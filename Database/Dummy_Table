@@ -7,5 +7,6 @@ CREATE TABLE Dummy_Table (
     );
     
 INSERT INTO Dummy_Table VALUES("CO", 23, 3000);
+INSERT INTO Dummy_Table VALUES("LA", 50, 5000);
 
 SELECT * FROM Dummy_Table;
