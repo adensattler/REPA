@@ -1,0 +1,11 @@
+/* THIS IS JUST A DUMMY FILE FOR INITIAL COMMIT*/
+
+CREATE TABLE Dummy_Table (
+    STATE VARCHAR(10),
+    STATE_ID INT,
+    PRICE INT
+    );
+    
+INSERT INTO Dummy_Table VALUES("CO", 23, 3000);
+
+SELECT * FROM Dummy_Table;
