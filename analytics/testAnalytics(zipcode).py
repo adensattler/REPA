@@ -7,7 +7,7 @@ cur = conn.cursor()
 cur.execute("DROP TABLE IF EXISTS RealEstate")
 
 # Read the CSV file and get the header row (make sure path to csv file is your own path on your local computer)
-with open('/Users/jordan/Desktop/Software Engineering/dataframe.csv') as csvfile:
+with open('\\Users\\robel\\Desktop\\dataframe.csv') as csvfile:
     reader = csv.reader(csvfile)
     header = next(reader)
 
