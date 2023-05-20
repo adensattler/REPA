@@ -14,18 +14,20 @@ def main():
     args = parser.parse_args()
 
     if args.url:
-        api_key = "1d06fd5a-f8a8-4204-bf67-628653b0aa23"
+        api_key = "20f2b911-a35e-4fdb-b54a-a466f52098a0"
         listing_url = args.url
 
         listing_response = get_listings(api_key, listing_url)
 
         # stores the columns we are interested in
-        cols = ['zpid', 'hdpData.homeInfo.price', 'hdpData.homeInfo.zipcode', 'beds', 'baths', 'area', 'hdpData.homeInfo.zestimate']
+        columns = [
+            'zpid', 'hdpData.homeInfo.price', 'hdpData.homeInfo.bedrooms', 'hdpData.homeInfo.bathrooms', 'area',
+            'hdpData.homeInfo.zipcode', 'hdpData.homeInfo.livingArea', 'hdpData.homeInfo.homeType', 'hdpData.homeInfo.zestimate', 'hdpData.homeInfo.city'
+        ]
 
         # Takes all of the data and converts it into normalized, tabular data (.json_normalize)
         den_listings = pd.json_normalize(listing_response["data"]["cat1"]["searchResults"]["mapResults"])
-        selected_den_listings = den_listings.loc[:, cols].dropna(thresh=7)
-
+        selected_den_listings = den_listings.loc[:, columns].dropna(thresh=10)
         create_database(selected_den_listings)
 
     if args.analyze:
