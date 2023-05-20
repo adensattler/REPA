@@ -77,6 +77,15 @@ def create_bar_chart_average_price_house_type(dataframe):
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.show()
+    
+def create_heatmap(dataframe):
+    attributes = ['price', 'area', 'living_area', 'no_of_beds', 'no_of_baths', 'zestimate']
+    correlation_matrix = dataframe[attributes].corr()
+
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+    plt.title('Correlation Between Important Attributes')
+    plt.show()
 
 def perform_analysis():
     # Connect to the database
@@ -103,6 +112,9 @@ def perform_analysis():
     
     # Create the bar chart for average price per house type
     create_bar_chart_average_price_house_type(df)
+    
+    # Create the heatmap for attribute correlation
+    create_heatmap(df)
 
     # Close the database connection
     conn.close()
