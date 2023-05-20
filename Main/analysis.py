@@ -62,6 +62,21 @@ def create_boxplot_prices_per_city(dataframe):
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.show()
+    
+def create_bar_chart_average_price_house_type(dataframe):
+    avg_prices = dataframe.groupby('house_type')['price'].mean().reset_index()
+
+    plt.figure(figsize=(10, 6))
+    colors = ['skyblue', 'lightgreen', 'lightcoral', 'lavender', 'gold']
+    ax = plt.gca()
+
+    avg_prices.plot(kind='bar', x='house_type', y='price', color=colors, ax=ax, legend=False)
+    plt.xlabel('House Type')
+    plt.ylabel('Average Price ($)')
+    plt.title('Average Price per House Type')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.show()
 
 def perform_analysis():
     # Connect to the database
@@ -85,6 +100,9 @@ def perform_analysis():
     
     # Create the boxplot for prices per city
     create_boxplot_prices_per_city(df)
+    
+    # Create the bar chart for average price per house type
+    create_bar_chart_average_price_house_type(df)
 
     # Close the database connection
     conn.close()
