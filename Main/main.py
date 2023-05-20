@@ -22,12 +22,12 @@ def main():
         # stores the columns we are interested in
         columns = [
             'zpid', 'hdpData.homeInfo.price', 'hdpData.homeInfo.bedrooms', 'hdpData.homeInfo.bathrooms', 'area',
-            'hdpData.homeInfo.zipcode', 'hdpData.homeInfo.livingArea', 'hdpData.homeInfo.homeType', 'hdpData.homeInfo.zestimate', 'hdpData.homeInfo.city'
+            'hdpData.homeInfo.zipcode', 'hdpData.homeInfo.livingArea', 'hdpData.homeInfo.homeType', 'hdpData.homeInfo.zestimate', 'hdpData.homeInfo.city', 'hdpData.homeInfo.latitude', 'hdpData.homeInfo.longitude'	
         ]
 
         # Takes all of the data and converts it into normalized, tabular data (.json_normalize)
         den_listings = pd.json_normalize(listing_response["data"]["cat1"]["searchResults"]["mapResults"])
-        selected_den_listings = den_listings.loc[:, columns].dropna(thresh=10)
+        selected_den_listings = den_listings.loc[:, columns].dropna(thresh=12)
         create_database(selected_den_listings)
 
     if args.analyze:

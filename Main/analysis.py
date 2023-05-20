@@ -4,6 +4,9 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+import folium
+from folium.plugins import HeatMap
+
 def create_summary_table(dataframe):
     summary_data = {
         'Metric': ['Minimum', 'Maximum', 'Mean', 'Median'],
@@ -86,6 +89,19 @@ def create_heatmap(dataframe):
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
     plt.title('Correlation Between Important Attributes')
     plt.show()
+    
+def create_price_heatmap(dataframe):
+    # Create a map centered around the average latitude and longitude of the listings
+    average_lat = dataframe['latitude'].mean()
+    average_lon = dataframe['longitude'].mean()
+    map_heat = folium.Map(location=[average_lat, average_lon], zoom_start=12)
+
+    # Create a HeatMap layer using the house locations and prices
+    heat_data = [[row['latitude'], row['longitude'], row['price']] for _, row in dataframe.iterrows()]
+    HeatMap(heat_data).add_to(map_heat)
+
+    map_heat.save('heatmap.html')
+
 
 def perform_analysis():
     # Connect to the database
@@ -115,6 +131,11 @@ def perform_analysis():
     
     # Create the heatmap for attribute correlation
     create_heatmap(df)
-
+    
+    create_price_heatmap(df)
+    
     # Close the database connection
     conn.close()
+
+
+

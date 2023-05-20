@@ -21,13 +21,15 @@ def create_database(dataframe):
         living_area INTEGER NOT NULL,
         house_type TEXT NOT NULL,
         zestimate INTEGER NOT NULL,
-        city TEXT NOT NULL
+        city TEXT NOT NULL,
+        latitude INTEGER NOT NULL,
+        longitude INTEGER NOT NULL
     )
     ''')
 
     for i, row in dataframe.iterrows():
-        c.execute('INSERT INTO listings (zillow_ID, price, no_of_beds, no_of_baths, area, zipcode, living_area, house_type, zestimate, city) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-                  (row['zpid'], row['hdpData.homeInfo.price'], row['hdpData.homeInfo.bedrooms'], row['hdpData.homeInfo.bathrooms'], row['area'], row['hdpData.homeInfo.zipcode'], row['hdpData.homeInfo.livingArea'], row['hdpData.homeInfo.homeType'], row['hdpData.homeInfo.zestimate'], row['hdpData.homeInfo.city']))
+        c.execute('INSERT INTO listings (zillow_ID, price, no_of_beds, no_of_baths, area, zipcode, living_area, house_type, zestimate, city, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+                  (row['zpid'], row['hdpData.homeInfo.price'], row['hdpData.homeInfo.bedrooms'], row['hdpData.homeInfo.bathrooms'], row['area'], row['hdpData.homeInfo.zipcode'], row['hdpData.homeInfo.livingArea'], row['hdpData.homeInfo.homeType'], row['hdpData.homeInfo.zestimate'], row['hdpData.homeInfo.city'], row['hdpData.homeInfo.latitude'], row['hdpData.homeInfo.longitude']))
 
     # Commit the changes and close the connection
     conn.commit()
