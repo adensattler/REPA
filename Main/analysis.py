@@ -18,6 +18,25 @@ def create_summary_table(dataframe):
     
     return summary_table
 
+def create_scatterplot(dataframe):
+    fig = px.scatter(dataframe, x='area', y=['zestimate', 'price'],
+                     color_discrete_sequence=["blue", "red"],
+                     title="House value vs. Area")
+    fig.show()
+
+
+def create_pie_chart_house_types(dataframe):
+    house_types = dataframe['house_type'].value_counts()
+    total_count = house_types.sum()
+    proportions = house_types / total_count
+
+    fig = px.pie(
+        values=proportions,
+        names=house_types.index,
+        title='Ratio of House Types'
+    )
+    fig.show()
+
 def perform_analysis():
     # Connect to the database
     conn = sqlite3.connect('zillow_listings.db')
@@ -25,15 +44,15 @@ def perform_analysis():
     # Execute the query and convert results to a DataFrame
     df = pd.read_sql_query("SELECT * FROM listings", conn)
 
-    # Create the scatter plot using plotly.express
-    fig = px.scatter(df, x=df['area'], y=[df['zestimate'], df['price']],
-                     color_discrete_sequence=["blue", "red"],
-                     title="House value vs. Area")
-    fig.show()
+    # Create the scatter plot using Plotly Express
+    create_scatterplot(df)
 
     # Create the summary table
     summary_table = create_summary_table(df)
     print(summary_table)
+
+    # Create the pie chart for house types
+    create_pie_chart_house_types(df)
+
     # Close the database connection
     conn.close()
-
