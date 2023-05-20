@@ -36,6 +36,18 @@ def create_pie_chart_house_types(dataframe):
         title='Ratio of House Types'
     )
     fig.show()
+    
+
+def create_bar_chart_average_price(dataframe):
+    average_price_per_zipcode = dataframe.groupby('zipcode')['price'].mean().reset_index()
+    
+    plt.figure(figsize=(12, 6))
+    plt.bar(average_price_per_zipcode['zipcode'], average_price_per_zipcode['price'])
+    plt.xlabel('Zipcode')
+    plt.ylabel('Average Price')
+    plt.title('Average Price per Zipcode')
+    plt.xticks(rotation=90)
+    plt.show()
 
 def perform_analysis():
     # Connect to the database
@@ -53,6 +65,9 @@ def perform_analysis():
 
     # Create the pie chart for house types
     create_pie_chart_house_types(df)
+    
+    # Create the bar chart for average price per zipcode
+    create_bar_chart_average_price(df)
 
     # Close the database connection
     conn.close()
