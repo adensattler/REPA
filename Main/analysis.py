@@ -39,14 +39,28 @@ def create_pie_chart_house_types(dataframe):
     
 
 def create_bar_chart_average_price(dataframe):
-    average_price_per_zipcode = dataframe.groupby('zipcode')['price'].mean().reset_index()
-    
+    avg_prices = dataframe.groupby('zipcode')['price'].mean().reset_index()
+
+    # Filter out zip codes with no mean value
+    avg_prices = avg_prices[~avg_prices['price'].isnull()]
+
     plt.figure(figsize=(12, 6))
-    plt.bar(average_price_per_zipcode['zipcode'], average_price_per_zipcode['price'])
+    sns.barplot(x='zipcode', y='price', data=avg_prices)
     plt.xlabel('Zipcode')
     plt.ylabel('Average Price')
     plt.title('Average Price per Zipcode')
-    plt.xticks(rotation=90)
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.show()
+
+def create_boxplot_prices_per_city(dataframe):
+    plt.figure(figsize=(12, 8))
+    sns.boxplot(x='city', y='price', data=dataframe)
+    plt.xlabel('City')
+    plt.ylabel('Price')
+    plt.title('Prices per City')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
     plt.show()
 
 def perform_analysis():
@@ -68,6 +82,9 @@ def perform_analysis():
     
     # Create the bar chart for average price per zipcode
     create_bar_chart_average_price(df)
+    
+    # Create the boxplot for prices per city
+    create_boxplot_prices_per_city(df)
 
     # Close the database connection
     conn.close()
