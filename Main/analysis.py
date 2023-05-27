@@ -15,10 +15,10 @@ def create_summary_table(dataframe):
         'Bedrooms': [dataframe['no_of_beds'].min(), dataframe['no_of_beds'].max(), dataframe['no_of_beds'].mean(), dataframe['no_of_beds'].median()],
         'Bathrooms': [dataframe['no_of_baths'].min(), dataframe['no_of_baths'].max(), dataframe['no_of_baths'].mean(), dataframe['no_of_baths'].median()]
     }
-    
+
     summary_table = pd.DataFrame(summary_data)
     summary_table = summary_table.set_index('Metric')
-    
+
     return summary_table
 
 def create_scatterplot(dataframe):
@@ -39,7 +39,7 @@ def create_pie_chart_house_types(dataframe):
         title='Ratio of House Types'
     )
     fig.show()
-    
+
 
 def create_bar_chart_average_price(dataframe):
     avg_prices = dataframe.groupby('zipcode')['price'].mean().reset_index()
@@ -65,7 +65,21 @@ def create_boxplot_prices_per_city(dataframe):
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.show()
-    
+
+#def create_line_actual_vs_predicted_price(dataframe):
+#    plt.figure)figsize=(12, 6)
+#    plt.scatter(true_value, predicted_value, c='crimson')
+#    plt.yscale('log')
+#    plt.xscale('log')
+
+#    p1 = max(max(predicted_value), max(true_value))
+#    p2 = min(min(predicted_value), min(true_value))
+#    plt.plot([p1, p2], [p1, p2], 'b-')
+#    plt.xlabel('True Values', fontsize=15)
+#    plt.ylabel('Predictions', fontsize=15)
+#    plt.axis('equal')
+#    plt.show()
+
 def create_bar_chart_average_price_house_type(dataframe):
     avg_prices = dataframe.groupby('house_type')['price'].mean().reset_index()
 
@@ -80,7 +94,7 @@ def create_bar_chart_average_price_house_type(dataframe):
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.show()
-    
+
 def create_heatmap(dataframe):
     attributes = ['price', 'area', 'living_area', 'no_of_beds', 'no_of_baths', 'zestimate']
     correlation_matrix = dataframe[attributes].corr()
@@ -89,7 +103,7 @@ def create_heatmap(dataframe):
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
     plt.title('Correlation Between Important Attributes')
     plt.show()
-    
+
 def create_price_heatmap(dataframe):
     # Create a map centered around the average latitude and longitude of the listings
     average_lat = dataframe['latitude'].mean()
@@ -119,23 +133,20 @@ def perform_analysis():
 
     # Create the pie chart for house types
     create_pie_chart_house_types(df)
-    
+
     # Create the bar chart for average price per zipcode
     create_bar_chart_average_price(df)
-    
+
     # Create the boxplot for prices per city
     create_boxplot_prices_per_city(df)
-    
+
     # Create the bar chart for average price per house type
     create_bar_chart_average_price_house_type(df)
-    
+
     # Create the heatmap for attribute correlation
     create_heatmap(df)
-    
+
     create_price_heatmap(df)
-    
+
     # Close the database connection
     conn.close()
-
-
-
