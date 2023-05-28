@@ -4,12 +4,14 @@ import pandas as pd
 from data_acquisition import get_listings
 from create_database import create_database
 from analysis import perform_analysis
+from prediction import predict
 
 def main():
     # Define command-line arguments
     parser = argparse.ArgumentParser(description="Real Estate Analysis Program")
     parser.add_argument("--url", help="Zillow search URL")
     parser.add_argument("--analyze", action="store_true", help="Perform analysis")
+    parser.add_argument("--predict", action="store_true", help="Perform prediction")
 
     args = parser.parse_args()
 
@@ -33,6 +35,9 @@ def main():
 
     if args.analyze:
         perform_analysis()
+        
+    if args.predict:
+        predict()
 
 if __name__ == "__main__":
     main()
