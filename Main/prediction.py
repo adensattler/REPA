@@ -14,16 +14,9 @@ def load_linear_regression_model(filepath):
         model = pickle.load(file)
     return model
 
-def perform_analysis():
-    # Connect to the database
-    conn = sqlite3.connect('zillow_listings.db')
-
-    # Execute the query and convert results to a DataFrame
-    df = pd.read_sql_query("SELECT * FROM listings", conn)
-
+def perform_prediction(df):
     # Load the linear regression models
     denver_model = load_linear_regression_model('denver_model.pickle')
-
 
     # Retrieve the necessary attributes for prediction
     features = df[['num_beds', 'num_baths', 'area', 'tax_ass_val', 'latitude', 'longitude']]
@@ -36,15 +29,16 @@ def perform_analysis():
     df['denver_difference'] = df['denver_predicted'] - df['price']
 
     # Sort the houses based on the difference in descending order
-    # Sort the DataFrame by denver_difference in descending order
     df_sorted = df.sort_values('denver_difference', ascending=False)
 
     # Print the top investments
     print("Denver Area - Best Value Houses:")
     print(df_sorted[['zillow_ID', 'price', 'denver_predicted', 'denver_difference']].head())
-
     print()
 
+    return df
+
+def scatter_plot_actual_predicted(df):
     plt.scatter(df['price'], df['denver_predicted'], color='blue', label='Predicted')
     plt.scatter(df['price'], df['price'], color='red', label='Actual')
     plt.xlabel('Actual House Price')
@@ -52,37 +46,38 @@ def perform_analysis():
     plt.title('Actual vs Predicted House Prices')
     plt.legend()
     plt.show()
-    
-    # Create residual plot for Denver area
+
+def residual_plot(df):
     plt.scatter(df['price'], df['denver_difference'], color='blue')
     plt.axhline(y=0, color='red', linestyle='--')
     plt.xlabel('Actual House Price')
     plt.ylabel('Residuals')
     plt.title('Residual Plot - Denver Area')
     plt.show()
-    
-    # Box plot - House Types
+
+def box_plot_house_types(df):
     sns.boxplot(data=df, x='house_type', y='denver_difference')
     plt.xlabel('House Type')
     plt.ylabel('Price Difference')
     plt.title('Price Difference by House Type')
     plt.show()
-    
-    # Violin plot - Number of Bedrooms
+
+def violin_plot_num_bedrooms(df):
     sns.violinplot(data=df, x='num_beds', y='denver_difference')
     plt.xlabel('Number of Bedrooms')
     plt.ylabel('Price Difference')
     plt.title('Price Difference by Number of Bedrooms')
     plt.show()
-    
-    # Histogram - Price Difference
+
+def histogram_price_difference(df):
     plt.hist(df['denver_difference'], bins=20, color='skyblue')
     plt.xlabel('Price Difference')
     plt.ylabel('Frequency')
     plt.title('Distribution of Price Difference')
     plt.show()
 
-        # Create a map centered on the average latitude and longitude of the data
+def create_predicted_heat_map(df):
+    # Create a map centered on the average latitude and longitude of the data
     map_center = [df['latitude'].mean(), df['longitude'].mean()]
     heat_map = folium.Map(location=map_center, zoom_start=12)
 
@@ -105,10 +100,29 @@ def perform_analysis():
 
     # Save the map as an HTML file
     heat_map.save("price_difference_heatmap.html")
+    
+def visualize_prediction(df):
+    scatter_plot_actual_predicted(df)
+    residual_plot(df)
+    box_plot_house_types(df)
+    violin_plot_num_bedrooms(df)
+    histogram_price_difference(df)
+    create_predicted_heat_map(df)
 
+def predict():
+    # Connect to the database
+    conn = sqlite3.connect('zillow_listings.db')
+
+    # Execute the query and convert results to a DataFrame
+    df = pd.read_sql_query("SELECT * FROM listings", conn)
 
     # Close the database connection
     conn.close()
 
-perform_analysis()
- 
+    # Perform prediction and obtain the updated dataframe
+    df = perform_prediction(df)
+
+    # Visualize the prediction using various graphs
+    visualize_prediction(df)
+
+
