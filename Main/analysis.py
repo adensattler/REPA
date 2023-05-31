@@ -22,23 +22,23 @@ def create_summary_table(dataframe):
     return summary_table
 
 def create_scatterplot(dataframe):
-    fig = px.scatter(dataframe, x='area', y=['zestimate', 'price'],
-                     color_discrete_sequence=["blue", "red"],
-                     title="House value vs. Area")
-    fig.show()
-
+    plt.scatter(dataframe['area'], dataframe['zestimate'], color='blue', label='zestimate', alpha=0.5, s=10)
+    plt.scatter(dataframe['area'], dataframe['price'], color='red', label='price', alpha=0.8, s=10)
+    plt.xlabel('Area')
+    plt.ylabel('House Value')
+    plt.title('House value vs. Area')
+    plt.legend()
+    plt.show()
 
 def create_pie_chart_house_types(dataframe):
     house_types = dataframe['house_type'].value_counts()
     total_count = house_types.sum()
     proportions = house_types / total_count
 
-    fig = px.pie(
-        values=proportions,
-        names=house_types.index,
-        title='Ratio of House Types'
-    )
-    fig.show()
+    plt.pie(proportions, labels=house_types.index, autopct='%1.1f%%')
+    plt.title('Ratio of House Types')
+    plt.show()
+    
     
 
 def create_bar_chart_average_price(dataframe):
