@@ -31,7 +31,9 @@ If you wish, you can use this link already provided in the 'zillow_example.txt' 
 ## Commands 
 ### --url 
 Command: 'python main.py --url [zillow search url]`
+
 Purpose: It will create a SQLite database of listings from the search url you obtained previously. The url is a required argument for the command.
+
 Expected output: 'zillow_listings.db' should be created in the same directory ('Main' folder). And, a list of keys and the number of properties retrieved should be be shown. For example:
 ```
 dict_keys(['user', 'mapState', 'regionState', 'searchPageSeoObject', 'requestId', 'cat1', 'categoryTotals'])
@@ -43,18 +45,22 @@ Note: In order to run the other two commands, tt is important to have 'zillow_li
 
 ### --analyze
 Command: 'python main.py --analyze`
-Purpose: It will conduct Exploratory Data Analysis (EDA) on the properties off the database. 
+
+Purpose: It will conduct Exploratory Data Analysis (EDA) on the properties off the database.
+
 Expected output: 
-*a summary table to the terminal.
-*a variety of graphs (should be 6) that will appear in a seperate popup window (the next graph will not be shown unless you exit out of the window of the current graph).
-*a heat geographic heat map (should appear as heatmap.html) of current prices that will be saved to the current directory (inside 'Main'). You can open it in your browser to interact with it.
+* a summary table to the terminal.
+* a variety of graphs (should be 6) that will appear in a seperate popup window (the next graph will not be shown unless you exit out of the window of the current graph).
+* a heat geographic heat map (should appear as heatmap.html) of current prices that will be saved to the current directory (inside 'Main'). You can open it in your browser to interact with it.
 
 ### --predict 
 Command: 'python main.py --predict'
+
 Purpose: It will use a linear regression machine learning model create predicted prices of the properties off the database and compare it with the actual price to determine which properties are undervalued (ideal for investment). 
+
 Expected output:
-*a list of 5 properties with the best value. It will have their Zillow ID, actual price, predicted price, and the difference between the two. It will be shown in the terminal.
-*a variety of graphs (should be 5) that will appear in a seperate popup window (the next graph will not be shown unless you exit out of the window of the current graph).
-*a heat geographic heat map (should appear as price_difference_heatmap.html) that will be saved to the current directory (inside 'Main'). You can open it in your browser to interact with it.
+* a list of 5 properties with the best value. It will have their Zillow ID, actual price, predicted price, and the difference between the two. It will be shown in the terminal.
+* a variety of graphs (should be 5) that will appear in a seperate popup window (the next graph will not be shown unless you exit out of the window of the current graph).
+* a heat geographic heat map (should appear as price_difference_heatmap.html) that will be saved to the current directory (inside 'Main'). You can open it in your browser to interact with it.
 ## Help
 If the the last two commands do not work, or any other issue arises, please let us know.
