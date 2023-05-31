@@ -8,10 +8,12 @@ def create_database(dataframe):
 
     columns = list(dataframe.columns)
     columns = [column.replace('.', '_') for column in columns]
+    
+    c.execute('DROP TABLE IF EXISTS listings;')
 
 # Create the table with appropriate columns and constraints
     c.execute('''
-    CREATE TABLE listings (
+    CREATE TABLE IF NOT EXISTS listings (
         zillow_ID INTEGER PRIMARY KEY NOT NULL,
         price INTEGER NOT NULL,
         num_beds INTEGER NOT NULL,
