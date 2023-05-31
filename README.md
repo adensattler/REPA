@@ -41,7 +41,7 @@ Count of properties: 1969
 
 Note: If this command does not work, please use the provided `zillow_listings.db` in the `Examples` folder of the repository. Move it to the `Main` folder on your local machine.
 
-Note: In order to run the other two commands, tt is important to have `zillow_listings.db` in the `Main` folder. Otherwise, it those commands will note work.
+Note: In order to run the other two commands, it is important to have `zillow_listings.db` in the `Main` folder. Otherwise, the following 2 commands will not work.
 
 ### --analyze
 Command: `python main.py --analyze`
