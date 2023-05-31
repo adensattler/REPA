@@ -20,6 +20,8 @@ The aim of this project is to develop a machine learning model that predicts rea
 `pip install matplotlib`
 `pip install folium`
 `pip install requests`
+`pip install scikit-learn`
+
 3. Clone the repository onto your local machine. Choose a directory that you plan to have the program in, open a terminal window on that directory, and run the following command line to clone:
 `git clone https://github.com/dussec/real-estate-price-analysis.git`
 4. Go to the Zillow website ([website](https://www.zillow.com/)) and search for homes (for sale) in the Denver. Try to include a variety of areas (Aurora, Centennial, etc) and a broad criteron for a large dataset. Once you're done with the search, copy the link in the address bar. If you wish, you can use this link already provided in the `zillow_example.txt` file under the 'Examples' folder.
