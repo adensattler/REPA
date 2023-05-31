@@ -30,7 +30,7 @@ If you wish, you can use this link already provided in the 'zillow_example.txt' 
 
 ## Commands 
 ### --url 
-Command: 'python main.py --url [zillow search url]`
+Command: `python main.py --url [zillow search url]`
 
 Purpose: It will create a SQLite database of listings from the search url you obtained previously. The url is a required argument for the command.
 
@@ -44,7 +44,7 @@ Note: If this command does not work, please use the provided 'zillow_listings.db
 Note: In order to run the other two commands, tt is important to have 'zillow_listings.db' in the 'Main' folder. Otherwise, it those commands will note work.
 
 ### --analyze
-Command: 'python main.py --analyze`
+Command: `python main.py --analyze`
 
 Purpose: It will conduct Exploratory Data Analysis (EDA) on the properties off the database.
 
@@ -54,7 +54,7 @@ Expected output:
 * a heat geographic heat map (should appear as heatmap.html) of current prices that will be saved to the current directory (inside 'Main'). You can open it in your browser to interact with it.
 
 ### --predict 
-Command: 'python main.py --predict'
+Command: `python main.py --predict`
 
 Purpose: It will use a linear regression machine learning model create predicted prices of the properties off the database and compare it with the actual price to determine which properties are undervalued (ideal for investment). 
 
