@@ -33,8 +33,10 @@ If you wish, you can use this link already provided in the 'zillow_example.txt' 
 Command: 'python main.py --url [zillow search url]`
 Purpose: It will create a SQLite database of listings from the search url you obtained previously. The url is a required argument for the command.
 Expected output: 'zillow_listings.db' should be created in the same directory ('Main' folder). And, a list of keys and the number of properties retrieved should be be shown. For example:
-```dict_keys(['user', 'mapState', 'regionState', 'searchPageSeoObject', 'requestId', 'cat1', 'categoryTotals'])
-Count of properties: 1969```
+```
+dict_keys(['user', 'mapState', 'regionState', 'searchPageSeoObject', 'requestId', 'cat1', 'categoryTotals'])
+Count of properties: 1969
+```
 
 Note: If this command does not work, please use the provided 'zillow_listings.db' in the 'Examples' folder of the repository. Move it to the 'Main' folder on your local machine.
 Note: In order to run the other two commands, tt is important to have 'zillow_listings.db' in the 'Main' folder. Otherwise, it those commands will note work.
