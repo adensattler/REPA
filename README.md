@@ -64,5 +64,57 @@ Expected output:
 * a list of 5 properties with the best value. It will have their Zillow ID, actual price, predicted price, and the difference between the two. It will be shown in the terminal.
 * a variety of graphs (should be 5) that will appear in a seperate popup window (the next graph will not be shown unless you exit out of the window of the current graph).
 * a heat geographic heat map (should appear as `price_difference_heatmap.html`) that will be saved to the current directory (inside `Main`). You can open it in your browser to interact with it.
+
+## --info
+
+Command: `python main.py --info [Zillow ID] --addr`
+
+Purpose: It will provide information about the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--addr` flag will provide the address of the property.
+
+Expected output: 
+* The street address and zip code of the property.
+
+Command: `python main.py --info [Zillow ID] --describe`
+
+Purpose: It will provide a description of the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--describe` flag will provide the description of the property.
+
+Expected output:
+* The description of the property written by the broker.
+
+Command: `python main.py --info [Zillow ID] --school`
+
+Purpose: It will provide information about the schools near the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--school` flag will provide the information about the schools near the property.
+
+Expected output:
+* The name of the school, the type of school, the grade level, the distance from the property, and the rating of the school.
+
+Command: `python main.py --info [Zillow ID] --comp`
+
+Purpose: It will provide information about the comparable properties near the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--comp` flag will provide the information about the comparable properties near the property.
+
+Expected output:
+* Links to the comparable properties near the property.
+
+Command: `python main.py --info [Zillow ID] --nearby`
+
+Purpose: It will provide a list of nearby cities with the given Zillow ID. The Zillow ID is a required argument for the command. The `--nearby` flag will provide the information about the nearby cities near the property.
+
+Expected output:
+* The name of the cities nearby the property.
+
+Command: `python main.py --info [Zillow ID] --hist`
+
+Purpose: It will provide a list of historical prices of the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--hist` flag will provide the information about the historical prices of the property.
+
+Expected output:
+* The date and the price of the property.
+
+Command: `python main.py --info [Zillow ID] --year`
+
+Purpose: It will provide information about the year built of the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--year` flag will provide the information about the year built of the property.
+
+Expected output:
+* The year built of the property.
+
 ## Help
 If the the last two commands do not work, or any other issue arises, please let us know.
