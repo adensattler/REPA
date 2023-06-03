@@ -1,6 +1,7 @@
 import sys
 import argparse
 import pandas as pd
+import datetime as dt
 from data_acquisition import get_listings
 from data_acquisition import organize_property_details
 from create_database import create_database
@@ -59,7 +60,7 @@ def main():
 
     if args.info:
         try:
-            api_key = "bead7c5a-3ccb-4a9f-b2d2-efc02707840a"
+            api_key = "e73c0de1-9ae1-493c-9d3a-b3d6875b6eed"
             zpid = args.info
             data, hist = organize_property_details(api_key, zpid)
             data = pd.json_normalize(data)
