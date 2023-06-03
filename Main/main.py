@@ -17,7 +17,7 @@ def main():
     parser.add_argument("--addr", action="store_true", help="Get street address")
     parser.add_argument("--describe", action="store_true", help="Get house description")
     parser.add_argument("--school", action="store_true", help="Get school information")
-    parser.add_argument("--comp", action="store_true", help="Compare to nerby houses")
+    parser.add_argument("--comp", action="store_true", help="Compare to nearby houses")
     parser.add_argument("--nearby", action="store_true", help="Get nearby cities")
     parser.add_argument("--hist", action="store_true", help="Get price history")
     parser.add_argument("--year", action="store_true", help="Get year built")
