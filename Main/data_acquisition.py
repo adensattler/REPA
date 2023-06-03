@@ -59,7 +59,7 @@ def organize_property_details(api_key, zpid):
         return prop_detail_dict
     else:
         prop_detail_dict = {
-            'street address': [data['streetAddress'][0] + data['zipcode'][0]],
+            'street address': [data['streetAddress'][0] + ' ' + data['zipcode'][0]],
             'year built': [data['adTargets.yrblt'][0]],
             'nearby cities': cities,
             'comps': comps,
