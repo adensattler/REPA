@@ -50,10 +50,14 @@ def organize_property_details(api_key, zpid):
         schools.append(f"school name: {data['schools'][0][_]['name']}\ndistance: {data['schools'][0][_]['distance']} miles\n"
               f"school rating: {data['schools'][0][_]['rating']}\nschool level: {data['schools'][0][_]['level']}")
 
-    price_hist = []
-    for i in range(len(data['priceHistory'][0])):
-        price_hist.append(f"date: {data['priceHistory'][0][i]['date']}\nprice: {data['priceHistory'][0][i]['price']}\n"
-            f"price per sqft: {data['priceHistory'][0][i]['pricePerSquareFoot']}")
+    # price_hist = []
+    # for i in range(len(data['priceHistory'][0])):
+    #     price_hist.append(f"date: {data['priceHistory'][0][i]['date']}\nprice: {data['priceHistory'][0][i]['price']}\n"
+    #         f"price per sqft: {data['priceHistory'][0][i]['pricePerSquareFoot']}")
+
+    df_price_hist = pd.DataFrame(data['priceHistory'].iloc[0], index=None)
+    cols = ['date', 'price', 'pricePerSquareFoot', 'priceChangeRate', 'event']
+    df_price_hist = df_price_hist[cols]
 
     if len(data.columns) == 0:
         return prop_detail_dict
@@ -64,8 +68,7 @@ def organize_property_details(api_key, zpid):
             'nearby cities': cities,
             'comps': comps,
             'schools': schools,
-            'description': [data['description'][0]],
-            'price history': price_hist,
+            'description': [data['description'][0]]
         }
 
-        return prop_detail_dict
+        return prop_detail_dict, df_price_hist

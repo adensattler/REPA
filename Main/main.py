@@ -25,7 +25,7 @@ def main():
     args = parser.parse_args()
 
     if args.url:
-        api_key = "20f2b911-a35e-4fdb-b54a-a466f52098a0"
+        api_key = "e73c0de1-9ae1-493c-9d3a-b3d6875b6eed"
         listing_url = args.url
 
         listing_response = get_listings(api_key, listing_url)
@@ -51,9 +51,10 @@ def main():
     if args.info:
         api_key = "bead7c5a-3ccb-4a9f-b2d2-efc02707840a"
         zpid = args.info
-        data = organize_property_details(api_key, zpid)
+        data, hist = organize_property_details(api_key, zpid)
         data = pd.json_normalize(data)
         data.to_json('data.json')
+        hist.to_json('hist.json')
     
     if args.addr:
         data = pd.read_json('data.json')
@@ -75,9 +76,10 @@ def main():
         for _ in range(len(data['nearby cities'][0])):
             print(data['nearby cities'][0][_])
     if args.hist:
-        data = pd.read_json('data.json')
-        for _ in range(len(data['price history'])):
-            print(data['price history'][0][_])
+        data = pd.read_json('hist.json')
+        print(data)
+        # for _ in range(len(data['price history'])):
+        #     print(data['price history'][0][_])
     if args.year:
         data = pd.read_json('data.json')
         print(data['year built'][0][0])
