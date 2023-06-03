@@ -13,7 +13,6 @@ The aim of this project is to develop a machine learning model that predicts rea
 ## Getting the Program to work
 1. If you haven't already, install the latest version of Python. You can install it from here: [website](https://www.python.org/downloads/)
 2. In a terminal window, run the following command lines to install the necessary dependencies for the program:
-`pip install sqlite3`
 `pip install pandas`
 `pip install plotly`
 `pip install seaborn`
