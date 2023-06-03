@@ -66,7 +66,14 @@ Expected output:
 * a heat geographic heat map (should appear as `price_difference_heatmap.html`) that will be saved to the current directory (inside `Main`). You can open it in your browser to interact with it.
 
 ## --info
+Command: `python main.py --info [zillow id]`
 
+Purpose: It will request house data for the provided `zillow id` and save a formatted json file.
+
+Expected output:
+* there `will not` be an output for this command; however, there should be a json file, `data.json`, created within the `Main` folder.
+
+## --addr
 Command: `python main.py --info [Zillow ID] --addr`
 
 Purpose: It will provide information about the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--addr` flag will provide the address of the property.
@@ -74,6 +81,7 @@ Purpose: It will provide information about the property with the given Zillow ID
 Expected output: 
 * The street address and zip code of the property.
 
+## --describe
 Command: `python main.py --info [Zillow ID] --describe`
 
 Purpose: It will provide a description of the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--describe` flag will provide the description of the property.
@@ -81,6 +89,7 @@ Purpose: It will provide a description of the property with the given Zillow ID.
 Expected output:
 * The description of the property written by the broker.
 
+## --school
 Command: `python main.py --info [Zillow ID] --school`
 
 Purpose: It will provide information about the schools near the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--school` flag will provide the information about the schools near the property.
@@ -88,6 +97,7 @@ Purpose: It will provide information about the schools near the property with th
 Expected output:
 * The name of the school, the type of school, the grade level, the distance from the property, and the rating of the school.
 
+## --comp
 Command: `python main.py --info [Zillow ID] --comp`
 
 Purpose: It will provide information about the comparable properties near the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--comp` flag will provide the information about the comparable properties near the property.
@@ -95,6 +105,7 @@ Purpose: It will provide information about the comparable properties near the pr
 Expected output:
 * Links to the comparable properties near the property.
 
+## --nearby
 Command: `python main.py --info [Zillow ID] --nearby`
 
 Purpose: It will provide a list of nearby cities with the given Zillow ID. The Zillow ID is a required argument for the command. The `--nearby` flag will provide the information about the nearby cities near the property.
@@ -102,6 +113,7 @@ Purpose: It will provide a list of nearby cities with the given Zillow ID. The Z
 Expected output:
 * The name of the cities nearby the property.
 
+## --hist
 Command: `python main.py --info [Zillow ID] --hist`
 
 Purpose: It will provide a list of historical prices of the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--hist` flag will provide the information about the historical prices of the property.
@@ -109,6 +121,7 @@ Purpose: It will provide a list of historical prices of the property with the gi
 Expected output:
 * The date and the price of the property.
 
+## --year
 Command: `python main.py --info [Zillow ID] --year`
 
 Purpose: It will provide information about the year built of the property with the given Zillow ID. The Zillow ID is a required argument for the command. The `--year` flag will provide the information about the year built of the property.
