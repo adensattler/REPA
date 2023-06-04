@@ -1,0 +1,9 @@
+As an investor, I need to be able to analyze the predicted prices, actual prices, and other relevant factors (such as education, crime) so that I can identify potentially profitable.
+investment opportunities in the housing market.
+As an investor, I need to be able to access the investment analysis report so that I can easily identify potential investment opportunities and understand why they are good.
+investments.
+As a investor, I need to be able to export the analysis in a suitable format so that I can conduct more in-depth studies on the housing market.
+As an investor, I need to be able to easily update the database with new real estate data so that I can keep the data up-to-date and relevant for analysis and modeling.
+As an investor, I need to be able to easily use the command line to access relevant information so that I can efficiently use the program to achieve my goals.
+As an investor, I need to be able to search for properties based on specific criteria (location, size, # of bedrooms, etc.) so that I can easily find potential investment opportunities tailored to my preferences.
+As an investor, I need to be able to save and organize (analysis of) properties that I am interested in so that I can easily access them later and compare them to other properties.

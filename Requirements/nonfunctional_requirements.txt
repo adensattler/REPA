@@ -1,0 +1,10 @@
+• The system should be programmed with Python, as it is better suited for the type of analysis we are going to do.
+• The database should be created using SQLite.
+• The system must allow the user to manipulate the analysis by allowing changes in parameters like location and the time range for the analysis.
+• The system must be able to handle large datasets, with a minimum of 5,000 data points, and provide results in under 10 seconds.
+• The system must be able to specify why it rated a property as an ideal or non-ideal investment by providing three parameters (crime, education, etc.) most relevant to the rating.
+• The system should allow the user request for analysis at any given time. If for some reason, the request is not possible, it should handle it by notifying the user as such by displaying the appropriate error message (example: Error: data not accessible).
+• The system should provide options for visualizing the data and results in different formats, such as charts and graphs.
+• The system should be designed as modular, with separate modules for data storage, data processing, and user interface.
+• The system should give users an optional argument for the command line to perform and export the analysis in formats such as PDF, CSV, and Excel to default location.
+• The system should be able to use APIs like Zillow to populate and update the existing SQLite database according to the parameters set by the user on the command line.
