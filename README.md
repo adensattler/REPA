@@ -59,7 +59,7 @@ For technical look at the system architecture, please refer to the diagram below
 
 ## Commands 
 ### --url 
-Command: `python main.py --url [zillow search url]`
+Command: `python main.py --url "[illow search url]"`
 
 Purpose: It will create a SQLite database of listings from the search url you obtained previously. The url is a required argument for the command.
 
