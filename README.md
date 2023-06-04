@@ -8,7 +8,36 @@ Description
 
 ## Description
 
-The aim of this project is to develop a machine learning model that predicts real estate prices and identifies potentially profitable investment opportunities in the housing market using historical and current data of the real estate market.
+This project aims to develop a potentially profitable investment opportunities in the housing market.
+By leveraging historical and current data from the real estate market and a machine learning model, the
+tool enables user to make informed decisions and navigate the market with confidence.
+
+The project utilizes Python as the primary programming language and leverages the Scrapeak API to
+scrape data from Zillow, a leading real estate marketplace. This ensures access to comprehensive and
+up-to-date information for analysis and modeling.
+
+The system architecture is designed with two keys objectives in mind:
+
+1. `Data Acquisition and Analysis`: The system efficiently collects data from Zillow through the Scrapeak
+API and stores it in a database. It provides robust analysis capabilities to gain insights into the real
+estate market. This includes exploring data trends, patterns, and correlations that can influence 
+property prices and investment opportunities.
+
+2. `User-Focused Property Exploration`: The system offers users the flexibility to select specific 
+properties they wish to explore further. It provides detailed and specific information about the selected
+property, allowing users to make informed decisions based on their preferences and requirements.
+
+This program does not necessitate the use of a particular development environment or anything like
+that, so feel free to download the program and use it right away (after following the instructions 
+below).
+
+Below, in the `Getting the Program to Work` section, you will find a guide on how to set up your system for the program, how to get started with
+the program, how to use it, the expected outputs, and visions for the future!
+
+For technical look at the system architecture, please refer to the diagram below also found in the
+`Diagrams` folder:
+
+![](../../software architecture diagram.png)
 
 ## Getting the Program to work
 1. If you haven't already, install the latest version of Python. You can install it from here: [website](https://www.python.org/downloads/)
@@ -146,5 +175,44 @@ Expected output:
 * The year built of the property.
     * Format: `year started - year completed`
 
+## Making sense of the output from the `--analyze` and `--predict` commands
+
+Below is a picture explaining the different graphs and outputs from the `--analyze` and `--predict` commands.
+This can also be found in the `Diagrams` folder:
+
+### --analyze:
+
+![](../../../Downloads/--analyze_expected_output.png)
+
+### --predict:
+
+![](../../../Downloads/--predict_expected_output.png)
+
+## Future Work
+
+In the future, there are several exciting avenues to explore and enhance this
+project. Firstly, developing a Graphical User Interface (GUI) would provide a
+user-friendly platform for easy interaction and visualization of data. 
+Secondly, accessing the Zillow Developer API could offer access to richer data
+, such as historical property information and market trends, enabling more 
+accurate predictive models. Gathering additional data, such as crime rates 
+and school district ratings, would further improve the models' accuracy and
+provide more comprehensive suggestions. Expanding the range of graphs and
+visualizations would enable deeper exploration and analysis of the gathered
+data. Integrating financial data, including mortgage rates and economic 
+indicators, would provide a holistic view of the real estate market. 
+Lastly, expanding the database to include more property listings and 
+historical data would facilitate long-term trend analysis. 
+These future endeavors will transform this project into a powerful 
+real estate analysis tool, empowering users with valuable insights and 
+supporting informed investment decisions.
+
 ## Help
-If the the last two commands do not work, or any other issue arises, please let us know.
+
+If you have any questions or need help with the project, 
+please contact us at:
+
+* [Robel Mamo](mailto:robel.mamo@du.du)
+* [Ibraheem Qureshi](mailto:ibraheem.qureshi@du.edu)
+* [Jordan Sutherland](mailto:jordan.sutherland@du.edu)
+* [Karthik Turimella](mailto:karthik.turimella@du.edu)
