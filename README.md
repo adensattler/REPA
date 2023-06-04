@@ -56,6 +56,7 @@ For technical look at the system architecture, please refer to the diagram below
 
 5. Open a new terminal window on the folder `Main`.  
 
+<img width="373" alt="software architecture diagram" src="https://github.com/dussec/real-estate-price-analysis/assets/95201389/eccf48b2-e3d0-46fb-8cf8-4843819fe4ed">
 
 ## Commands 
 ### --url 
