@@ -26,7 +26,7 @@ def main():
 
     if args.url:
         try:
-            api_key = "e73c0de1-9ae1-493c-9d3a-b3d6875b6eed"
+            api_key = "00b71f28-feee-48d9-b482-c06247c6f6cf"
             listing_url = args.url
 
             listing_response = get_listings(api_key, listing_url)
