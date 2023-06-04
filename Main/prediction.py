@@ -28,8 +28,13 @@ def perform_prediction(df):
     df['denver_predicted'] = denver_predictions
     df['denver_difference'] = df['denver_predicted'] - df['price']
 
+
+
     # Sort the houses based on the difference in descending order
     df_sorted = df.sort_values('denver_difference', ascending=False)
+    
+     # Save the predicted properties as a CSV file
+    df_sorted.to_csv('predictions.csv', index=False)
 
     # Print the top investments
     print("Denver Area - Best Value Houses:")
