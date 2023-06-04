@@ -1,7 +1,6 @@
 import sys
 import argparse
 import pandas as pd
-import datetime as dt
 from data_acquisition import get_listings
 from data_acquisition import organize_property_details
 from create_database import create_database
