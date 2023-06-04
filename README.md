@@ -182,11 +182,11 @@ This can also be found in the `Diagrams` folder:
 
 ### --analyze:
 
-![](../../../Downloads/--analyze_expected_output.png)
+![image](https://github.com/dussec/real-estate-price-analysis/assets/130081083/b1ed48f0-fa85-4102-bdb5-896c07139b1c)
 
 ### --predict:
 
-![](../../../Downloads/--predict_expected_output.png)
+![image](https://github.com/dussec/real-estate-price-analysis/assets/130081083/66921f71-dacb-490e-aa09-bcadd7cc536b)
 
 ## Future Work
 
