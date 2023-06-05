@@ -40,6 +40,9 @@ For technical look at the system architecture, please refer to the diagram below
 <img width="373" alt="software architecture diagram" src="https://github.com/dussec/real-estate-price-analysis/assets/95201389/eccf48b2-e3d0-46fb-8cf8-4843819fe4ed">
 
 ## Getting the Program to work
+
+**`!NOTE`**: Please use `pip3` instead of `pip` in the following install instructions if you have the latest python release.
+
 1. If you haven't already, install the latest version of Python. You can install it from here: [website](https://www.python.org/downloads/)
 2. In a terminal window, run the following command lines to install the necessary dependencies for the program:
 `pip install pandas`
@@ -57,6 +60,9 @@ For technical look at the system architecture, please refer to the diagram below
 5. Open a new terminal window on the folder `Main`.  
 
 ## Commands 
+
+**`!NOTE`**: Please use `python3` instead of `python` in the following commands if you have the latest python release.
+
 ### --url 
 Command: `python main.py --url "[Zillow search url]"`
 
