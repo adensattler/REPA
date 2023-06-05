@@ -37,7 +37,7 @@ the program, how to use it, the expected outputs, and visions for the future!
 For technical look at the system architecture, please refer to the diagram below also found in the
 `Diagrams` folder:
 
-![](../../software architecture diagram.png)
+<img width="373" alt="software architecture diagram" src="https://github.com/dussec/real-estate-price-analysis/assets/95201389/eccf48b2-e3d0-46fb-8cf8-4843819fe4ed">
 
 ## Getting the Program to work
 1. If you haven't already, install the latest version of Python. You can install it from here: [website](https://www.python.org/downloads/)
@@ -55,8 +55,6 @@ For technical look at the system architecture, please refer to the diagram below
 4. Go to the Zillow website ([website](https://www.zillow.com/)) and search for homes (for sale) in the Denver. Try to include a variety of areas (Aurora, Centennial, etc) and a broad criteron for a large dataset. Once you're done with the search, copy the link in the address bar. If you wish, you can use this link already provided in the `zillow_example.txt` file under the 'Examples' folder.
 
 5. Open a new terminal window on the folder `Main`.  
-
-<img width="373" alt="software architecture diagram" src="https://github.com/dussec/real-estate-price-analysis/assets/95201389/eccf48b2-e3d0-46fb-8cf8-4843819fe4ed">
 
 ## Commands 
 ### --url 
