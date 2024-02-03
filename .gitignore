@@ -5,7 +5,10 @@
 *.csv
 
 # Ignore all html files
-*.html
+# *.html
+
+heatmap.html
+price_difference_heatmap.html
 
 # Ignore all db files
 *.db
