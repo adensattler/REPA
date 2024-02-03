@@ -1,0 +1,17 @@
+# Ignore all json files
+*.json
+
+# Ignore all csv files
+*.csv
+
+# Ignore all html files
+*.html
+
+# Ignore all db files
+*.db
+
+# Ignore pycache!
+__pycache__
+
+#
+env
