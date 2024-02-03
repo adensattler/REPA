@@ -12,3 +12,6 @@
 
 # Ignore pycache!
 __pycache__
+
+#
+env
