@@ -221,3 +221,11 @@ please contact us at:
 * [Ibraheem Qureshi](mailto:ibraheem.qureshi@du.edu)
 * [Jordan Sutherland](mailto:jordan.sutherland@du.edu)
 * [Karthik Turimella](mailto:karthik.turimella@du.edu)
+* 
+
+## Flask Setup!
+
+1.) pip3 install virtualenv
+2.) virtualenv env
+3.) Mac: source env/bin/activate       on Windows: source \env\Scripts\activate.bat
+4.) pip3 install flask pandas
