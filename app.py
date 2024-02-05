@@ -49,5 +49,16 @@ def create():
 
     return render_template('create.html')
 
+
+@app.route('/predict', methods=('GET', 'POST'))
+def predict():
+    if request.method == 'POST':
+        try:
+           predict() 
+        except:
+            flash("Error: please make sure that you have already created the database")
+            print("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
+    return render_template('predict.html')
+
 if __name__ == "__main__":
     app.run()
