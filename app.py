@@ -18,7 +18,8 @@ def create():
     if request.method == 'POST':
         # get the url from the form that was submitted
         url = request.form['url']
-        print(url)
+        # print(url)
+        flash("URL received.")
 
         # check that input is not empty
         # if "https://www.zillow.com/" not in url:
@@ -45,9 +46,38 @@ def create():
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
             print("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
 
+    return render_template('create.html', )
 
 
-    return render_template('create.html')
+# def get_listings_gui(listing_url:str, api_key:str)->str:
+#     try:
+#         url = "https://app.scrapeak.com/v1/scrapers/zillow/listing"
+
+#         querystring = {
+#         "api_key": api_key,
+#         "url": listing_url
+#         }
+
+#         response = requests.get(url, params=querystring)
+#         data = response.json()
+
+#         num_of_properties_fetched = data["data"]["categoryTotals"]["cat1"]["totalResultCount"]
+
+#         # stores the columns we are interested in
+#         columns = [
+#             'zpid', 'hdpData.homeInfo.price', 'hdpData.homeInfo.bedrooms', 'hdpData.homeInfo.bathrooms', 'area',
+#             'hdpData.homeInfo.zipcode', 'hdpData.homeInfo.livingArea', 'hdpData.homeInfo.homeType', 'hdpData.homeInfo.zestimate', 'hdpData.homeInfo.city', 'hdpData.homeInfo.latitude', 'hdpData.homeInfo.longitude',
+#             'hdpData.homeInfo.taxAssessedValue'
+#         ]
+
+#         # Takes all of the data and converts it into normalized, tabular data (.json_normalize)
+#         den_listings = pd.json_normalize(data["data"]["cat1"]["searchResults"]["mapResults"])
+#         selected_den_listings = den_listings.loc[:, columns].dropna(thresh=13)
+#         create_database(selected_den_listings)
+
+#         return f"Number of properties fetched: {num_of_properties_fetched}"
+#     except:
+#         return "Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired."
 
 if __name__ == "__main__":
     app.run()
