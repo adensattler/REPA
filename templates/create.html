@@ -28,13 +28,3 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
-{% endblock %}
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul>
-{% for message in messages %}
-<li>{{ message }}</li>
-{% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
