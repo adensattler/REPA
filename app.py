@@ -79,9 +79,10 @@ def analyze():
             df = pd.read_sql_query("SELECT * FROM listings", database_connection)
             summary_table = create_summary_table(df).to_html()    
             database_connection.close()
+            return render_template('analyze.html', result=summary_table)
         except:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
-    return render_template('analyze.html', result=summary_table)
+    return render_template('analyze.html')
 
 if __name__ == "__main__":
     app.run()
