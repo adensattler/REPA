@@ -1,5 +1,42 @@
 import requests
 import pandas as pd
+from create_database import create_database
+
+def get_listings_gui(url:str, api_key:str)->str:
+    scraper_api_url = "https://app.scrapeak.com/v1/scrapers/zillow/listing"
+
+    api_query_string = {
+    "api_key": api_key,
+    "url": url
+    }
+
+    api_response = None
+
+    try:
+        api_response = requests.get(scraper_api_url, params=api_query_string)
+    except:
+        return "Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired."
+
+    data = api_response.json()
+
+    num_of_properties_fetched = data["data"]["categoryTotals"]["cat1"]["totalResultCount"]
+
+    # Store the columns we are interested in
+    columns_of_interest = [
+        'zpid', 'hdpData.homeInfo.price', 'hdpData.homeInfo.bedrooms', 'hdpData.homeInfo.bathrooms', 'area',
+        'hdpData.homeInfo.zipcode', 'hdpData.homeInfo.livingArea', 'hdpData.homeInfo.homeType', 'hdpData.homeInfo.zestimate', 'hdpData.homeInfo.city', 'hdpData.homeInfo.latitude', 'hdpData.homeInfo.longitude',
+        'hdpData.homeInfo.taxAssessedValue'
+    ]
+
+    # Take the data and converts it into normalized, tabular data (.json_normalize)
+    den_listings = pd.json_normalize(data["data"]["cat1"]["searchResults"]["mapResults"])
+    
+    # Discard rows with over 13 null values
+    selected_den_listings = den_listings.loc[:, columns_of_interest].dropna(thresh=13)
+    create_database(selected_den_listings)
+
+    return f"{num_of_properties_fetched} properties fetched."
+
 
 def get_listings(api_key, listing_url):
     url = "https://app.scrapeak.com/v1/scrapers/zillow/listing"
@@ -21,6 +58,7 @@ def get_listings(api_key, listing_url):
 
     return data
 
+
 # get property detail
 def get_property_detail(api_key, zpid):
   url = "https://app.scrapeak.com/v1/scrapers/zillow/property"
@@ -31,6 +69,7 @@ def get_property_detail(api_key, zpid):
   }
 
   return requests.request("GET", url, params=querystring)
+
 
 def organize_property_details(api_key, zpid):
     response = get_property_detail(api_key, zpid)
