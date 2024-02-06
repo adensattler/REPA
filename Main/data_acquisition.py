@@ -26,11 +26,10 @@ def get_listings_gui(url:str, api_key:str)->str:
         'hdpData.homeInfo.taxAssessedValue'
     ]
 
-    # Take the data and converts it into normalized, tabular data (.json_normalize)
+    # Get DataFrame from .json
     den_listings = pd.json_normalize(data["data"]["cat1"]["searchResults"]["mapResults"])
     
-    # Discard rows with over 13 null values
-    selected_den_listings = den_listings.loc[:, columns_of_interest].dropna(thresh=13)
+    selected_den_listings = den_listings.loc[:, columns_of_interest].dropna(thresh=13) # Discard rows with over 13 null values
     create_database(selected_den_listings)
 
     return f"{num_of_properties_fetched} properties fetched."
@@ -97,7 +96,7 @@ def organize_property_details(api_key, zpid):
     df_price_hist = df_price_hist[cols]
 
     if len(data.columns) == 0:
-        return prop_detail_dict
+        return prop_detail_dict, df_price_hist
     else:
         prop_detail_dict = {
             'street address': [data['streetAddress'][0] + ' ' + data['zipcode'][0]],

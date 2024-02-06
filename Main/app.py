@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash
 import pandas as pd
 import sqlite3
 
-from data_acquisition import get_listings, get_listings_gui
+from data_acquisition import get_listings, get_listings_gui, organize_property_details
 from create_database import create_database
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
@@ -19,8 +19,9 @@ def index():
 @app.route('/home', methods=('GET', 'POST'))
 def home():
     if request.method == 'POST':
-        url = request.form['url'] # Get from HTML form
+        url = request.form['url'] # Get URL from HTML form
         result = get_listings_gui(url, api_key)
+        
         if not result:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
         else:
@@ -58,9 +59,9 @@ def create():
 @app.route('/analyze', methods=('GET', 'POST'))
 def analyze():
     if request.method == 'POST':
-        # Get from HTML form
-        url = request.form['url']
+        url = request.form['url'] # Get URL from HTML form
         result = get_listings_gui(url, api_key)
+        
         if not result:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
             return render_template('analyze.html')        
@@ -77,12 +78,12 @@ def analyze():
 @app.route('/predict', methods=('GET', 'POST'))
 def predict():
     if request.method == 'POST':
-        # Get from HTML form
-        url = request.form['url']
+        url = request.form['url'] # Get URL from HTML form
         result = get_listings_gui(url, api_key)
+
         if not result:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
-            return render_template('analyze.html')
+            return render_template('predict.html')
 
         database_connection = sqlite3.connect('zillow_listings.db')
         dataframe = pd.read_sql_query("SELECT * FROM listings", database_connection)
@@ -92,6 +93,26 @@ def predict():
 
         return render_template('predict.html', result=top_five_properties.to_html())
     return render_template('predict.html')
+
+def dict_to_html(data_dict):
+    html = "<ul>"
+    for key, value in data_dict.items():
+        html += f"<li><strong>{key}:</strong> {value}</li>"
+    html += "</ul>"
+    return html
+
+@app.route('/info', methods=('GET', 'POST'))
+def info():
+    if request.method == 'POST':
+        zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
+        property_detail_dict, df_price_hist = organize_property_details(api_key, zillow_id)
+        
+        if not property_detail_dict:
+            flash("Error: Please check that the Zillow ID is valid and try again.")
+        else:
+            return render_template('info.html', dict=dict_to_html(property_detail_dict), df=df_price_hist.to_html())
+
+    return render_template('info.html')
 
 if __name__ == "__main__":
     app.run()
