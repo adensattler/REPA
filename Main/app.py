@@ -16,6 +16,14 @@ app.config['SECRET_KEY'] = 'your secret key'
 def index():
     return render_template('index.html')
 
+# Helper function
+def list_to_html(data_list):
+    html = "<ul>\n"
+    for item in data_list:
+        html += f"  <li>{item}</li>\n"
+    html += "</ul>"
+    return html
+
 @app.route('/home', methods=('GET', 'POST'))
 def home():
     if request.method == 'POST':
@@ -25,7 +33,19 @@ def home():
         if not result:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
         else:
-            return render_template('home.html', result=result)
+            # Connect to the database
+            database_connection = sqlite3.connect('zillow_listings.db')
+            dataframe = pd.read_sql_query("SELECT * FROM listings", database_connection)
+            database_connection.close()
+            
+            top_five_properties = perform_prediction_gui(dataframe)
+            zillow_id_list = top_five_properties['zillow_ID'].to_list()
+            print(zillow_id_list)
+            address_list = []
+            for zillow_id in zillow_id_list:
+                address_list.append(get_address(api_key, zillow_id))
+
+            return render_template('home.html', result=list_to_html(address_list))
     return render_template('home.html')
 
 @app.route('/create', methods=('GET', 'POST'))
@@ -94,6 +114,7 @@ def predict():
         return render_template('predict.html', result=top_five_properties.to_html())
     return render_template('predict.html')
 
+# Helper function
 def dict_to_html(data_dict):
     html = "<ul>"
     for key, value in data_dict.items():
