@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash
 import pandas as pd
 import sqlite3
 
-from data_acquisition import get_listings
+from data_acquisition import get_listings, get_listings_gui
 from create_database import create_database
 from analysis import create_summary_table
 from prediction import load_linear_regression_model
@@ -15,6 +15,14 @@ api_key = "a9fef9b3-771c-4f18-87c1-aee712b66b4c"
 @app.route('/', methods=('GET', 'POST'))
 def index():
     return render_template('index.html')
+
+@app.route('/home', methods=('GET', 'POST'))
+def home():
+    if request.method == 'POST':
+        url = request.form['url']
+        result = get_listings_gui(url, api_key)
+        return render_template('home.html', result=result)
+    return render_template('home.html')
 
 @app.route('/create', methods=('GET', 'POST'))
 def create():
