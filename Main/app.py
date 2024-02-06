@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash
 import pandas as pd
 import sqlite3
 
-from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description
+from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
 from create_database import create_database
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
@@ -167,6 +167,20 @@ def homeinfo(zpid):
         hist.to_json('hist.json')
     except:
         print("Error: Please check that the ZPID is valid and try again. If the problem persists, check if your API key has expired for the month.")
+
+@app.route('/addr', methods=('GET', 'POST'))
+def addr():
+    if request.method == 'POST':
+        zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
+        property_address = get_address(api_key, zillow_id)
+        
+        if not property_address:
+            flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
+        else:
+            return render_template('addr.html', address=property_address)
+
+    return render_template('addr.html')
+
 
 if __name__ == "__main__":
     app.run()
