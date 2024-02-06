@@ -133,5 +133,24 @@ def year():
     
     return render_template('year.html')
 
+# runs --info and subsequently runs --nearby on a given zpid
+@app.route('/nearby', methods=('GET','POST'))
+def nearby():
+    # run --info with zpid obtained from form
+    try:
+        zpid = request.form['zpid']
+        data, hist = organize_property_details(api_key, zpid)
+        data = pd.json_normalize(data)
+        data.to_json('data.json')
+        hist.to_json('hist.json')
+        # run --nearby after establishing --info
+        data = pd.read_json('data.json')
+        for _ in range(len(data['nearby cities'][0])):
+            print(data['nearby cities'][0][_])
+            flash(data['nearby cities'][0][_])
+    except:
+        print("Error: Please check that the ZPID is valid and try again. If the problem persists, check if your API key has expired for the month.")
+
+    return render_template('nearby.html')
 if __name__ == "__main__":
     app.run()
