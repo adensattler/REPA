@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash
 import pandas as pd
 import sqlite3
 
-from data_acquisition import get_listings, get_listings_gui, organize_property_details
+from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description
 from create_database import create_database
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
@@ -10,7 +10,7 @@ from prediction import perform_prediction_gui
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
-api_key = "a9fef9b3-771c-4f18-87c1-aee712b66b4c"
+api_key = "26a8e12e-902b-46ea-ba69-1d8f841a49f4"
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
@@ -108,11 +108,24 @@ def info():
         property_detail_dict, df_price_hist = organize_property_details(api_key, zillow_id)
         
         if not property_detail_dict:
-            flash("Error: Please check that the Zillow ID is valid and try again.")
+            flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
         else:
             return render_template('info.html', dict=dict_to_html(property_detail_dict), df=df_price_hist.to_html())
 
     return render_template('info.html')
+
+@app.route('/describe', methods=('GET', 'POST'))
+def describe():
+    if request.method == 'POST':
+        zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
+        property_description = get_description(api_key, zillow_id)
+        
+        if not property_description:
+            flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
+        else:
+            return render_template('describe.html', description=property_description)
+
+    return render_template('describe.html')
 
 # runs --info and subsequently runs --year on a given zpid
 @app.route('/year', methods=('GET','POST'))
