@@ -119,11 +119,7 @@ def info():
 def year():
     # run --info with zpid obtained from form
     try:
-        zpid = request.form['zpid']
-        data, hist = organize_property_details(api_key, zpid)
-        data = pd.json_normalize(data)
-        data.to_json('data.json')
-        hist.to_json('hist.json')
+        homeinfo(request.form['zpid'])
         # run --year after establishing --info
         data = pd.read_json('data.json')
         print(data['year built'][0][0])
@@ -138,11 +134,7 @@ def year():
 def nearby():
     # run --info with zpid obtained from form
     try:
-        zpid = request.form['zpid']
-        data, hist = organize_property_details(api_key, zpid)
-        data = pd.json_normalize(data)
-        data.to_json('data.json')
-        hist.to_json('hist.json')
+        homeinfo(request.form['zpid'])
         # run --nearby after establishing --info
         data = pd.read_json('data.json')
         for _ in range(len(data['nearby cities'][0])):
@@ -152,5 +144,16 @@ def nearby():
         print("Error: Please check that the ZPID is valid and try again. If the problem persists, check if your API key has expired for the month.")
 
     return render_template('nearby.html')
+
+# homeinfo function to reduce size of dependent functions (same functionality as --info)
+def homeinfo(zpid):
+    try:
+        data, hist = organize_property_details(api_key, zpid)
+        data = pd.json_normalize(data)
+        data.to_json('data.json')
+        hist.to_json('hist.json')
+    except:
+        print("Error: Please check that the ZPID is valid and try again. If the problem persists, check if your API key has expired for the month.")
+
 if __name__ == "__main__":
     app.run()
