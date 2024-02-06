@@ -1,9 +1,5 @@
 {% extends 'base.html' %}
 
-<head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-
 {% block content %}
 <h1>{% block title %} Real Estate Price Prediction Tool {% endblock %}</h1>
 
@@ -36,14 +32,4 @@
 <div>
     {{result|safe}}
 </div>
-
 {% endblock %}
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul>
-{% for message in messages %}
-<li>{{ message }}</li>
-{% endfor %}
-</ul>
-{% endif %}
-{% endwith %}

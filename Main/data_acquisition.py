@@ -10,12 +10,10 @@ def get_listings_gui(url:str, api_key:str)->str:
     "url": url
     }
 
-    api_response = None
-
-    try:
-        api_response = requests.get(scraper_api_url, params=api_query_string)
-    except:
-        return "Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired."
+    api_response = requests.get(scraper_api_url, params=api_query_string)    
+    # Successful API call: Status 200
+    if api_response.status_code != 200:
+        return ""
 
     data = api_response.json()
 
