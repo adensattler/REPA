@@ -108,3 +108,21 @@ def organize_property_details(api_key, zpid):
         }
 
         return prop_detail_dict, df_price_hist
+
+def get_description(api_key, zpid):
+    api_response = get_property_detail(api_key, zpid)    
+
+    if api_response.status_code != 200: # Successful API call: Status 200
+        return ""
+    else:
+        data = pd.json_normalize(api_response.json()['data'])
+        return data['description'][0]
+    
+def get_address(api_key, zpid):
+    api_response = get_property_detail(api_key, zpid)    
+
+    if api_response.status_code != 200: # Successful API call: Status 200
+        return ""
+    else:
+        data = pd.json_normalize(api_response.json()['data'])
+        return data['streetAddress'][0] + ' ' + data['zipcode'][0]
