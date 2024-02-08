@@ -20,4 +20,4 @@ __pycache__
 env
 
 # Ignore config.py (holds api key)
-config.py
+Main/config.py
