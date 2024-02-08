@@ -16,5 +16,8 @@ price_difference_heatmap.html
 # Ignore pycache!
 __pycache__
 
-#
+# Ignore the env folder for flask venv
 env
+
+# Ignore config.py (holds api key)
+config.py
