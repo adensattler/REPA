@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash
 import pandas as pd
 import sqlite3
+from config import API_KEY
 
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
 from create_database import create_database
@@ -10,7 +11,6 @@ from prediction import perform_prediction_gui
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
-api_key = "26a8e12e-902b-46ea-ba69-1d8f841a49f4"
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
@@ -20,7 +20,7 @@ def index():
 def home():
     if request.method == 'POST':
         url = request.form['url'] # Get URL from HTML form
-        result = get_listings_gui(url, api_key)
+        result = get_listings_gui(url, API_KEY)
         
         if not result:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
@@ -36,10 +36,9 @@ def create():
         url = request.form['url']
 
         try:
-            api_key = "a9fef9b3-771c-4f18-87c1-aee712b66b4c"
             listing_url = url
 
-            listing_response = get_listings(api_key, listing_url)
+            listing_response = get_listings(API_KEY, listing_url)
 
             # stores the columns we are interested in
             columns = [
@@ -60,7 +59,7 @@ def create():
 def analyze():
     if request.method == 'POST':
         url = request.form['url'] # Get URL from HTML form
-        result = get_listings_gui(url, api_key)
+        result = get_listings_gui(url, API_KEY)
         
         if not result:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
@@ -79,7 +78,7 @@ def analyze():
 def predict():
     if request.method == 'POST':
         url = request.form['url'] # Get URL from HTML form
-        result = get_listings_gui(url, api_key)
+        result = get_listings_gui(url, API_KEY)
 
         if not result:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
@@ -105,7 +104,7 @@ def dict_to_html(data_dict):
 def info():
     if request.method == 'POST':
         zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
-        property_detail_dict, df_price_hist = organize_property_details(api_key, zillow_id)
+        property_detail_dict, df_price_hist = organize_property_details(API_KEY, zillow_id)
         
         if not property_detail_dict:
             flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
@@ -118,7 +117,7 @@ def info():
 def describe():
     if request.method == 'POST':
         zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
-        property_description = get_description(api_key, zillow_id)
+        property_description = get_description(API_KEY, zillow_id)
         
         if not property_description:
             flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
@@ -161,7 +160,7 @@ def nearby():
 # homeinfo function to reduce size of dependent functions (same functionality as --info)
 def homeinfo(zpid):
     try:
-        data, hist = organize_property_details(api_key, zpid)
+        data, hist = organize_property_details(API_KEY, zpid)
         data = pd.json_normalize(data)
         data.to_json('data.json')
         hist.to_json('hist.json')
@@ -172,7 +171,7 @@ def homeinfo(zpid):
 def addr():
     if request.method == 'POST':
         zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
-        property_address = get_address(api_key, zillow_id)
+        property_address = get_address(API_KEY, zillow_id)
         
         if not property_address:
             flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
