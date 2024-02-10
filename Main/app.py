@@ -51,6 +51,7 @@ def create():
             den_listings = pd.json_normalize(listing_response["data"]["cat1"]["searchResults"]["mapResults"])
             selected_den_listings = den_listings.loc[:, columns].dropna(thresh=13)
             create_database(selected_den_listings)
+            return render_template('create.html', success_message = "Search was succesful!")
         except:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
     return render_template('create.html')
@@ -190,11 +191,8 @@ def hist():
     if request.method == 'POST':
 
         try:
-            data = pd.read_json('hist.json')
-            print(data)
-            hist_results = data.to_html()
-
-            return render_template('hist.html', hist_results=hist_results)
+            hist_results = pd.read_json('hist.json')
+            return render_template('hist.html', hist_results=hist_results.to_html())
 
         except:
             flash("Error: Please run --info command first")
