@@ -5,13 +5,6 @@
 
 <form method="post">
     <div class="form-group">
-        <label for="zpid">Please enter a Zillow ID:</label>
-
-        <input type="number" name="zpid"
-            placeholder="Zillow ID" class="form-control"
-            value="{{ request.form['zpid'] }}"></input>
-    </div>
-    <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
@@ -29,11 +22,17 @@
 {% endif %}
 {% endwith %}
 
+{% if nearby %}
+<br>
 <div>
-    {{dict|safe}}
+    <h2>Nearby Cities:</h2>
+    <ul>
+        {% for city in nearby %}
+        <li>{{ city }}</li>
+        {% endfor %}
+    </ul>
 </div>
-<div>
-    {{df|safe}}
-</div>
+{% endif %}
+
 
 {% endblock %}
