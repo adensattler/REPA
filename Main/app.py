@@ -105,6 +105,11 @@ def info():
     if request.method == 'POST':
         zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
         property_detail_dict, df_price_hist = organize_property_details(API_KEY, zillow_id)
+
+        # make json files of the property details returned for usage by other routes
+        data = pd.json_normalize(property_detail_dict)
+        data.to_json('data.json')
+        df_price_hist.to_json('hist.json')
         
         if not property_detail_dict:
             flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
@@ -180,6 +185,17 @@ def addr():
 
     return render_template('addr.html')
 
+@app.route('/hist', methods=('GET', 'POST'))
+def hist():
+    if request.method == 'POST':
+
+        try:
+            data = pd.read_json('hist.json')
+            print(data)
+        except:
+            flash("Error: Please run --info command first")
+
+    return render_template('hist.html')
 
 if __name__ == "__main__":
     app.run()
