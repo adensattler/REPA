@@ -43,7 +43,7 @@ def home():
             print(zillow_id_list)
             address_list = []
             for zillow_id in zillow_id_list:
-                address_list.append(get_address(api_key, zillow_id))
+                address_list.append(get_address(API_KEY, zillow_id))
 
             return render_template('home.html', result=list_to_html(address_list))
     return render_template('home.html')
@@ -79,39 +79,29 @@ def create():
 @app.route('/analyze', methods=('GET', 'POST'))
 def analyze():
     if request.method == 'POST':
-        url = request.form['url'] # Get URL from HTML form
-        result = get_listings_gui(url, API_KEY)
-        
-        if not result:
-            flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
-            return render_template('analyze.html')        
-        
-        # Connect to the database
-        database_connection = sqlite3.connect('zillow_listings.db')
-        dataframe = pd.read_sql_query("SELECT * FROM listings", database_connection)
-        database_connection.close()
-        
-        summary_table = create_summary_table(dataframe).to_html()    
-        return render_template('analyze.html', result=summary_table)
+        try:
+            database_connection = sqlite3.connect('zillow_listings.db')
+            dataframe = pd.read_sql_query("SELECT * FROM listings", database_connection)
+            database_connection.close()
+            
+            summary_table = create_summary_table(dataframe).to_html()    
+            return render_template('analyze.html', result=summary_table)
+        except:
+            flash("zillow_listings.db is empty. Please run --url first.")
     return render_template('analyze.html')
 
 @app.route('/predict', methods=('GET', 'POST'))
 def predict():
     if request.method == 'POST':
-        url = request.form['url'] # Get URL from HTML form
-        result = get_listings_gui(url, API_KEY)
+        try:
+            database_connection = sqlite3.connect('zillow_listings.db')
+            dataframe = pd.read_sql_query("SELECT * FROM listings", database_connection)
+            database_connection.close()
 
-        if not result:
-            flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired.")
-            return render_template('predict.html')
-
-        database_connection = sqlite3.connect('zillow_listings.db')
-        dataframe = pd.read_sql_query("SELECT * FROM listings", database_connection)
-        database_connection.close()
-
-        top_five_properties = perform_prediction_gui(dataframe)
-
-        return render_template('predict.html', result=top_five_properties.to_html())
+            top_five_properties = perform_prediction_gui(dataframe)
+            return render_template('predict.html', result=top_five_properties.to_html())
+        except:
+            flash("zillow_listings.db is empty. Please run --url first.")
     return render_template('predict.html')
 
 # Helper function
