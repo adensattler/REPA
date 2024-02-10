@@ -48,6 +48,17 @@ def home():
             return render_template('home.html', result=list_to_html(address_list))
     return render_template('home.html')
 
+@app.route('/property_details', methods=('GET', 'POST'))
+def property_details():
+    if request.method == 'POST':
+        search_term = request.form['search_term']
+        if search_term.isdigit():
+            callback = "You searched by Zillow ID."
+        else:
+            callback = "You searched by street address."
+        return render_template('property_details.html', result=callback)
+    return render_template('property_details.html')
+
 @app.route('/create', methods=('GET', 'POST'))
 def create():
     # if a post request is made lets check out what was posted!
