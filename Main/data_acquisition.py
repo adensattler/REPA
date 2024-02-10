@@ -126,3 +126,16 @@ def get_address(api_key, zpid):
     else:
         data = pd.json_normalize(api_response.json()['data'])
         return data['streetAddress'][0] + ' ' + data['zipcode'][0]
+
+def addr_to_zpid(api_key, street, city, state, zip_code):
+    url = "https://app.scrapeak.com/v1/scrapers/zillow/zpidByAddress"
+
+    querystring = {
+    "api_key": api_key,
+    "street":street,
+    "city":city,
+    "state":state,
+    "zipcode":zip_code
+    }
+
+    return requests.request("GET", url, params=querystring)
