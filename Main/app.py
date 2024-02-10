@@ -192,9 +192,13 @@ def hist():
         try:
             data = pd.read_json('hist.json')
             print(data)
+            hist_results = data.to_html()
+
+            return render_template('hist.html', hist_results=hist_results)
+
         except:
             flash("Error: Please run --info command first")
-
+        
     return render_template('hist.html')
 
 if __name__ == "__main__":
