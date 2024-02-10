@@ -22,8 +22,11 @@
 {% endif %}
 {% endwith %}
 
+{% if address %}
 <div>
+    <br>
     <h2>{{address|safe}}</h2>
 </div>
+{% endif %}
 
 {% endblock %}
