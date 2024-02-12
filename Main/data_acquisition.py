@@ -1,0 +1,141 @@
+import requests
+import pandas as pd
+from create_database import create_database
+
+def get_listings_gui(url:str, api_key:str)->str:
+    scraper_api_url = "https://app.scrapeak.com/v1/scrapers/zillow/listing"
+
+    api_query_string = {
+    "api_key": api_key,
+    "url": url
+    }
+
+    api_response = requests.get(scraper_api_url, params=api_query_string)    
+    # Successful API call: Status 200
+    if api_response.status_code != 200:
+        return ""
+
+    data = api_response.json()
+
+    num_of_properties_fetched = data["data"]["categoryTotals"]["cat1"]["totalResultCount"]
+
+    # Store the columns we are interested in
+    columns_of_interest = [
+        'zpid', 'hdpData.homeInfo.price', 'hdpData.homeInfo.bedrooms', 'hdpData.homeInfo.bathrooms', 'area',
+        'hdpData.homeInfo.zipcode', 'hdpData.homeInfo.livingArea', 'hdpData.homeInfo.homeType', 'hdpData.homeInfo.zestimate', 'hdpData.homeInfo.city', 'hdpData.homeInfo.latitude', 'hdpData.homeInfo.longitude',
+        'hdpData.homeInfo.taxAssessedValue'
+    ]
+
+    # Get DataFrame from .json
+    den_listings = pd.json_normalize(data["data"]["cat1"]["searchResults"]["mapResults"])
+    
+    selected_den_listings = den_listings.loc[:, columns_of_interest].dropna(thresh=13) # Discard rows with over 13 null values
+    create_database(selected_den_listings)
+
+    return f"{num_of_properties_fetched} properties fetched."
+
+
+def get_listings(api_key, listing_url):
+    url = "https://app.scrapeak.com/v1/scrapers/zillow/listing"
+
+    querystring = {
+        "api_key": api_key,
+        "url": listing_url
+    }
+
+    response = requests.get(url, params=querystring)
+    data = response.json()
+
+    # Print the keys for the "data"
+    print(data['data'].keys())
+
+    # Print the number of homes fetched by the search
+    numProperties = data["data"]["categoryTotals"]["cat1"]["totalResultCount"]
+    print("Count of properties:", numProperties)
+
+    return data
+
+
+# get property detail
+def get_property_detail(api_key, zpid):
+  url = "https://app.scrapeak.com/v1/scrapers/zillow/property"
+
+  querystring = {
+      "api_key": api_key,
+      "zpid": zpid
+  }
+
+  return requests.request("GET", url, params=querystring)
+
+
+def organize_property_details(api_key, zpid):
+    response = get_property_detail(api_key, zpid)
+    data = pd.json_normalize(response.json()['data'])
+    prop_detail_dict = {}
+
+    cities = []
+    for _ in range(len(data['nearbyCities'][0])):
+        cities.append(data['nearbyCities'][0][_]['name'])
+
+    comps = []
+    for _ in range(len(data['comps'][0])):
+        comps.append(f"https://zillow.com/{data['comps'][0][_]['hdpUrl']}")
+        
+    schools = []
+    for _ in range(len(data['schools'][0])):
+        schools.append(f"school name: {data['schools'][0][_]['name']}\ndistance: {data['schools'][0][_]['distance']} miles\n"
+              f"school rating: {data['schools'][0][_]['rating']}\nschool level: {data['schools'][0][_]['level']}")
+
+    # price_hist = []
+    # for i in range(len(data['priceHistory'][0])):
+    #     price_hist.append(f"date: {data['priceHistory'][0][i]['date']}\nprice: {data['priceHistory'][0][i]['price']}\n"
+    #         f"price per sqft: {data['priceHistory'][0][i]['pricePerSquareFoot']}")
+
+    df_price_hist = pd.DataFrame(data['priceHistory'].iloc[0], index=None)
+    cols = ['date', 'price', 'pricePerSquareFoot', 'priceChangeRate', 'event']
+    df_price_hist = df_price_hist[cols]
+
+    if len(data.columns) == 0:
+        return prop_detail_dict, df_price_hist
+    else:
+        prop_detail_dict = {
+            'street address': [data['streetAddress'][0] + ' ' + data['zipcode'][0]],
+            'year built': [data['adTargets.yrblt'][0]],
+            'nearby cities': cities,
+            'comps': comps,
+            'schools': schools,
+            'description': [data['description'][0]]
+        }
+
+        return prop_detail_dict, df_price_hist
+
+def get_description(api_key, zpid):
+    api_response = get_property_detail(api_key, zpid)    
+
+    if api_response.status_code != 200: # Successful API call: Status 200
+        return ""
+    else:
+        data = pd.json_normalize(api_response.json()['data'])
+        return data['description'][0]
+    
+def get_address(api_key, zpid):
+    api_response = get_property_detail(api_key, zpid)    
+
+    if api_response.status_code != 200: # Successful API call: Status 200
+        return ""
+    else:
+        data = pd.json_normalize(api_response.json()['data'])
+        return data['streetAddress'][0] + ' ' + data['zipcode'][0]
+
+def addr_to_zpid(api_key, street, city, state, zip_code):
+    url = "https://app.scrapeak.com/v1/scrapers/zillow/zpidByAddress"
+
+    querystring = {
+    "api_key": api_key,
+    "street":street,
+    "city":city,
+    "state":state,
+    "zipcode":zip_code
+    }
+
+    return requests.request("GET", url, params=querystring)

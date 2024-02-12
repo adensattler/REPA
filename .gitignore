@@ -1,0 +1,23 @@
+# Ignore all json files
+*.json
+
+# Ignore all csv files
+*.csv
+
+# Ignore all html files
+# *.html
+
+heatmap.html
+price_difference_heatmap.html
+
+# Ignore all db files
+*.db
+
+# Ignore pycache!
+__pycache__
+
+# Ignore the env folder for flask venv
+env
+
+# Ignore config.py (holds api key)
+Main/config.py
