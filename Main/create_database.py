@@ -31,9 +31,9 @@ def create_database(dataframe):
     ''')
     c.execute('''
     CREATE TABLE IF NOT EXISTS propertyDetails(
-        zillow_ID INT NOT NULL,
+        zillow_ID INTEGER NOT NULL,
         streetAddress TEXT NOT NULL,
-        isFavorite INT NOT NULL,
+        isFavorite INTEGER NOT NULL,
 
         CONSTRAINT zillow_ID_FK FOREIGN KEY (zillow_ID)
         REFERENCES listings(zillow_ID)
