@@ -7,6 +7,7 @@ from data_acquisition import get_listings, get_listings_gui, organize_property_d
 from create_database import create_database
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
+import json
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
@@ -196,6 +197,52 @@ def hist():
             flash("Error: Please run --info command first")
         
     return render_template('hist.html')
+
+@app.route('/school', methods=('GET', 'POST'))
+def school():
+    if request.method == 'POST':
+        try:
+            
+            zpid = request.form.get('zpid')  # Retrieve Zillow ID from the form data
+
+            
+            with open('data.json', 'r') as file:  # Load property details from data.json
+                property_data = json.load(file)
+
+            nearby_schools = property_data.get('schools', {}).get('0', [])    # Retrieve nearby schools from the property data
+
+            if not nearby_schools:
+                flash("Error: Nearby schools information is not found.")
+            else:
+                return render_template('school.html', nearby=nearby_schools)
+
+        except Exception as e:
+            flash(f"Error: {str(e)}")
+
+    return render_template('school.html')
+
+@app.route('/comp', methods=('GET', 'POST'))
+def comp():
+    if request.method == 'POST':
+        try:
+            with open('data.json', 'r') as file:
+                data = json.load(file)
+            
+            comps_dict = data.get('comps', {})
+        
+            comps = comps_dict.get('0', [])
+
+            print("Loaded comparable properties:", comps)
+
+            return render_template('comp.html', comps=comps)
+        
+        except Exception as e:
+            print("Error occurred:", e)
+            flash(f"An error occurred: {e}")
+            return render_template('comp.html', comps=[]), 500
+    else:
+        return render_template('comp.html', comps=[])
+
 
 if __name__ == "__main__":
     app.run()
