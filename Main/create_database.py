@@ -29,7 +29,17 @@ def create_database(dataframe):
         tax_ass_val INTEGER NOT NULL
     )
     ''')
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS propertyDetails(
+        zillow_ID INT NOT NULL,
+        streetAddress TEXT NOT NULL,
 
+        CONSTRAINT zillow_ID_FK FOREIGN KEY (zillow_ID)
+        REFERENCES listings(zillow_ID)
+    )
+    ''')
+    
+    
     for i, row in dataframe.iterrows():
         c.execute('INSERT INTO listings (zillow_ID, price, num_beds, num_baths, area, zipcode, living_area, house_type, zestimate, city, latitude, longitude, tax_ass_val) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
                   (row['zpid'], row['hdpData.homeInfo.price'], row['hdpData.homeInfo.bedrooms'], row['hdpData.homeInfo.bathrooms'], row['area'], row['hdpData.homeInfo.zipcode'], row['hdpData.homeInfo.livingArea'], row['hdpData.homeInfo.homeType'], row['hdpData.homeInfo.zestimate'], row['hdpData.homeInfo.city'], row['hdpData.homeInfo.latitude'], row['hdpData.homeInfo.longitude'], row['hdpData.homeInfo.taxAssessedValue']))
