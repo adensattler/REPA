@@ -73,17 +73,20 @@ def insert_property_db(zpid,data):
 
     if (inDB[0][0] < 1):
         c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
+        
+    #EXAMPLE: how to pull data from SQLite server
 
     # sql = 'SELECT raw_json FROM propertyDetails LIMIT 1 '
     # c.execute(sql)
-    # jsonRaw = c.fetchall()
-    # jsonStr = json.dumps(jsonRaw)
-    # jsonObj = json.loads(jsonStr)
+    # rows = c.fetchall()
+    # jsonRaw = rows[0][0]
+    # jsonObj = json.loads(jsonRaw)
+    # # jsonStr = json.dumps(jsonRaw)
     # print(type(jsonObj))
-    # print(jsonObj['is_success'])
 
+    # value = jsonObj.get("is_success")
+    # print(value)
 
-    
 
     conn.commit()
     conn.close()
