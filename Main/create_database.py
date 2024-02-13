@@ -1,15 +1,12 @@
 import sqlite3
 import pandas as pd
 
-def create_database(dataframe):
+def create_database():
     # Create a SQLite connection and cursor
     conn = sqlite3.connect('zillow_listings.db')
     c = conn.cursor()
 
-    columns = list(dataframe.columns)
-    columns = [column.replace('.', '_') for column in columns]
-    
-    c.execute('DROP TABLE IF EXISTS listings;')
+    # c.execute('DROP TABLE IF EXISTS listings;')
 
 # Create the table with appropriate columns and constraints
     c.execute('''
@@ -39,14 +36,17 @@ def create_database(dataframe):
         REFERENCES listings(zillow_ID)
     )
     ''')
-    
-    
+    conn.commit()
+    conn.close()
+
+def fill_database(dataframe):
+    conn = sqlite3.connect('zillow_listings.db')
+    c = conn.cursor()
+    columns = list(dataframe.columns)
+    columns = [column.replace('.', '_') for column in columns]
     for i, row in dataframe.iterrows():
         c.execute('INSERT INTO listings (zillow_ID, price, num_beds, num_baths, area, zipcode, living_area, house_type, zestimate, city, latitude, longitude, tax_ass_val) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
                   (row['zpid'], row['hdpData.homeInfo.price'], row['hdpData.homeInfo.bedrooms'], row['hdpData.homeInfo.bathrooms'], row['area'], row['hdpData.homeInfo.zipcode'], row['hdpData.homeInfo.livingArea'], row['hdpData.homeInfo.homeType'], row['hdpData.homeInfo.zestimate'], row['hdpData.homeInfo.city'], row['hdpData.homeInfo.latitude'], row['hdpData.homeInfo.longitude'], row['hdpData.homeInfo.taxAssessedValue']))
-        c.execute('INSERT INTO propertyDetails (zillow_ID, isFavorite) VALUES (?,?)',
-                  (row['zpid'], 0)) 
-
     # Commit the changes and close the connection
     conn.commit()
     conn.close()
