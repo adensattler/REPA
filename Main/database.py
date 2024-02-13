@@ -1,14 +1,17 @@
 import sqlite3
 import pandas as pd
+import json
 
 def create_database():
     # Create a SQLite connection and cursor
     conn = sqlite3.connect('zillow_listings.db')
+    conn.row_factory = sqlite3.Row
     c = conn.cursor()
 
     # c.execute('DROP TABLE IF EXISTS listings;')
 
 # Create the table with appropriate columns and constraints
+
     c.execute('''
     CREATE TABLE IF NOT EXISTS listings (
         zillow_ID INTEGER PRIMARY KEY NOT NULL,
@@ -30,6 +33,8 @@ def create_database():
     CREATE TABLE IF NOT EXISTS propertyDetails(
         zillow_ID INTEGER NOT NULL,
         streetAddress TEXT,
+        raw_json JSON,
+
 
         CONSTRAINT zillow_ID_FK FOREIGN KEY (zillow_ID)
         REFERENCES listings(zillow_ID)
@@ -59,7 +64,27 @@ def fill_database(dataframe):
     conn.commit()
     conn.close()
 
-def insert_property_db(zpid):
+def insert_property_db(zpid,data):
     conn = sqlite3.connect('zillow_listings.db')
     c = conn.cursor()
+    sql = 'SELECT COUNT(zillow_ID) FROM propertyDetails WHERE zillow_ID = ' + zpid
+    inDB = c.execute(sql).fetchall()
+    # print(inDB[0][0])
 
+    if (inDB[0][0] < 1):
+        c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
+
+    # sql = 'SELECT raw_json FROM propertyDetails LIMIT 1 '
+    # c.execute(sql)
+    # jsonRaw = c.fetchall()
+    # jsonStr = json.dumps(jsonRaw)
+    # jsonObj = json.loads(jsonStr)
+    # print(type(jsonObj))
+    # print(jsonObj['is_success'])
+
+
+    
+
+    conn.commit()
+    conn.close()
+ 
