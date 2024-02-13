@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash
 import pandas as pd
 import sqlite3
+from werkzeug.exceptions import abort
 from config import API_KEY
 
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
@@ -242,6 +243,28 @@ def comp():
             return render_template('comp.html', comps=[]), 500
     else:
         return render_template('comp.html', comps=[])
+    
+
+@app.route('/<int:zpid>')
+def property(zpid):
+    property = get_property_from_db(zpid)
+    return render_template('property.html', property=property)
+
+def get_property_from_db(zpid):
+    # Create a SQLite connection and cursor
+    conn = sqlite3.connect('zillow_listings.db')
+    c = conn.cursor()
+
+    # get the property details from the db
+    # NOTE: the name "zillow_ID" could change in the future and will have to change here as well
+    property = c.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()       # fetchone gets the result and stores it in property
+
+    conn.close()
+    if property is None:
+        abort(404)
+    return property
+
+
 
 
 if __name__ == "__main__":
