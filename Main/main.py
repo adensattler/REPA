@@ -3,7 +3,7 @@ import argparse
 import pandas as pd
 from data_acquisition import get_listings
 from data_acquisition import organize_property_details
-from create_database import create_database
+from create_database import create_database, fill_database
 from analysis import perform_analysis
 from prediction import predict
 
@@ -41,7 +41,7 @@ def main():
             # Takes all of the data and converts it into normalized, tabular data (.json_normalize)
             den_listings = pd.json_normalize(listing_response["data"]["cat1"]["searchResults"]["mapResults"])
             selected_den_listings = den_listings.loc[:, columns].dropna(thresh=13)
-            create_database(selected_den_listings)
+            fill_database(selected_den_listings)
         except:
             print("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
 

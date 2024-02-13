@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from create_database import create_database
+from create_database import create_database, fill_database
 
 def get_listings_gui(url:str, api_key:str)->str:
     scraper_api_url = "https://app.scrapeak.com/v1/scrapers/zillow/listing"
@@ -30,7 +30,7 @@ def get_listings_gui(url:str, api_key:str)->str:
     den_listings = pd.json_normalize(data["data"]["cat1"]["searchResults"]["mapResults"])
     
     selected_den_listings = den_listings.loc[:, columns_of_interest].dropna(thresh=13) # Discard rows with over 13 null values
-    create_database(selected_den_listings)
+    fill_database(selected_den_listings)
 
     return f"{num_of_properties_fetched} properties fetched."
 

@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 from config import API_KEY
 
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
-from create_database import create_database
+from create_database import create_database, fill_database
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
 import json
@@ -13,6 +13,7 @@ import json
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
+create_database()
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
@@ -72,7 +73,7 @@ def create():
             # Takes all of the data and converts it into normalized, tabular data (.json_normalize)
             den_listings = pd.json_normalize(listing_response["data"]["cat1"]["searchResults"]["mapResults"])
             selected_den_listings = den_listings.loc[:, columns].dropna(thresh=13)
-            create_database(selected_den_listings)
+            fill_database(selected_den_listings)
             return render_template('create.html', success_message = "Search was succesful!")
         except:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
