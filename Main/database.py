@@ -64,6 +64,41 @@ def fill_database(dataframe):
     conn.commit()
     conn.close()
 
+# This function given a zpid returns the raw json of a property
+# From the Database
+def get_JSON(zpid):
+    zpid = str(zpid)
+    conn = sqlite3.connect('zillow_listings.db')
+    c = conn.cursor()
+
+    sql = 'SELECT raw_json FROM propertyDetails WHERE zillow_ID =' +zpid
+    rows = c.execute(sql).fetchall()
+    dataRaw = rows[0][0]
+
+    return dataRaw
+
+
+# # INFO This function takes either a list of keys or a single key as well as the raw JSON
+# # and gets the the specific key data from the database
+# def data_from_JSON(keys, dataRaw):
+#     if type(keys) is not list: keys = [keys]
+
+#     response_values = []
+#     data = json.loads(dataRaw)
+#     for i in keys:
+#        response_values.append(data.get(i))
+#     return response_values
+
+# # Heres an example of how these two functions would work together
+
+# # jsonRaw = get_JSON(12947851)
+# # data = data_from_JSON("is_success", jsonRaw)
+
+# # the following also works:
+# # data = data_from_JSON(["is_success", "address", "bedrooms", "bathrooms"], jsonRaw)
+
+
+
 def insert_property_db(zpid,data):
     conn = sqlite3.connect('zillow_listings.db')
     c = conn.cursor()
@@ -73,21 +108,18 @@ def insert_property_db(zpid,data):
 
     if (inDB[0][0] < 1):
         c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
-        
-    #EXAMPLE: how to pull data from SQLite server
 
-    # sql = 'SELECT raw_json FROM propertyDetails LIMIT 1 '
-    # c.execute(sql)
-    # rows = c.fetchall()
-    # jsonRaw = rows[0][0]
-    # jsonObj = json.loads(jsonRaw)
-    # # jsonStr = json.dumps(jsonRaw)
-    # print(type(jsonObj))
+    data = json.loads(get_JSON(zpid))
+    update_property_db(zpid, "streetAddress" , data["data"]["address"]["streetAddress"])
 
-    # value = jsonObj.get("is_success")
-    # print(value)
+    conn.commit()
+    conn.close() 
 
+def update_property_db(zpid, field, data):
+    conn = sqlite3.connect('zillow_listings.db')
+    c = conn.cursor()
+    sql = 'UPDATE propertyDetails SET ' + field + ' = "' + data + '" WHERE zillow_ID = ' + zpid
+    c.execute(sql)
 
     conn.commit()
     conn.close()
- 
