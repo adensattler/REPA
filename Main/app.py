@@ -5,7 +5,8 @@ from werkzeug.exceptions import abort
 from config import API_KEY
 
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
-from create_database import create_database, fill_database
+from database import create_database, fill_database
+from data_acquisition import get_property_detail
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
 import json
@@ -255,7 +256,7 @@ def property_home():
             flash('zillow id is required!')
         else:
             # TODO: FUNCTION THAT GETS THE DATA FROM THE API
-            # data = get_property_details(zpid, API_KEY)
+            data = get_property_detail(zpid, API_KEY)
             
 
             # TODO:FUNCTION THAT TAKES THAT DATA AND ADDS IT TO THE DATABASE
