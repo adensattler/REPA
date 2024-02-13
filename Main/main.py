@@ -3,7 +3,7 @@ import argparse
 import pandas as pd
 from data_acquisition import get_listings
 from data_acquisition import organize_property_details
-from create_database import create_database, fill_database
+from database import create_database, fill_database
 from analysis import perform_analysis
 from prediction import predict
 
