@@ -255,11 +255,11 @@ def property_home():
         if not zpid:
             flash('zillow id is required!')
         else:
-            # TODO: FUNCTION THAT GETS THE DATA FROM THE API
+            #FUNCTION THAT GETS THE DATA FROM THE API
             data = get_property_detail(API_KEY, zpid)
             
 
-            # TODO:FUNCTION THAT TAKES THAT DATA AND ADDS IT TO THE DATABASE
+            #FUNCTION THAT TAKES THAT DATA AND ADDS IT TO THE DATABASE
             insert_property_db(zpid, data.text)
 
             # TODO: REDIRECT THE USER TO THE PROPERTY PAGE!!!!! (i think this is right)
