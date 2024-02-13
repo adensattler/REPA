@@ -224,8 +224,9 @@ please contact us at:
 * 
 
 ## Flask Setup!
+Execute these steps sequentially in your repo directory to initialize your development environment.
 
-1.) pip3 install virtualenv
-2.) virtualenv env
-3.) Mac: source env/bin/activate       on Windows: source \env\Scripts\activate.bat
-4.) pip3 install flask pandas
+* pip3 install virtualenv
+* virtualenv env
+* Mac: source env/bin/activate    or    Windows: source \env\Scripts\activate.bat
+* pip3 install flask pandas requests

@@ -9,10 +9,31 @@ from folium.plugins import HeatMap
 pd.options.display.float_format = '{:.2f}'.format
 pd.set_option('display.max_rows', None)
 
+def perform_prediction_gui(df):
+    denver_model = load_linear_regression_model('denver_model.pickle')
+
+    # Retrieve the necessary attributes for prediction
+    features = df[['num_beds', 'num_baths', 'area', 'tax_ass_val', 'latitude', 'longitude']]
+
+    # Make predictions using the models
+    denver_predictions = denver_model.predict(features)
+
+    # Calculate the difference between predicted prices and actual prices
+    df['denver_predicted'] = denver_predictions
+    df['denver_difference'] = df['denver_predicted'] - df['price']
+    
+    # Sort the houses based on the difference in descending order
+    df_sorted = df.sort_values('denver_difference', ascending=False)
+
+    # Return the top investments
+    return df_sorted[['zillow_ID', 'price', 'denver_predicted', 'denver_difference']].head()
+
+
 def load_linear_regression_model(filepath):
     with open(filepath, 'rb') as file:
         model = pickle.load(file)
     return model
+
 
 def perform_prediction(df):
     # Load the linear regression models
@@ -28,8 +49,6 @@ def perform_prediction(df):
     df['denver_predicted'] = denver_predictions
     df['denver_difference'] = df['denver_predicted'] - df['price']
 
-
-
     # Sort the houses based on the difference in descending order
     df_sorted = df.sort_values('denver_difference', ascending=False)
     
@@ -42,6 +61,7 @@ def perform_prediction(df):
     print()
 
     return df
+
 
 def scatter_plot_actual_predicted(df):
     plt.scatter(df['price'], df['denver_predicted'], color='blue', label='Predicted')

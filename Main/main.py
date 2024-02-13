@@ -26,7 +26,7 @@ def main():
 
     if args.url:
         try:
-            api_key = "a9fef9b3-771c-4f18-87c1-aee712b66b4c"
+            api_key = "33244655-efca-44b7-ada4-b8b5dd9b0e37"
             listing_url = args.url
 
             listing_response = get_listings(api_key, listing_url)
@@ -59,7 +59,7 @@ def main():
 
     if args.info:
         try:
-            api_key = "a9fef9b3-771c-4f18-87c1-aee712b66b4c"
+            api_key = "33244655-efca-44b7-ada4-b8b5dd9b0e37"
             zpid = args.info
             data, hist = organize_property_details(api_key, zpid)
             data = pd.json_normalize(data)
