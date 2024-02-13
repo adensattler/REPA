@@ -104,13 +104,14 @@ def insert_property_db(zpid,data):
     c = conn.cursor()
     sql = 'SELECT COUNT(zillow_ID) FROM propertyDetails WHERE zillow_ID = ' + zpid
     inDB = c.execute(sql).fetchall()
-    # print(inDB[0][0])
-
+        
     if (inDB[0][0] < 1):
         c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
+        conn.commit()
+        conn.close() 
 
-    data = json.loads(get_JSON(zpid))
-    update_property_db(zpid, "streetAddress" , data["data"]["address"]["streetAddress"])
+        data = json.loads(get_JSON(zpid))
+        update_property_db(zpid, "streetAddress" , data["data"]["address"]["streetAddress"])
 
     conn.commit()
     conn.close() 
