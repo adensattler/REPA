@@ -21,10 +21,10 @@
     <!-- light navbar options: navbar navbar-expand-lg navbar-light bg-light -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            
+
             <!-- Brand -->
             <a class="navbar-brand" href="{{ url_for('home')}}">REPA</a>
-            
+
             <!-- NAV Burger -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -40,8 +40,9 @@
 
                     <!-- Archived Routes -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> 
-                            Archived 
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Archived
                         </a>
                         <ul class="dropdown-menu">
                             <!-- Listings Search Routes -->
@@ -49,7 +50,9 @@
                             <li><a class="dropdown-item" href="{{ url_for('analyze')}}">--analyze</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('predict')}}">--predict</a></li>
 
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
                             <!-- Property Details Routes -->
                             <li><a class="dropdown-item" href="{{ url_for('info')}}">--info</a></li>
@@ -71,6 +74,19 @@
             </div>
         </div>
     </nav>
+    
+    <!-- Display flashed messages here -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-info">
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
 
     <div class="container">{% block content %} {% endblock %}</div>
 

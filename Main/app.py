@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, url_for, flash, redirect
 import pandas as pd
 import sqlite3
 from werkzeug.exceptions import abort
@@ -243,13 +243,43 @@ def comp():
             return render_template('comp.html', comps=[]), 500
     else:
         return render_template('comp.html', comps=[])
-    
 
+# ROUTE TO THE PROPERTY SEARCH PAGE
+@app.route('/property_home')
+def index():
+    if request.method == 'POST':
+        zpid = request.form['zpid'] # Get Zillow ID from HTML form
+
+        if not zpid:
+            flash('zillow id is required!')
+        else:
+            # TODO: FUNCTION THAT GETS THE DATA FROM THE API
+            # data = get_property_details(zpid, API_KEY)
+            
+
+            # TODO:FUNCTION THAT TAKES THAT DATA AND ADDS IT TO THE DATABASE
+            
+
+            # TODO: REDIRECT THE USER TO THE PROPERTY PAGE!!!!! (i think this is right)
+            # return redirect(url_for('property', zpid=zpid))
+            # ^^^ until we get the db working we don't have to redirect
+            pass
+
+    # FUNCTION THAT GETS ALL THE PROPERTIES FROM THE DATABASE
+    properties = get_prop_search_history()
+
+    # pass the properties to the html page!
+    return render_template('property_home.html', properties=properties)
+
+# ROUTE TO A SPECIFIC PROPERTY PAGE
 @app.route('/<int:zpid>')
 def property(zpid):
     property = get_property_from_db(zpid)
     return render_template('property.html', property=property)
 
+
+
+# SOME HELPER FUNCTIONS
 def get_property_from_db(zpid):
     # Create a SQLite connection and cursor
     conn = sqlite3.connect('zillow_listings.db')
@@ -264,6 +294,15 @@ def get_property_from_db(zpid):
         abort(404)
     return property
 
+def get_prop_search_history():
+    # Create a SQLite connection and cursor
+    conn = sqlite3.connect('zillow_listings.db')
+    c = conn.cursor()
+
+    # store all the historical properties from the database
+    properties = c.execute('SELECT * FROM propertyDetails').fetchall()
+    conn.close()
+    return properties
 
 
 
