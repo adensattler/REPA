@@ -246,7 +246,7 @@ def comp():
 
 # ROUTE TO THE PROPERTY SEARCH PAGE
 @app.route('/property_home')
-def index():
+def property_home():
     if request.method == 'POST':
         zpid = request.form['zpid'] # Get Zillow ID from HTML form
 
@@ -266,7 +266,8 @@ def index():
             pass
 
     # FUNCTION THAT GETS ALL THE PROPERTIES FROM THE DATABASE
-    properties = get_prop_search_history()
+    #properties = get_prop_search_history()
+    properties = ""
 
     # pass the properties to the html page!
     return render_template('property_home.html', properties=properties)
