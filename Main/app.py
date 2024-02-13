@@ -3,7 +3,7 @@ import pandas as pd
 import sqlite3
 from config import API_KEY
 
-from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
+from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address, save_api_response
 from create_database import create_database
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
@@ -122,6 +122,15 @@ def dict_to_html(data_dict):
         html += f"<li><strong>{key}:</strong> {value}</li>"
     html += "</ul>"
     return html
+
+# Temporary function to examine API reponse
+# @app.route('/info', methods=('GET', 'POST'))
+# def info():
+#     if request.method == 'POST':
+#         zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
+#         save_api_response(API_KEY, zillow_id)
+
+#     return render_template('info.html')
 
 @app.route('/info', methods=('GET', 'POST'))
 def info():

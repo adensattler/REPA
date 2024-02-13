@@ -1,3 +1,4 @@
+import json
 import requests
 import pandas as pd
 from create_database import create_database
@@ -67,6 +68,19 @@ def get_property_detail(api_key, zpid):
 
   return requests.request("GET", url, params=querystring)
 
+# Temporary function to examine API reponse
+def save_api_response(api_key, zpid):
+    response = get_property_detail(api_key, zpid)
+
+    if response.status_code == 200: # Successful API call: Status 200
+        data = response.json()
+
+        with open("property_detail.json", "w") as json_file:
+            json.dump(data, json_file)
+        
+        print("Data saved to property_detail.json successfully.")
+    else:
+        print(f"Error: {response.status_code} - {response.reason}")
 
 def organize_property_details(api_key, zpid):
     response = get_property_detail(api_key, zpid)
