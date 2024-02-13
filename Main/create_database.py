@@ -30,12 +30,20 @@ def create_database():
     CREATE TABLE IF NOT EXISTS propertyDetails(
         zillow_ID INTEGER NOT NULL,
         streetAddress TEXT,
-        isFavorite INTEGER NOT NULL,
 
         CONSTRAINT zillow_ID_FK FOREIGN KEY (zillow_ID)
         REFERENCES listings(zillow_ID)
     )
     ''')
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS favoriteList(
+        zillow_ID INTEGER NOT NULL,
+        
+        CONSTRAINT zillow_ID_FK FOREIGN KEY (zillow_ID)
+        REFERENCES listings(zillow_ID)
+    )
+
+              ''')
     conn.commit()
     conn.close()
 
