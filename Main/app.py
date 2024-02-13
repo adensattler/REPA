@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 from config import API_KEY
 
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
-from database import create_database, fill_database
+from database import create_database, fill_database,insert_property_db
 from data_acquisition import get_property_detail
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
@@ -247,7 +247,7 @@ def comp():
         return render_template('comp.html', comps=[])
 
 # ROUTE TO THE PROPERTY SEARCH PAGE
-@app.route('/property_home')
+@app.route('/property_home', methods=('GET', 'POST'))
 def property_home():
     if request.method == 'POST':
         zpid = request.form['zpid'] # Get Zillow ID from HTML form
@@ -256,11 +256,11 @@ def property_home():
             flash('zillow id is required!')
         else:
             # TODO: FUNCTION THAT GETS THE DATA FROM THE API
-            data = get_property_detail(zpid, API_KEY)
+            data = get_property_detail(API_KEY, zpid)
             
 
             # TODO:FUNCTION THAT TAKES THAT DATA AND ADDS IT TO THE DATABASE
-            
+            insert_property_db(zpid, data.text)
 
             # TODO: REDIRECT THE USER TO THE PROPERTY PAGE!!!!! (i think this is right)
             # return redirect(url_for('property', zpid=zpid))
