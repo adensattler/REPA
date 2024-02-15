@@ -126,3 +126,41 @@ def update_property_db(zpid, field, data):
 
     conn.commit()
     conn.close()
+
+
+# SOME HELPER FUNCTIONS
+def get_property_from_db(zpid):
+    """Returns property data from an SQL query as a dictionary."""
+    try:
+        conn = sqlite3.connect('zillow_listings.db')
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        property = cursor.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+        if property is not None:
+            return dict(property)
+        else:
+            return None
+    except Exception as e:
+        print(f"Failed to execute. Query: 'SELECT * FROM propertyDetails WHERE zillow_ID = ?'\n with error:\n{e}")
+        return None
+    finally:
+        conn.close()
+
+def get_prop_search_history():
+    properties = sql_data_to_list_of_dicts("zillow_listings.db", "SELECT * FROM propertyDetails")
+    return properties
+
+def sql_data_to_list_of_dicts(path_to_db, select_query):
+    """Returns data from an SQL query as a list of dicts."""
+    try:
+        conn = sqlite3.connect(path_to_db)
+        conn.row_factory = sqlite3.Row
+        things = conn.execute(select_query).fetchall()
+        unpacked = [{k: item[k] for k in item.keys()} for item in things]
+        return unpacked
+    except Exception as e:
+        print(f"Failed to execute. Query: {select_query}\n with error:\n{e}")
+        return []
+    finally:
+        conn.close()
+
