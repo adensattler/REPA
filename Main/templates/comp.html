@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{% block title %} Run <b>--nearby</b> on a given Zillow ID {% endblock %}</h1>
+<h1>{% block title %} Run <b>--comp</b> on a given Zillow ID {% endblock %}</h1>
 
 <form method="post">
     <div class="form-group">
@@ -22,15 +22,22 @@
 {% endif %}
 {% endwith %}
 
-{% if nearby %}
+
+<!-- Display clickable links to comperable properties-->
+
+{% if comps %}
 <br>
 <div>
-    <h2>Nearby Cities:</h2>
+    <h2>Comparable Properties:</h2>
     <ul>
-        {% for city in nearby %}
-        <li>{{ city }}</li>
+        {% for comp in comps %}
+        <li><a href="{{ comp }}" target="_blank">{{ comp }}</a></li>
         {% endfor %}
     </ul>
+</div>
+{% else %}
+<div class="alert alert-warning">
+    No comparable properties found.
 </div>
 {% endif %}
 

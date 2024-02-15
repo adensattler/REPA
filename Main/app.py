@@ -1,16 +1,21 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, url_for, flash, redirect
 import pandas as pd
 import sqlite3
+from werkzeug.exceptions import abort
 from config import API_KEY
 
-from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address, save_api_response
+from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address, save_api_response, get_property_detail
 from create_database import create_database
+from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
+from database import create_database, fill_database,insert_property_db
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
+import json
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
+create_database()
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
@@ -81,7 +86,7 @@ def create():
             # Takes all of the data and converts it into normalized, tabular data (.json_normalize)
             den_listings = pd.json_normalize(listing_response["data"]["cat1"]["searchResults"]["mapResults"])
             selected_den_listings = den_listings.loc[:, columns].dropna(thresh=13)
-            create_database(selected_den_listings)
+            fill_database(selected_den_listings)
             return render_template('create.html', success_message = "Search was succesful!")
         except:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
@@ -153,45 +158,34 @@ def info():
 @app.route('/describe', methods=('GET', 'POST'))
 def describe():
     if request.method == 'POST':
-        zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
-        property_description = get_description(API_KEY, zillow_id)
-        
-        if not property_description:
-            flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
-        else:
-            return render_template('describe.html', description=property_description)
+        try:
+            data = pd.read_json('data.json')
+            return render_template('describe.html', description=data['description'][0][0])
+        except:
+            flash("Error: Please run --info command first")
 
     return render_template('describe.html')
 
 # runs --info and subsequently runs --year on a given zpid
 @app.route('/year', methods=('GET','POST'))
 def year():
-    # run --info with zpid obtained from form
-    try:
-        homeinfo(request.form['zpid'])
-        # run --year after establishing --info
-        data = pd.read_json('data.json')
-        print(data['year built'][0][0])
-        flash(data['year built'][0][0])
-    except:
-        print("Error: Please check that the ZPID is valid and try again. If the problem persists, check if your API key has expired for the month.")
-    
+    if request.method == 'POST':
+        try:
+            data = pd.read_json('data.json')
+            return render_template('year.html', year=data['year built'][0][0])
+        except:
+            flash("Error: Please run --info command first")
     return render_template('year.html')
 
 # runs --info and subsequently runs --nearby on a given zpid
 @app.route('/nearby', methods=('GET','POST'))
 def nearby():
-    # run --info with zpid obtained from form
-    try:
-        homeinfo(request.form['zpid'])
-        # run --nearby after establishing --info
-        data = pd.read_json('data.json')
-        for _ in range(len(data['nearby cities'][0])):
-            print(data['nearby cities'][0][_])
-            flash(data['nearby cities'][0][_])
-    except:
-        print("Error: Please check that the ZPID is valid and try again. If the problem persists, check if your API key has expired for the month.")
-
+    if request.method == 'POST':
+        try:
+            data = pd.read_json('data.json')
+            return render_template('nearby.html', nearby=data['nearby cities'][0])
+        except:
+            print("Error: Please run --info command first")
     return render_template('nearby.html')
 
 # homeinfo function to reduce size of dependent functions (same functionality as --info)
@@ -207,28 +201,134 @@ def homeinfo(zpid):
 @app.route('/addr', methods=('GET', 'POST'))
 def addr():
     if request.method == 'POST':
-        zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
-        property_address = get_address(API_KEY, zillow_id)
-        
-        if not property_address:
-            flash("Error: Please check that the Zillow ID is valid and try again. If the problem persists, check if your API key has expired for the month.")
-        else:
-            return render_template('addr.html', address=property_address)
+        try:
+            data = pd.read_json('data.json')                    # read the data from the property details json file if it exists
+            property_address = data['street address'][0][0]     # get the street address from the data
+
+            return render_template('addr.html', address=property_address)       # render the addr template with address
+        except:
+            flash("Error: Please run --info command first")
 
     return render_template('addr.html')
 
 @app.route('/hist', methods=('GET', 'POST'))
 def hist():
     if request.method == 'POST':
-
         try:
             hist_results = pd.read_json('hist.json')
             return render_template('hist.html', hist_results=hist_results.to_html())
-
         except:
             flash("Error: Please run --info command first")
         
     return render_template('hist.html')
+
+@app.route('/school', methods=('GET', 'POST'))
+def school():
+    if request.method == 'POST':
+        try:
+            
+            zpid = request.form.get('zpid')  # Retrieve Zillow ID from the form data
+
+            
+            with open('data.json', 'r') as file:  # Load property details from data.json
+                property_data = json.load(file)
+
+            nearby_schools = property_data.get('schools', {}).get('0', [])    # Retrieve nearby schools from the property data
+
+            if not nearby_schools:
+                flash("Error: Nearby schools information is not found.")
+            else:
+                return render_template('school.html', nearby=nearby_schools)
+
+        except Exception as e:
+            flash(f"Error: {str(e)}")
+
+    return render_template('school.html')
+
+@app.route('/comp', methods=('GET', 'POST'))
+def comp():
+    if request.method == 'POST':
+        try:
+            with open('data.json', 'r') as file:
+                data = json.load(file)
+            
+            comps_dict = data.get('comps', {})
+        
+            comps = comps_dict.get('0', [])
+
+            print("Loaded comparable properties:", comps)
+
+            return render_template('comp.html', comps=comps)
+        
+        except Exception as e:
+            print("Error occurred:", e)
+            flash(f"An error occurred: {e}")
+            return render_template('comp.html', comps=[]), 500
+    else:
+        return render_template('comp.html', comps=[])
+
+# ROUTE TO THE PROPERTY SEARCH PAGE
+@app.route('/property_home', methods=('GET', 'POST'))
+def property_home():
+    if request.method == 'POST':
+        zpid = request.form['zpid'] # Get Zillow ID from HTML form
+
+        if not zpid:
+            flash('zillow id is required!')
+        else:
+            #FUNCTION THAT GETS THE DATA FROM THE API
+            data = get_property_detail(API_KEY, zpid)
+            
+
+            #FUNCTION THAT TAKES THAT DATA AND ADDS IT TO THE DATABASE
+            insert_property_db(zpid, data.text)
+
+            # TODO: REDIRECT THE USER TO THE PROPERTY PAGE!!!!! (i think this is right)
+            # return redirect(url_for('property', zpid=zpid))
+            # ^^^ until we get the db working we don't have to redirect
+            pass
+
+    # FUNCTION THAT GETS ALL THE PROPERTIES FROM THE DATABASE
+    #properties = get_prop_search_history()
+    properties = ""
+
+    # pass the properties to the html page!
+    return render_template('property_home.html', properties=properties)
+
+# ROUTE TO A SPECIFIC PROPERTY PAGE
+@app.route('/<int:zpid>')
+def property(zpid):
+    property = get_property_from_db(zpid)
+    return render_template('property.html', property=property)
+
+
+
+# SOME HELPER FUNCTIONS
+def get_property_from_db(zpid):
+    # Create a SQLite connection and cursor
+    conn = sqlite3.connect('zillow_listings.db')
+    c = conn.cursor()
+
+    # get the property details from the db
+    # NOTE: the name "zillow_ID" could change in the future and will have to change here as well
+    property = c.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()       # fetchone gets the result and stores it in property
+
+    conn.close()
+    if property is None:
+        abort(404)
+    return property
+
+def get_prop_search_history():
+    # Create a SQLite connection and cursor
+    conn = sqlite3.connect('zillow_listings.db')
+    c = conn.cursor()
+
+    # store all the historical properties from the database
+    properties = c.execute('SELECT * FROM propertyDetails').fetchall()
+    conn.close()
+    return properties
+
+
 
 if __name__ == "__main__":
     app.run()

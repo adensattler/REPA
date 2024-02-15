@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{% block title %} Run <b>--nearby</b> on a given Zillow ID {% endblock %}</h1>
+<h1>{% block title %} Run <b>--school</b> on a given Zillow ID {% endblock %}</h1>
 
 <form method="post">
     <div class="form-group">
@@ -22,17 +22,17 @@
 {% endif %}
 {% endwith %}
 
+<!-- Display nearby schools if available -->
 {% if nearby %}
 <br>
 <div>
-    <h2>Nearby Cities:</h2>
+    <h2>Nearby Schools:</h2>
     <ul>
-        {% for city in nearby %}
-        <li>{{ city }}</li>
+        {% for school in nearby %}
+        <li>{{ school }}</li>
         {% endfor %}
     </ul>
 </div>
 {% endif %}
-
 
 {% endblock %}

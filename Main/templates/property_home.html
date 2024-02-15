@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Page Title -->
+<h1>{% block title %} Get Property Details! {% endblock %}</h1>
+
+<!-- Add search bar and submit button for an address/zpid here: -->
+<form method="post">
+    <div class="form-group">
+        <label for="zpid">Please enter a Zillow ID:</label>
+
+        <input type="number" name="zpid"
+            placeholder="Zillow ID" class="form-control"
+            value="{{ request.form['zpid'] }}"></input>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+
+
+
+<!-- Add other page details here: -->
+
+
+
+
+
+<!-- Displays ALL Properties in DB (History essentially) -->
+<!-- right now it is just a series of links but eventually each property will be displayed w/ a bootstrap CARD -->
+{% for property in properties %}
+<!-- Links to the property route and passes the zillow id as a parameter! -->
+<a href=" {{ url_for('property', zpid=property['zillow_ID']) }} ">
+    <h2>{{ property['address'] }}</h2>
+</a>
+<hr>
+{% endfor %}
+
+{% endblock %}
