@@ -271,7 +271,7 @@ def comp():
 # --------------------------------------------------------------------------------------------------------
 
 # ROUTE TO A SPECIFIC PROPERTY PAGE
-@app.route('/<int:zpid>')
+@app.route('/property/<int:zpid>')
 def property(zpid):
     property = get_property_from_db(zpid)
     return render_template('property.html', property=property)
@@ -285,12 +285,14 @@ def property_home():
         if not zpid:
             flash('zillow id is required!')
         else:
-            #FUNCTION THAT GETS THE DATA FROM THE API
+            # Retrieve raw property data from the API
             data = get_property_detail(API_KEY, zpid)
             
-
-            #FUNCTION THAT TAKES THAT DATA AND ADDS IT TO THE DATABASE
+            # Add property data to the database
             insert_property_db(zpid, data.text)
+
+            # TODO: Retrieve organized property details from the database
+            # write function here:
 
             # TODO: REDIRECT THE USER TO THE PROPERTY PAGE!!!!! (i think this is right)
             # return redirect(url_for('property', zpid=zpid))
@@ -299,29 +301,48 @@ def property_home():
 
     # FUNCTION THAT GETS ALL THE PROPERTIES FROM THE DATABASE
     properties = get_prop_search_history()
-    #print(properties)
 
     # pass the properties to the html page!
     #properties_list = properties.to_dict(orient='records')
     return render_template('property_home.html', properties=properties)
-    #return render_template('property_home.html')
 
 
 
 # SOME HELPER FUNCTIONS
 def get_property_from_db(zpid):
-    # Create a SQLite connection and cursor
-    conn = sqlite3.connect('zillow_listings.db')
-    c = conn.cursor()
+    """Returns data from an SQL query as a dictionary."""
+    try:
+        con = sqlite3.connect('zillow_listings.db')
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        property = cursor.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+        if property is not None:
+            return dict(property)
+        else:
+            return None
+    except Exception as e:
+        print(f"Failed to execute. Query: 'SELECT * FROM propertyDetails WHERE zillow_ID = ?'\n with error:\n{e}")
+        return None
+    finally:
+        con.close()
 
-    # get the property details from the db
-    # NOTE: the name "zillow_ID" could change in the future and will have to change here as well
-    property = c.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()       # fetchone gets the result and stores it in property
-
-    conn.close()
-    if property is None:
-        abort(404)
-    return property
+def sql_data_to_dict(path_to_db, select_query):
+    """Returns data from an SQL query as a dictionary."""
+    try:
+        con = sqlite3.connect(path_to_db)
+        con.row_factory = sqlite3.Row
+        cursor = con.cursor()
+        cursor.execute(select_query)
+        row = cursor.fetchone()
+        if row is not None:
+            return dict(row)
+        else:
+            return None
+    except Exception as e:
+        print(f"Failed to execute. Query: {select_query}\n with error:\n{e}")
+        return None
+    finally:
+        con.close()
 
 def get_prop_search_history():
     # Create a SQLite connection
