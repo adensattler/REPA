@@ -4,9 +4,10 @@ import sqlite3
 from werkzeug.exceptions import abort
 from config import API_KEY
 
+from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address, save_api_response, get_property_detail
+from create_database import create_database
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
 from database import create_database, fill_database,insert_property_db
-from data_acquisition import get_property_detail
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
 import json
@@ -51,6 +52,17 @@ def home():
 
             return render_template('home.html', result=list_to_html(address_list))
     return render_template('home.html')
+
+@app.route('/property_details', methods=('GET', 'POST'))
+def property_details():
+    if request.method == 'POST':
+        search_term = request.form['search_term']
+        if search_term.isdigit():
+            callback = "You searched by Zillow ID."
+        else:
+            callback = "You searched by street address."
+        return render_template('property_details.html', result=callback)
+    return render_template('property_details.html')
 
 @app.route('/create', methods=('GET', 'POST'))
 def create():
@@ -115,6 +127,15 @@ def dict_to_html(data_dict):
         html += f"<li><strong>{key}:</strong> {value}</li>"
     html += "</ul>"
     return html
+
+# Temporary function to examine API reponse
+# @app.route('/info', methods=('GET', 'POST'))
+# def info():
+#     if request.method == 'POST':
+#         zillow_id = request.form['zpid'] # Get Zillow ID from HTML form
+#         save_api_response(API_KEY, zillow_id)
+
+#     return render_template('info.html')
 
 @app.route('/info', methods=('GET', 'POST'))
 def info():
