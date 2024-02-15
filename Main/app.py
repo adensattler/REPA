@@ -270,12 +270,6 @@ def comp():
 # NEW ROUTES FOR VERSION 2 OF THE APP
 # --------------------------------------------------------------------------------------------------------
 
-# ROUTE TO A SPECIFIC PROPERTY PAGE
-@app.route('/property/<int:zpid>')
-def property(zpid):
-    property = get_property_from_db(zpid)
-    return render_template('property.html', property=property)
-
 # ROUTE TO THE PROPERTY SEARCH PAGE
 @app.route('/property_home', methods=('GET', 'POST'))
 def property_home():
@@ -291,30 +285,28 @@ def property_home():
             # Add property data to the database
             insert_property_db(zpid, data.text)
 
-            # TODO: Retrieve organized property details from the database
-            # write function here:
-
-            # TODO: REDIRECT THE USER TO THE PROPERTY PAGE!!!!! (i think this is right)
+            # Redirect the user to the property page on submission
             return redirect(url_for('property', zpid=zpid))
-            # ^^^ until we get the db working we don't have to redirect
-            pass
 
-    # FUNCTION THAT GETS ALL THE PROPERTIES FROM THE DATABASE
+    # Retrieve property search history from the database
     properties = get_prop_search_history()
 
-    # pass the properties to the html page!
-    #properties_list = properties.to_dict(orient='records')
+    # Pass the properties to the html page as a list of dictionaries!
     return render_template('property_home.html', properties=properties)
 
-
+# ROUTE TO A SPECIFIC PROPERTY PAGE
+@app.route('/property/<int:zpid>')
+def property(zpid):
+    property = get_property_from_db(zpid)
+    return render_template('property.html', property=property)
 
 # SOME HELPER FUNCTIONS
 def get_property_from_db(zpid):
-    """Returns data from an SQL query as a dictionary."""
+    """Returns property data from an SQL query as a dictionary."""
     try:
-        con = sqlite3.connect('zillow_listings.db')
-        con.row_factory = sqlite3.Row
-        cursor = con.cursor()
+        conn = sqlite3.connect('zillow_listings.db')
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
         property = cursor.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
         if property is not None:
             return dict(property)
@@ -324,53 +316,25 @@ def get_property_from_db(zpid):
         print(f"Failed to execute. Query: 'SELECT * FROM propertyDetails WHERE zillow_ID = ?'\n with error:\n{e}")
         return None
     finally:
-        con.close()
-
-def sql_data_to_dict(path_to_db, select_query):
-    """Returns data from an SQL query as a dictionary."""
-    try:
-        con = sqlite3.connect(path_to_db)
-        con.row_factory = sqlite3.Row
-        cursor = con.cursor()
-        cursor.execute(select_query)
-        row = cursor.fetchone()
-        if row is not None:
-            return dict(row)
-        else:
-            return None
-    except Exception as e:
-        print(f"Failed to execute. Query: {select_query}\n with error:\n{e}")
-        return None
-    finally:
-        con.close()
+        conn.close()
 
 def get_prop_search_history():
-    # Create a SQLite connection
-    conn = sqlite3.connect('zillow_listings.db')
-
-    # Read data into a DataFrame
-    dataframe = pd.read_sql_query("SELECT * FROM propertyDetails", conn)
-
     properties = sql_data_to_list_of_dicts("zillow_listings.db", "SELECT * FROM propertyDetails")
-
-    # Close the connection
-    conn.close()
-
     return properties
 
 def sql_data_to_list_of_dicts(path_to_db, select_query):
     """Returns data from an SQL query as a list of dicts."""
     try:
-        con = sqlite3.connect(path_to_db)
-        con.row_factory = sqlite3.Row
-        things = con.execute(select_query).fetchall()
+        conn = sqlite3.connect(path_to_db)
+        conn.row_factory = sqlite3.Row
+        things = conn.execute(select_query).fetchall()
         unpacked = [{k: item[k] for k in item.keys()} for item in things]
         return unpacked
     except Exception as e:
         print(f"Failed to execute. Query: {select_query}\n with error:\n{e}")
         return []
     finally:
-        con.close()
+        conn.close()
 
 
 
