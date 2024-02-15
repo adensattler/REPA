@@ -295,7 +295,7 @@ def property_home():
             # write function here:
 
             # TODO: REDIRECT THE USER TO THE PROPERTY PAGE!!!!! (i think this is right)
-            # return redirect(url_for('property', zpid=zpid))
+            return redirect(url_for('property', zpid=zpid))
             # ^^^ until we get the db working we don't have to redirect
             pass
 

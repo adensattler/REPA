@@ -100,23 +100,23 @@ def get_JSON(zpid):
 
 
 def insert_property_db(zpid,data):
-    conn = sqlite3.connect('zillow_listings.db')
-    c = conn.cursor()
-
-    # use parameterized query!
-    sql = 'SELECT COUNT(zillow_ID) FROM propertyDetails WHERE zillow_ID = ?'
-    inDB = c.execute(sql, (zpid,)).fetchone()
-        
-    if (inDB[0][0] < 1):
-        c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
-        conn.commit()
-        conn.close() 
-
-        data = json.loads(get_JSON(zpid))
-        update_property_db(zpid, "streetAddress" , data["data"]["address"]["streetAddress"])
-
-    conn.commit()
-    conn.close() 
+    try:
+        # Connect to the SQLite database
+        conn = sqlite3.connect('zillow_listings.db')
+        c = conn.cursor()
+        sql = 'SELECT COUNT(zillow_ID) FROM propertyDetails WHERE zillow_ID = ?'
+        inDB = c.execute(sql, (zpid,)).fetchone()[0]
+            
+        if (inDB < 1):
+            # Insert data into the table
+            c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
+            conn.commit()
+            data = json.loads(get_JSON(zpid))
+            update_property_db(zpid, "streetAddress" , data["data"]["address"]["streetAddress"])
+    except Exception as e:
+        print(f"Failed to execute. Query: insert_property_db\n with error:\n{e}")
+    finally:
+        conn.close()
 
 def update_property_db(zpid, field, data):
     conn = sqlite3.connect('zillow_listings.db')
