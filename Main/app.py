@@ -6,7 +6,7 @@ from config import API_KEY
 
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address, save_api_response, get_property_detail
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
-from database import create_database, fill_database,insert_property_db
+from database import *
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
 import json
@@ -299,11 +299,11 @@ def property_home():
 
     # FUNCTION THAT GETS ALL THE PROPERTIES FROM THE DATABASE
     properties = get_prop_search_history()
-    print(properties)
+    #print(properties)
 
     # pass the properties to the html page!
-    properties_list = properties.to_dict(orient='records')
-    return render_template('property_home.html', properties=properties_list)
+    #properties_list = properties.to_dict(orient='records')
+    return render_template('property_home.html', properties=properties)
     #return render_template('property_home.html')
 
 
@@ -324,17 +324,32 @@ def get_property_from_db(zpid):
     return property
 
 def get_prop_search_history():
-    # Create a SQLite connection and cursor
+    # Create a SQLite connection
     conn = sqlite3.connect('zillow_listings.db')
-    c = conn.cursor()
 
-    # store all the historical properties from the database
-    # properties = c.execute('SELECT * FROM propertyDetails').fetchall()
-    # conn.close()
-    database_connection = sqlite3.connect('zillow_listings.db')
-    dataframe = pd.read_sql_query("SELECT * FROM propertyDetails", database_connection)
-    database_connection.close()
-    return dataframe
+    # Read data into a DataFrame
+    dataframe = pd.read_sql_query("SELECT * FROM propertyDetails", conn)
+
+    properties = sql_data_to_list_of_dicts("zillow_listings.db", "SELECT * FROM propertyDetails")
+
+    # Close the connection
+    conn.close()
+
+    return properties
+
+def sql_data_to_list_of_dicts(path_to_db, select_query):
+    """Returns data from an SQL query as a list of dicts."""
+    try:
+        con = sqlite3.connect(path_to_db)
+        con.row_factory = sqlite3.Row
+        things = con.execute(select_query).fetchall()
+        unpacked = [{k: item[k] for k in item.keys()} for item in things]
+        return unpacked
+    except Exception as e:
+        print(f"Failed to execute. Query: {select_query}\n with error:\n{e}")
+        return []
+    finally:
+        con.close()
 
 
 
