@@ -9,8 +9,7 @@
     <div class="form-group">
         <label for="zpid">Please enter a Zillow ID:</label>
 
-        <input type="number" name="zpid"
-            placeholder="Zillow ID" class="form-control"
+        <input type="number" name="zpid" placeholder="Zillow ID" class="form-control"
             value="{{ request.form['zpid'] }}"></input>
     </div>
     <div class="form-group">
@@ -26,15 +25,18 @@
 
 
 
-
 <!-- Displays ALL Properties in DB (History essentially) -->
-<!-- right now it is just a series of links but eventually each property will be displayed w/ a bootstrap CARD -->
-{% for property in properties %}
-<!-- Links to the property route and passes the zillow id as a parameter! -->
-<a href=" {{ url_for('property', zpid=property['zillow_ID']) }} ">
-    <h2>{{ property['address'] }}</h2>
-</a>
-<hr>
+<div>
+    <!-- right now it is just a series of links but eventually each property will be displayed w/ a bootstrap CARD -->
+    {% for property in properties %}
+    <!-- Links to the property route and passes the zillow id as a parameter! -->
+    <!-- <a href=" {{ url_for('property', zpid=property['zillow_ID']) }} "> -->
+    <a href="">
+        <h2>{{ property['streetAddress'] }}</h2>
+    </a>
+    <hr>
+</div>
+
 {% endfor %}
 
 {% endblock %}

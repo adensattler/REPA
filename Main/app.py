@@ -5,7 +5,6 @@ from werkzeug.exceptions import abort
 from config import API_KEY
 
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address, save_api_response, get_property_detail
-from create_database import create_database
 from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
 from database import create_database, fill_database,insert_property_db
 from analysis import create_summary_table
@@ -267,6 +266,16 @@ def comp():
     else:
         return render_template('comp.html', comps=[])
 
+
+# NEW ROUTES FOR VERSION 2 OF THE APP
+# --------------------------------------------------------------------------------------------------------
+
+# ROUTE TO A SPECIFIC PROPERTY PAGE
+@app.route('/<int:zpid>')
+def property(zpid):
+    property = get_property_from_db(zpid)
+    return render_template('property.html', property=property)
+
 # ROUTE TO THE PROPERTY SEARCH PAGE
 @app.route('/property_home', methods=('GET', 'POST'))
 def property_home():
@@ -289,17 +298,13 @@ def property_home():
             pass
 
     # FUNCTION THAT GETS ALL THE PROPERTIES FROM THE DATABASE
-    #properties = get_prop_search_history()
-    properties = ""
+    properties = get_prop_search_history()
+    print(properties)
 
     # pass the properties to the html page!
-    return render_template('property_home.html', properties=properties)
-
-# ROUTE TO A SPECIFIC PROPERTY PAGE
-@app.route('/<int:zpid>')
-def property(zpid):
-    property = get_property_from_db(zpid)
-    return render_template('property.html', property=property)
+    properties_list = properties.to_dict(orient='records')
+    return render_template('property_home.html', properties=properties_list)
+    #return render_template('property_home.html')
 
 
 
@@ -324,9 +329,12 @@ def get_prop_search_history():
     c = conn.cursor()
 
     # store all the historical properties from the database
-    properties = c.execute('SELECT * FROM propertyDetails').fetchall()
-    conn.close()
-    return properties
+    # properties = c.execute('SELECT * FROM propertyDetails').fetchall()
+    # conn.close()
+    database_connection = sqlite3.connect('zillow_listings.db')
+    dataframe = pd.read_sql_query("SELECT * FROM propertyDetails", database_connection)
+    database_connection.close()
+    return dataframe
 
 
 

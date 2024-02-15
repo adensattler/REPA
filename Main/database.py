@@ -102,8 +102,10 @@ def get_JSON(zpid):
 def insert_property_db(zpid,data):
     conn = sqlite3.connect('zillow_listings.db')
     c = conn.cursor()
-    sql = 'SELECT COUNT(zillow_ID) FROM propertyDetails WHERE zillow_ID = ' + zpid
-    inDB = c.execute(sql).fetchall()
+
+    # use parameterized query!
+    sql = 'SELECT COUNT(zillow_ID) FROM propertyDetails WHERE zillow_ID = ?'
+    inDB = c.execute(sql, (zpid,)).fetchone()
         
     if (inDB[0][0] < 1):
         c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
