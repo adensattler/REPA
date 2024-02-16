@@ -85,11 +85,10 @@ def save_api_response(api_key, zpid):
 def get_image_from_json(json_file_path):
     with open(json_file_path, 'r') as file:
         data = json.load(file)
-        url = data["data"]["responsivePhotos"]["mixedSources"]["jpeg"][5]["url"]
-    
+        url = data['data']['responsivePhotos'][0]['mixedSources']['jpeg'][7]['url']
     response = requests.get(url)
     if response.status_code == 200:
-        with open(".", 'wb') as file:
+        with open("property_image.jpg", 'wb') as file:
             file.write(response.content)
         print("Image downloaded successfully.")
     else:

@@ -4,8 +4,7 @@ import sqlite3
 from werkzeug.exceptions import abort
 from config import API_KEY
 
-from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address, save_api_response, get_property_detail
-from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address
+from data_acquisition import *
 from database import *
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
