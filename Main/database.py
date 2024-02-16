@@ -138,9 +138,9 @@ def insert_property_db(zpid,data):
 
             print(str(get_value_from_property_db(zpid, "zestimate")))
 
-            #TODO: Schools
-            #TODO: Nearby Cities
-            #TODO: images
+            # TODO: Schools
+            # TODO: Nearby Cities
+            # TODO: images
 
             update_property_db(zpid, "description", data["data"]["description"])
 
