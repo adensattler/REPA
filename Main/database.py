@@ -165,7 +165,7 @@ def get_property_from_db(zpid):
         conn.close()
 
 def get_prop_search_history():
-    properties = sql_data_to_list_of_dicts("zillow_listings.db", "SELECT * FROM propertyDetails")
+    properties = sql_data_to_list_of_dicts("zillow_listings.db", "SELECT * FROM propertyDetails LIMIT 10")
     return properties
 
 def sql_data_to_list_of_dicts(path_to_db, select_query):

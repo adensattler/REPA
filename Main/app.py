@@ -3,8 +3,7 @@ import pandas as pd
 import sqlite3
 from werkzeug.exceptions import abort
 from config import API_KEY
-
-from data_acquisition import get_listings, get_listings_gui, organize_property_details, get_description, get_address, save_api_response, get_property_detail
+from data_acquisition import *
 from database import *
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
@@ -138,7 +137,8 @@ def property_home():
 @app.route('/property/<int:zpid>')
 def property(zpid):
     property = get_property_from_db(zpid)
-    return render_template('property.html', property=property)
+    rawjson = json.loads(get_JSON(zpid))
+    return render_template('property.html', property=property, rawjson=rawjson)
 
 
 if __name__ == "__main__":
