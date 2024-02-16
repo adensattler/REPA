@@ -7,5 +7,7 @@ c.execute(' DROP TABLE IF EXISTS propertyDetails;')
 c.execute(' DROP TABLE IF EXISTS favoriteList')
 c.execute(' DROP TABLE IF EXISTS listings;')
 
+# c.execute(' VACUUM ')
+
 conn.commit()
 conn.close()
