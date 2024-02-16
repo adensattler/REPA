@@ -33,6 +33,18 @@ def create_database():
     CREATE TABLE IF NOT EXISTS propertyDetails(
         zillow_ID INTEGER NOT NULL,
         streetAddress TEXT,
+        price INTEGER,
+        num_beds INTEGER,
+        num_baths INTEGER,
+        zestimate INTEGER,
+        sqft INTEGER,
+        price_per_sqft INTEGER,
+        house_type TEXT,
+        property_tax REAL,
+        nearby_schools BLOB,
+        nearby_cities BLOB,
+        images BLOB,
+        description TEXT,
         raw_json JSON,
 
 
@@ -112,7 +124,24 @@ def insert_property_db(zpid,data):
             c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
             conn.commit()
             data = json.loads(get_JSON(zpid))
+            
+            #Insert data for each column
             update_property_db(zpid, "streetAddress" , data["data"]["address"]["streetAddress"])
+            update_property_db(zpid, "price", data["data"]["price"])
+            update_property_db(zpid, "num_beds", data["data"]["bedrooms"])
+            update_property_db(zpid, "num_baths", data["data"]["bathrooms"])
+            update_property_db(zpid, "zestimate", data["data"]["zestimate"])
+            update_property_db(zpid, "sqft", data["data"]["adTargets"]["sqft"])
+            update_property_db(zpid, "price_per_sqft", data["data"]["resoFacts"]["pricePerSquareFoot"])
+            update_property_db(zpid, "property_tax", data["data"]["propertyTaxRate"])
+            update_property_db(zpid, "house_type", data["data"]["homeType"])
+
+            #TODO: Schools
+            #TODO: Nearby Cities
+            #TODO: images
+
+            update_property_db(zpid, "description", data["data"]["description"])
+
     except Exception as e:
         print(f"Failed to execute. Query: insert_property_db\n with error:\n{e}")
     finally:
@@ -121,7 +150,7 @@ def insert_property_db(zpid,data):
 def update_property_db(zpid, field, data):
     conn = sqlite3.connect('zillow_listings.db')
     c = conn.cursor()
-    sql = 'UPDATE propertyDetails SET ' + field + ' = "' + data + '" WHERE zillow_ID = ' + zpid
+    sql = 'UPDATE propertyDetails SET ' + field + ' = "' + str(data) + '" WHERE zillow_ID = ' + zpid
     c.execute(sql)
 
     conn.commit()
