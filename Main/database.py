@@ -153,7 +153,7 @@ def get_property_from_db(zpid):
         conn = sqlite3.connect('zillow_listings.db')
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        property = cursor.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+        property = cursor.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
         if property is not None:
             return dict(property)
         else:
