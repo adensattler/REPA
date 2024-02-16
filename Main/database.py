@@ -136,6 +136,8 @@ def insert_property_db(zpid,data):
             update_property_db(zpid, "property_tax", data["data"]["propertyTaxRate"])
             update_property_db(zpid, "house_type", data["data"]["homeType"])
 
+            print(str(get_value_from_property_db(zpid, "zestimate")))
+
             #TODO: Schools
             #TODO: Nearby Cities
             #TODO: images
@@ -156,6 +158,12 @@ def update_property_db(zpid, field, data):
     conn.commit()
     conn.close()
 
+def get_value_from_property_db(zpid, key):
+    conn = sqlite3.connect('zillow_listings.db')
+    c = conn.cursor()
+    sql = "SELECT " + str(key) + " FROM propertyDetails WHERE zillow_ID = " + str(zpid)
+    data = c.execute(sql).fetchone()
+    return data[0][0]
 
 # SOME HELPER FUNCTIONS
 def get_property_from_db(zpid):
