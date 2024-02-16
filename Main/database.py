@@ -90,25 +90,6 @@ def get_JSON(zpid):
     return dataRaw
 
 
-# # INFO This function takes either a list of keys or a single key as well as the raw JSON
-# # and gets the the specific key data from the database
-# def data_from_JSON(keys, dataRaw):
-#     if type(keys) is not list: keys = [keys]
-
-#     response_values = []
-#     data = json.loads(dataRaw)
-#     for i in keys:
-#        response_values.append(data.get(i))
-#     return response_values
-
-# # Heres an example of how these two functions would work together
-
-# # jsonRaw = get_JSON(12947851)
-# # data = data_from_JSON("is_success", jsonRaw)
-
-# # the following also works:
-# # data = data_from_JSON(["is_success", "address", "bedrooms", "bathrooms"], jsonRaw)
-
 
 
 def insert_property_db(zpid,data):
@@ -148,6 +129,8 @@ def insert_property_db(zpid,data):
         print(f"Failed to execute. Query: insert_property_db\n with error:\n{e}")
     finally:
         conn.close()
+
+
 
 def update_property_db(zpid, field, data):
     conn = sqlite3.connect('zillow_listings.db')
