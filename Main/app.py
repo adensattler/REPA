@@ -298,7 +298,8 @@ def property_home():
 @app.route('/property/<int:zpid>')
 def property(zpid):
     property = get_property_from_db(zpid)
-    return render_template('property.html', property=property)
+    rawjson = json.loads(get_JSON(zpid))
+    return render_template('property.html', property=property, rawjson=rawjson)
 
 
 if __name__ == "__main__":
