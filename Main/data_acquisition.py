@@ -82,6 +82,19 @@ def save_api_response(api_key, zpid):
     else:
         print(f"Error: {response.status_code} - {response.reason}")
 
+def get_image_from_json(json_file_path):
+    with open(json_file_path, 'r') as file:
+        data = json.load(file)
+        url = data["data"]["responsivePhotos"]["mixedSources"]["jpeg"][5]["url"]
+    
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(".", 'wb') as file:
+            file.write(response.content)
+        print("Image downloaded successfully.")
+    else:
+        print("Failed to download image. Status code:", response.status_code)
+
 def organize_property_details(api_key, zpid):
     response = get_property_detail(api_key, zpid)
     data = pd.json_normalize(response.json()['data'])
