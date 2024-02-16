@@ -91,7 +91,6 @@ def get_JSON(zpid):
 
 
 
-
 def insert_property_db(zpid,data):
     try:
         # Connect to the SQLite database
@@ -117,7 +116,6 @@ def insert_property_db(zpid,data):
             update_property_db(zpid, "property_tax", data["data"]["propertyTaxRate"])
             update_property_db(zpid, "house_type", data["data"]["homeType"])
 
-            print(str(get_value_from_property_db(zpid, "zestimate")))
 
             # TODO: Schools
             # TODO: Nearby Cities
