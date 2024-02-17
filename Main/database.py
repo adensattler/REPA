@@ -43,7 +43,7 @@ def create_database():
         property_tax REAL,
         nearby_schools BLOB,
         nearby_cities BLOB,
-        images BLOB,
+        images TEXT,
         description TEXT,
         raw_json JSON,
 
@@ -116,12 +116,13 @@ def insert_property_db(zpid,data):
             update_property_db(zpid, "property_tax", data["data"]["propertyTaxRate"])
             update_property_db(zpid, "house_type", data["data"]["homeType"])
 
-
             # TODO: Schools
             # TODO: Nearby Cities
-            # TODO: images
 
+            # TODO: Get more Images
+            update_property_db(zpid, "images", data['data']['responsivePhotos'][0]['mixedSources']['jpeg'][7]['url'])
             update_property_db(zpid, "description", data["data"]["description"])
+
 
     except Exception as e:
         print(f"Failed to execute. Query: insert_property_db\n with error:\n{e}")
