@@ -1,7 +1,7 @@
 import json
 import requests
 import pandas as pd
-from database import create_database, fill_database
+from database import fill_database, get_JSON
 
 def get_listings_gui(url:str, api_key:str)->str:
     scraper_api_url = "https://app.scrapeak.com/v1/scrapers/zillow/listing"
@@ -93,6 +93,9 @@ def get_image_from_json(json_file_path):
         print("Image downloaded successfully.")
     else:
         print("Failed to download image. Status code:", response.status_code)
+
+
+
 
 def organize_property_details(api_key, zpid):
     response = get_property_detail(api_key, zpid)
