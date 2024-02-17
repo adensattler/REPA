@@ -41,6 +41,8 @@ def create_database():
         price_per_sqft INTEGER,
         house_type TEXT,
         property_tax REAL,
+        latitude REAL,
+        longitude REAL,
         nearby_schools BLOB,
         nearby_cities BLOB,
         images TEXT,
@@ -114,6 +116,9 @@ def insert_property_db(zpid,data):
             update_property_db(zpid, "sqft", data["data"]["adTargets"]["sqft"])
             update_property_db(zpid, "price_per_sqft", data["data"]["resoFacts"]["pricePerSquareFoot"])
             update_property_db(zpid, "property_tax", data["data"]["propertyTaxRate"])
+
+            update_property_db(zpid, "latitude", data["data"]["adTargets"]["mlat"])
+            update_property_db(zpid, "longitude", data["data"]["adTargets"]["mlong"])
             update_property_db(zpid, "house_type", data["data"]["homeType"])
 
             # TODO: Schools
