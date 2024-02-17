@@ -144,10 +144,6 @@ class DatabaseManager:
                 self.update_property_db(zpid, "description", data["data"]["description"])
                 self.conn.commit()
             c.close()
-    
-    
-
-
 
     def update_property_db(self, zpid, field, data):
         with self.conn:
