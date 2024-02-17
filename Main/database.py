@@ -156,11 +156,12 @@ class DatabaseManager:
     def get_value_from_property_db(self, zpid, key):
         with self.conn:
             c = self.conn.cursor()
+            self.conn.row_factory = sqlite3.Row
             sql = "SELECT " + str(key) + " FROM propertyDetails WHERE zillow_ID = " + str(zpid)
             data = c.execute(sql).fetchone()
-            self.conn.commit()
+        self.conn.commit()
         c.close()
-        return data[0][0]
+        return data[0]
 
 # SOME HELPER FUNCTIONS
     def get_property_from_db(self, zpid):
