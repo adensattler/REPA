@@ -120,12 +120,17 @@ def property_home():
         else:
             # Retrieve raw property data from the API
             data = get_property_detail(API_KEY, zpid)
-            
-            # Add property data to the database
-            insert_property_db(zpid, data.text)
 
-            # Redirect the user to the property page on submission
-            return redirect(url_for('property', zpid=zpid))
+            #Check to make sure api returns a property
+            if not json.loads(data.text)["data"] == None:
+                
+                # Add property data to the database
+                insert_property_db(zpid, data.text)
+
+                # Redirect the user to the property page on submission
+                return redirect(url_for('property', zpid=zpid))
+            else:
+                flash('please enter a valid Zillow id')
 
     # Retrieve property search history from the database
     properties = get_prop_search_history()
