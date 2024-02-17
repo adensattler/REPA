@@ -4,7 +4,7 @@ import sqlite3
 from werkzeug.exceptions import abort
 from config import API_KEY
 from data_acquisition import *
-from database import *
+from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
 import json
@@ -12,7 +12,8 @@ import json
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
-create_database()
+database = DatabaseManager('zillow_listings.db')
+database.create_database()
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
@@ -80,6 +81,7 @@ def predict():
 
 @app.route('/create', methods=('GET', 'POST'))
 def create():
+    database = DatabaseManager('zillow_listings.db')
     # if a post request is made lets check out what was posted!
     if request.method == 'POST':
         # get the url from the form that was submitted
@@ -100,7 +102,7 @@ def create():
             # Takes all of the data and converts it into normalized, tabular data (.json_normalize)
             den_listings = pd.json_normalize(listing_response["data"]["cat1"]["searchResults"]["mapResults"])
             selected_den_listings = den_listings.loc[:, columns].dropna(thresh=13)
-            fill_database(selected_den_listings)
+            database.fill_database(selected_den_listings)
             return render_template('create.html', success_message = "Search was succesful!")
         except:
             flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
@@ -112,6 +114,7 @@ def create():
 # ROUTE TO THE PROPERTY SEARCH PAGE
 @app.route('/property_home', methods=('GET', 'POST'))
 def property_home():
+    database = DatabaseManager('zillow_listings.db')
     if request.method == 'POST':
         zpid = request.form['zpid'] # Get Zillow ID from HTML form
 
@@ -125,7 +128,7 @@ def property_home():
             if not json.loads(data.text)["data"] == None:
                 
                 # Add property data to the database
-                insert_property_db(zpid, data.text)
+                database.insert_property_db(zpid, data.text)
 
                 # Redirect the user to the property page on submission
                 return redirect(url_for('property', zpid=zpid))
@@ -133,7 +136,7 @@ def property_home():
                 flash('please enter a valid Zillow id')
 
     # Retrieve property search history from the database
-    properties = get_prop_search_history()
+    properties = database.get_prop_search_history()
 
     # Pass the properties to the html page as a list of dictionaries!
     return render_template('property_home.html', properties=properties)
@@ -141,8 +144,9 @@ def property_home():
 # ROUTE TO A SPECIFIC PROPERTY PAGE
 @app.route('/property/<int:zpid>')
 def property(zpid):
-    property = get_property_from_db(zpid)
-    rawjson = json.loads(get_JSON(zpid))
+    database = DatabaseManager('zillow_listings.db')
+    property = database.get_property_from_db(zpid)
+    rawjson = json.loads(database.get_JSON(zpid))
     return render_template('property.html', property=property, rawjson=rawjson)
 
 
