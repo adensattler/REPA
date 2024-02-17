@@ -4,6 +4,8 @@ import json
 
 class DatabaseManager:
     
+    _instance = None
+
     def __init__(self, db_name):
         self.db_name = db_name
         self.conn = sqlite3.connect(db_name)
@@ -16,6 +18,13 @@ class DatabaseManager:
         if self.conn:
             self.conn.commit()
             self.conn.close()
+    
+    def __new__(cls, db_name):
+        if cls._instance is None:
+            cls._instance = super(DatabaseManager, cls).__new__(cls)
+            cls._instance.db_name = db_name
+            cls._instance.conn = None
+        return cls._instance
 
 
     def create_database(self):
