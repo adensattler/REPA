@@ -7,10 +7,10 @@
 <!-- Add search bar and submit button for an address/zpid here: -->
 <form method="post">
     <div class="form-group">
-        <label for="zpid">Please enter a Zillow ID:</label>
+        <label for="search_term">Please enter the Zillow ID or street address of a property:</label>
 
-        <input type="number" name="zpid" placeholder="Zillow ID" class="form-control"
-            value="{{ request.form['zpid'] }}"></input>
+        <input type="text" name="search_term" placeholder="Zillow ID" class="form-control"
+            value="{{ request.form['search_term'] }}"></input>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
