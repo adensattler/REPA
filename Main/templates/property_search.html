@@ -2,14 +2,15 @@
 
 {% block content %}
 <!-- Page Title -->
-<h1>{% block title %} Get Property Details! {% endblock %}</h1>
+<h1>{% block title %} Property Search {% endblock %}</h1>
 
 <!-- Add search bar and submit button for an address/zpid here: -->
 <form method="post">
     <div class="form-group">
-        <label for="search_term">Please enter the Zillow ID or street address of a property:</label>
+        <label for="search_term">Receive a comphensive breakdown of any property on Zillow and any insights into whether it might be a good deal.</label>
+        
 
-        <input type="text" name="search_term" placeholder="Zillow ID" class="form-control"
+        <input type="text" name="search_term" placeholder="Search by ZPID or Address" class="form-control"
             value="{{ request.form['search_term'] }}"></input>
     </div>
     <div class="form-group">
