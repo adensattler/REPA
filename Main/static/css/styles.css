@@ -107,3 +107,20 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+.property-image-container {
+    height: 300px; /* Fixed height */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Space between image and button */
+}
+.property-image-container img {
+    width: auto;
+    max-height: 100%;
+}
+.add-favorite-btn {
+    display: block;
+    width: 100%;
+}
