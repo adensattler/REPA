@@ -1,3 +1,4 @@
+import re
 import json
 import requests
 import pandas as pd
@@ -158,17 +159,34 @@ def get_address(api_key, zpid):
         data = pd.json_normalize(api_response.json()['data'])
         return data['streetAddress'][0] + ' ' + data['zipcode'][0]
 
-def addr_to_zpid(api_key, street, city, state, zip_code):
+def address_to_zpid(api_key, address:str)->str:
     url = "https://app.scrapeak.com/v1/scrapers/zillow/zpidByAddress"
+    
+    # Regular expression pattern to extract street address, city, state, and zip code
+    pattern = r'(?P<street>[0-9A-Za-z\s#.,-]+),\s*(?P<city>[A-Za-z\s]+),\s*(?P<state>[A-Za-z]{2})\s+(?P<zip>\d{5}(?:-\d{4})?)'
 
-    querystring = {
-    "api_key": api_key,
-    "street":street,
-    "city":city,
-    "state":state,
-    "zipcode":zip_code
-    }
+    # Match the pattern against the address
+    match = re.match(pattern, address)
 
-    return requests.request("GET", url, params=querystring)
+    if match:
+        # Extract components
+        street = match.group('street')
+        city = match.group('city')
+        state = match.group('state')
+        zip_code = match.group('zip')
+
+        querystring = {
+        "api_key": api_key,
+        "street":street,
+        "city":city,
+        "state":state,
+        "zipcode":zip_code
+        }
+
+        api_response = requests.request("GET", url, params=querystring)
+        data = pd.json_normalize(api_response.json()['data'])
+        return data['zpid'][0]
+    else:
+        return "Please enter the address as: street, city, state, zipcode."
 
 

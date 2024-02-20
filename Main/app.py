@@ -116,24 +116,27 @@ def create():
 def property_home():
     database = DatabaseManager('zillow_listings.db')
     if request.method == 'POST':
-        zpid = request.form['zpid'] # Get Zillow ID from HTML form
+        zpid = request.form['search_term'] # Get Zillow ID or address from HTML form
+        
+        # If searching by address
+        if not zpid.isdigit():
+            zpid = address_to_zpid(API_KEY, address=zpid)
+            if not zpid.isdigit():
+                flash("Please enter the address as: street, city, state, zipcode.")
 
-        if not zpid:
-            flash('zillow id is required!')
+        # Retrieve raw property data from the API
+        data = get_property_detail(API_KEY, zpid)
+
+        #Check to make sure api returns a property
+        if not json.loads(data.text)["data"] == None:
+            
+            # Add property data to the database
+            database.insert_property_db(zpid, data.text)
+
+            # Redirect the user to the property page on submission
+            return redirect(url_for('property', zpid=zpid))
         else:
-            # Retrieve raw property data from the API
-            data = get_property_detail(API_KEY, zpid)
-
-            #Check to make sure api returns a property
-            if not json.loads(data.text)["data"] == None:
-                
-                # Add property data to the database
-                database.insert_property_db(zpid, data.text)
-
-                # Redirect the user to the property page on submission
-                return redirect(url_for('property', zpid=zpid))
-            else:
-                flash('please enter a valid Zillow id')
+            flash('Please enter a valid Zillow ID')
 
     # Retrieve property search history from the database
     properties = database.get_prop_search_history()
