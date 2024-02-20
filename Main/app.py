@@ -154,9 +154,15 @@ def property(zpid):
     return render_template('property.html', property=property, rawjson=rawjson)
 
 
-@app.route('/reset/')
+@app.route('/reset')
 def reset():
-    resetDB()
+    if request.method == "GET":
+        resetDB()
+        database = DatabaseManager('zillow_listings.db')
+        database.create_database()
+        return redirect('/')
+    
+    return redirect('/')
 
 
 

@@ -1,8 +1,5 @@
 import sqlite3 
 
-def Main():
-    resetDB()
-
 def resetDB():
     conn = sqlite3.connect('zillow_listings.db')
     c = conn.cursor()
@@ -15,3 +12,6 @@ def resetDB():
     
     conn.commit()
     conn.close()
+
+
+resetDB()
