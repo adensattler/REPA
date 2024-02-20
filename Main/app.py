@@ -117,7 +117,7 @@ def listings_search():
     database = DatabaseManager('zillow_listings.db')
     # if a post request is made lets check out what was posted!
     if request.method == 'POST':
-        if "search" in request.form:
+        if "url" in request.form:
                 
             # get the url from the form that was submitted
             url = request.form['url']
