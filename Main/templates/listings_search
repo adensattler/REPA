@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Search Listings // Add Listings to Database -->
+<h1>{% block title %} Search Listings {% endblock %}</h1>
+<form method="post">
+    <div class="form-group">
+        <label for="search">URL</label>
+
+        <input type="text" name="search" placeholder="paste url" class="form-control"
+            value="{{ request.form['url'] }}"></input>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+{% if success_message %}
+    <p>{{ success_message }}</p>
+{% endif %}
+
+<!-- Predict Button -->
+<h1>Run <b>--predict</b> on the created database </h1>
+
+<form method="post">
+    <div class="form-group">
+        <button type="submit" name="predict" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<!-- Place to display the results of predict -->
+<div>
+    {{predict_result|safe}}
+</div>
+
+
+<!-- Analyze Button -->
+<h1>Run <b>--analyze</b> on the created database</h1>
+
+<form method="post">
+    <div class="form-group">
+        <button type="submit" name="analyze" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<!-- Place to display the result of analyze -->
+<div>
+    {{analyze_result|safe}}
+</div>
+
+
+{% endblock %}
