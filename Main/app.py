@@ -8,6 +8,7 @@ from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
 import json
+from db_debug import resetDB
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
@@ -151,6 +152,12 @@ def property(zpid):
     property = database.get_property_from_db(zpid)
     rawjson = json.loads(database.get_JSON(zpid))
     return render_template('property.html', property=property, rawjson=rawjson)
+
+
+@app.route('/reset/')
+def reset():
+    resetDB()
+
 
 
 if __name__ == "__main__":
