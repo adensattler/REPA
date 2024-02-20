@@ -14,4 +14,3 @@ def resetDB():
     conn.close()
 
 
-resetDB()
