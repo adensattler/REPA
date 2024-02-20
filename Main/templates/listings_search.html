@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Search Listings // Add Listings to Database -->
+<h1>{% block title %} Search Listings {% endblock %}</h1>
+<p>Search an area on Zillow and filter by whatever criteria you want. Copy that URL when youre ready and paste it here! We will collect all those listings and analyze the area for good deals and market trends!</p>
+<form method="post">
+    <div class="form-group">
+        <input type="text" name="url" placeholder="paste url" class="form-control"
+            value="{{ request.form['url'] }}"></input>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+{% if success_message %}
+    <p>{{ success_message }}</p>
+{% endif %}
+<br>
+
+<!-- Predict Button -->
+<h1>Predict Good Deals</h1>
+
+<form method="post">
+    <div class="form-group">
+        <button type="submit" name="predict" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<!-- Place to display the results of predict -->
+<div>
+    {{predict_result|safe}}
+</div>
+<br>
+
+<!-- Analyze Button -->
+<h1>Analyze Area Trends</h1>
+
+<form method="post">
+    <div class="form-group">
+        <button type="submit" name="analyze" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<!-- Place to display the result of analyze -->
+<div>
+    {{analyze_result|safe}}
+</div>
+
+
+{% endblock %}

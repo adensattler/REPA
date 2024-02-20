@@ -23,7 +23,7 @@
         <div class="container-fluid">
 
             <!-- Brand -->
-            <a class="navbar-brand" href="{{ url_for('home')}}">REPA</a>
+            <a class="navbar-brand" href="{{ url_for('index')}}">REPA</a>
 
             <!-- NAV Burger -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -35,7 +35,10 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <!-- NAV Items -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('property_home')}}">Property Details</a>
+                        <a class="nav-link" href="{{ url_for('listings_search')}}">Listings Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('property_search')}}">Property Search</a>
                     </li>
 
                     <!-- Archived Routes -->
