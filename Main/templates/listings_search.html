@@ -4,10 +4,9 @@
 
 <!-- Search Listings // Add Listings to Database -->
 <h1>{% block title %} Search Listings {% endblock %}</h1>
+<p>Search an area on Zillow and filter by whatever criteria you want. Copy that URL when youre ready and paste it here! We will collect all those listings and analyze the area for good deals and market trends!</p>
 <form method="post">
     <div class="form-group">
-        <label for="url">URL</label>
-
         <input type="text" name="url" placeholder="paste url" class="form-control"
             value="{{ request.form['url'] }}"></input>
     </div>
@@ -19,9 +18,10 @@
 {% if success_message %}
     <p>{{ success_message }}</p>
 {% endif %}
+<br>
 
 <!-- Predict Button -->
-<h1>Run <b>--predict</b> on the created database </h1>
+<h1>Predict Good Deals</h1>
 
 <form method="post">
     <div class="form-group">
@@ -33,10 +33,10 @@
 <div>
     {{predict_result|safe}}
 </div>
-
+<br>
 
 <!-- Analyze Button -->
-<h1>Run <b>--analyze</b> on the created database</h1>
+<h1>Analyze Area Trends</h1>
 
 <form method="post">
     <div class="form-group">
