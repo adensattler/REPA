@@ -1,49 +1,71 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <!-- Page Title -->
 <h1>{% block title %} Property Search {% endblock %}</h1>
 
 <!-- Add search bar and submit button for an address/zpid here: -->
 <form method="post">
-    <div class="form-group">
-        <label for="search_term">Receive a comphensive breakdown of any property on Zillow and any insights into whether it might be a good deal.</label>
-        
+  <div class="form-group">
+    <label for="search_term"
+      >Receive a comphensive breakdown of any property on Zillow and any
+      insights into whether it might be a good deal.</label
+    >
 
-        <input type="text" name="search_term" placeholder="Search by ZPID or Address" class="form-control"
-            value="{{ request.form['search_term'] }}"></input>
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
+    <input
+      type="text"
+      name="search_term"
+      id="autocomplete_search"
+      placeholder="Search by ZPID or Address"
+      class="form-control"
+      value="{{ request.form['search_term'] }}"
+    />
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 </form>
-
-
-
 
 <!-- Add other page details here: -->
 
-
-
-
-<!-- displays search history of properties in DB (up to 5)-->>
-<br>
+<!-- Displays ALL Properties in DB (History essentially) -->
+<!-- right now it is just a series of links but eventually each property will be displayed w/ a bootstrap CARD -->
+<br />
 <h2>Search History</h2>
-<div class="card-group">
-    {% for property in properties %}
-    <div class="single-card">
-        <div class="card">
-            <img class="card-img-top" src="{{ property['images'] }}" alt="Card image cap"> 
-            <div class="card-body">
-                <h5 class="card-title"> 
-                    <a href=" {{url_for('property', zpid=property['zillow_ID']) }}" style="text-decoration: none;color:black;"> 
-                        {{ property['streetAddress'] }}
-                    </a>
-                </h5>
-                <p class="card-text"> price: ${{ property['price'] }} | beds: {{ property['num_beds'] }} | baths: {{ property['num_baths'] }} | sqft: {{ property['sqft'] }}</p>
-            </div>
-        </div>
+<div class="d-flex flex-row">
+  {% for property in properties %}
+  <!-- bootstrap cards-->
+  <div class="card" style="width: 18rem">
+    <img
+      class="card-img-top"
+      src="{{ property['images'] }}"
+      alt="Card image cap"
+    />
+    <!-- insert property picture here -->
+    <div class="card-body">
+      <h5 class="card-title">
+        <a
+          href=" {{url_for('property', zpid=property['zillow_ID']) }}"
+          style="text-decoration: none; color: black"
+        >
+          <h2>{{ property['streetAddress'] }}</h2>
+        </a>
+      </h5>
+      <p class="card-text">
+        price: ${{ property['price'] }} | beds: {{ property['num_beds'] }} |
+        baths: {{ property['num_baths'] }} | sqft: {{ property['sqft'] }}
+      </p>
     </div>
-    {% endfor %}
+  </div>
+  <hr />
+  {% endfor %}
 </div>
 {% endblock %}
+
+<!-- JavaScript Section for Google Places API Autocomplete -->
+<!-- <script>
+    function initAutocomplete() {
+        console.log('Autocomplete called')
+        var input = document.getElementById('autocomplete');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete" async defer></script> -->
