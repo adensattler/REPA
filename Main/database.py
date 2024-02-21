@@ -198,7 +198,7 @@ class DatabaseManager:
             c.execute("SELECT COUNT(*) FROM favoriteList WHERE zillow_ID = ?", (zpid,))
             if c.fetchone()[0] == 0:  # If not already in favorites
                 c.execute("INSERT INTO favoriteList (zillow_ID) VALUES (?)", (zpid,))
-            self.conn.commit()
+        self.conn.commit()
 
     def get_favorite_properties(self):
         with self.conn:
