@@ -13,6 +13,19 @@
     <!-- This is how you link to a specific file! The syntax is specific to jinja/Flask -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 
+    <!-- styling to make images fit-->
+    <style>
+        .card-img-top {
+            height: 260px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .single-card .card {
+            max-width: 259px;
+            margin: auto;
+        }
+    </style>
     <title>{% block title %} {% endblock %}</title>
 </head>
 
