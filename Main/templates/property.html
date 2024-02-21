@@ -7,9 +7,10 @@
         <div class="col-md-12 property-image-container">
             <img src="{{ property['images'] }}" class="img-fluid" alt="Property Image">
         </div>
-        <div class="col-md-12 text-center">
-            <button class="btn btn-warning btn-lg add-favorite-btn" onclick>Add to Favorites</button>
-        </div>
+        <form action="{{ url_for('add_to_favorites') }}" method="post">
+            <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}">
+            <button type="submit" class="btn btn-warning btn-lg">Add to Favorites</button>
+        </form>
     </div>
 
     <!-- Property Details -->

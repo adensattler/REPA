@@ -141,8 +141,10 @@ def property_home():
     # Retrieve property search history from the database
     properties = database.get_prop_search_history()
 
+    favorite_properties = database.get_favorite_properties()
+
     # Pass the properties to the html page as a list of dictionaries!
-    return render_template('property_home.html', properties=properties)
+    return render_template('property_home.html', properties=properties, favorites=favorite_properties)
 
 # ROUTE TO A SPECIFIC PROPERTY PAGE
 @app.route('/property/<int:zpid>')
@@ -152,6 +154,19 @@ def property(zpid):
     rawjson = json.loads(database.get_JSON(zpid))
     return render_template('property.html', property=property, rawjson=rawjson)
 
+@app.route('/add_to_favorites', methods=['POST'])
+def add_to_favorites():
+    zpid = request.form.get('zpid')
+    if zpid:
+        try:
+            # Add the property to the favorites list in the database
+            database.add_to_favorites(zpid)
+            flash('Property added to favorites successfully.', 'success')
+        except Exception as e:
+            flash('An error occurred while adding to favorites: ' + str(e), 'error')
+    else:
+        flash('Invalid property ID.', 'error')
+    return redirect(url_for('property_home'))
 
 if __name__ == "__main__":
     app.run()
