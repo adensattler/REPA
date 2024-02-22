@@ -83,20 +83,19 @@
 <!-- right now it is just a series of links but eventually each property will be displayed w/ a bootstrap CARD -->
 <br>
 <h2>Search History</h2>
-<div class="d-flex flex-row">
-    {% for property in properties %}
-    <!-- bootstrap cards-->
-    <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="{{ property['images'] }}" alt="Card image cap"> <!-- insert property picture here -->
-        <div class="card-body">
-            <h5 class="card-title"> <a href=" {{url_for('property', zpid=property['zillow_ID']) }}" style="text-decoration: none;color:black;">
-                <h2>{{ property['streetAddress'] }}</h2>
-                </a>
-            </h5>
-            <p class="card-text"> price: ${{ property['price'] }} | beds: {{ property['num_beds'] }} | baths: {{ property['num_baths'] }} | sqft: {{ property['sqft'] }}</p>
+    <div class="d-flex flex-wrap">
+        {% for property in properties %}
+        <!-- Bootstrap card for each favorite property -->
+        <div class="card m-2" style="width: 18rem;">
+            <img class="card-img-top" src="{{ property['images'] }}" alt="Property image">
+            <div class="card-body">
+                <h5 class="card-title">{{ property['streetAddress'] }}</h5>
+                <p class="card-text">
+                    Price: ${{ property['price'] }} | Beds: {{ property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft: {{ property['sqft'] }}
+                </p>
+                <a href="{{ url_for('property', zpid=property['zillow_ID']) }}" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-</div>
-    <hr>
-    {% endfor %}
-</div>
 {% endblock %}
