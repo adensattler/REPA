@@ -83,6 +83,7 @@
 <!-- right now it is just a series of links but eventually each property will be displayed w/ a bootstrap CARD -->
 <br>
 <h2>Search History</h2>
+{% if properties%}
     <div class="d-flex flex-wrap">
         {% for property in properties %}
         <!-- Bootstrap card for each favorite property -->
@@ -99,4 +100,7 @@
         </div>
         {% endfor %}
     </div>
+{% else %}
+    <p>No properties viewed yet.</p>
+{% endif %}
 {% endblock %}
