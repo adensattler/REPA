@@ -220,7 +220,7 @@ def add_to_favorites():
             flash('An error occurred while adding to favorites: ' + str(e), 'error')
     else:
         flash('Invalid property ID.', 'error')
-    return redirect(url_for('property_home'))
+    return redirect(url_for('property_search'))
 
 @app.route('/reset')
 def reset():
