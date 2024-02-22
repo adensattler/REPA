@@ -67,7 +67,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ property['streetAddress'] }}</h5>
                 <p class="card-text">
-                    Price: ${{ property['price'] }} | Beds: {{ property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft: {{ property['sqft'] }}
+                    Price: {{"${:,.0f}".format(property['price']) }}  | Beds: {{ property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft: {{ "{:,.0f}".format(property['sqft']) }}
                 </p>
                 <a href="{{ url_for('property', zpid=property['zillow_ID']) }}" class="btn btn-primary">View Details</a>
             </div>
@@ -91,7 +91,8 @@
             <div class="card-body">
                 <h5 class="card-title">{{ property['streetAddress'] }}</h5>
                 <p class="card-text">
-                    Price: ${{ property['price'] }} | Beds: {{ property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft: {{ property['sqft'] }}
+                    Price: {{"${:,.0f}".format(property['price']) }} | Beds: {{ property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft: {{ "{:,.0f}".format(property['sqft']) }}
+
                 </p>
                 <a href="{{ url_for('property', zpid=property['zillow_ID']) }}" class="btn btn-primary">View Details</a>
             </div>
