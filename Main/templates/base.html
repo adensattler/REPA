@@ -68,8 +68,8 @@
                         </ul>
                     </li>
 
-                    <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('reset')}}">Reset Database</a>
+                    <li class="nav-item" data-bs-toggle="modal" data-bs-target="#resetConf">
+                        <a class="nav-link">Reset Database</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -79,6 +79,24 @@
             </div>
         </div>
     </nav>
+
+    <div id="resetConf" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reset Database</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you would like to reset the Database?</p>
+                </div>
+                <div class="modal-footer">
+                        <a type="button" class="btn btn-large btn-danger" href="{{ url_for('reset') }}"><strong>Reset</string></a>
+                    <button id="closeModal" type="button" class="btn btn-large btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Display flashed messages here -->
     {% with messages = get_flashed_messages() %}
