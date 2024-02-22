@@ -17,9 +17,9 @@
     <div class="row justify-content-center mb-4">
         <div class="col-md-8">
             <h2 class="mb-3">{{ property['streetAddress'] }}</h2>
-            <p><strong>Price:</strong> ${{ property['price'] }}</p>
-            <p><strong>Beds:</strong> {{ property['num_beds'] }} | <strong>Baths:</strong> {{ property['num_baths'] }} | <strong>Sqft:</strong> {{ property['sqft'] }}</p>
-            <p><strong>Zestimate®:</strong> ${{ property['zestimate'] }}</p>
+            <p><strong>Price:</strong> {{"${:,.0f}".format(property['price']) }}  </p>
+        <p><strong>Beds:</strong> {{ property['num_beds'] }} | <strong>Baths:</strong> {{ property['num_baths'] }} | <strong>Sqft:</strong> {{ "{:,.0f}".format(property['sqft']) }}</p>
+            <p><strong>Zestimate®:</strong> {{ "${:,.0f}".format(property['zestimate']) }}</p>
             <p><strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}</p>
             <p><strong>House Type:</strong> {{ property['house_type'] }}</p>
             <p><strong>Property Tax Rate:</strong> {{ property['property_tax'] }}%</p>
