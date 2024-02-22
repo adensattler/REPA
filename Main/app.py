@@ -183,7 +183,7 @@ def property_search():
         data = get_property_detail(API_KEY, zpid)
 
         #Check to make sure api returns a property
-        if not json.loads(data.text)["data"] == None:
+        if json.loads(data.text)["data"]:
             
             # Add property data to the database
             database.insert_property_db(zpid, data.text)
@@ -206,8 +206,9 @@ def property_search():
 def property(zpid):
     database = DatabaseManager('zillow_listings.db')
     property = database.get_property_from_db(zpid)
-    rawjson = json.loads(database.get_JSON(zpid))
-    return render_template('property.html', property=property, rawjson=rawjson)
+    # rawjson = json.loads(database.get_JSON(zpid))
+    # return render_template('property.html', property=property, rawjson=rawjson)
+    return render_template('property.html', property=property)
 
 @app.route('/add_to_favorites', methods=['POST'])
 def add_to_favorites():
