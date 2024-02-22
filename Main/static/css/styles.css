@@ -124,3 +124,6 @@ footer {
     display: block;
     width: 100%;
 }
+.pac-container:after{
+    content:none !important;
+}
