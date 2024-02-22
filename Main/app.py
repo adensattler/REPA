@@ -112,8 +112,8 @@ def create():
 # --------------------------------------------------------------------------------------------------------
 
 # ROUTE TO THE PROPERTY SEARCH PAGE
-@app.route('/property_home', methods=('GET', 'POST'))
-def property_home():
+@app.route('/propertysearch', methods=('GET', 'POST'))
+def property_search():
     database = DatabaseManager('zillow_listings.db')
     if request.method == 'POST':
         zpid = request.form['search_term'] # Get Zillow ID or address from HTML form
@@ -144,7 +144,7 @@ def property_home():
     favorite_properties = database.get_favorite_properties()
 
     # Pass the properties to the html page as a list of dictionaries!
-    return render_template('property_home.html', properties=properties, favorites=favorite_properties)
+    return render_template('property_search.html', properties=properties, favorites=favorite_properties)
 
 # ROUTE TO A SPECIFIC PROPERTY PAGE
 @app.route('/property/<int:zpid>')
