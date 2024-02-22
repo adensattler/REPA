@@ -12,12 +12,30 @@
     >
 
     <input
+      id="autocomplete"
       type="text"
       name="search_term"
       placeholder="Search by ZPID or Address"
       class="form-control"
       value="{{ request.form['search_term'] }}"
     />
+<script>
+  let autocomplete;
+  function initAutocomplete() {
+    autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("autocomplete"),
+      {
+        types: ["address"],
+        componentRestrictions: { country: ["us"] },
+      }
+    );
+  }
+</script>
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete"
+  async
+  defer
+></script>
   </div>
   <div class="form-group">
     <button type="submit" class="btn btn-primary">Submit</button>
@@ -59,23 +77,23 @@
   {% endfor %}
 </div>
 
-<!-- JavaScript Section for Google Places API Autocomplete -->
-<input id="autocomplete" placeholder="Enter a place" , type="text" />
-<script>
-  let autocomplete;
-  function initAutocomplete() {
-    autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("autocomplete"),
-      {
-        types: ["street_address"],
-        componentRestrictions: { country: ["us"] },
-      }
-    );
-  }
-</script>
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete"
-  async
-  defer
-></script>
+<!-- JavaScript Section for Google Places API Autocomplete --> 
+<!-- <input id="autocomplete" placeholder="Enter a place" , type="text" /> -->
+<!-- <script> -->
+<!--   let autocomplete; -->
+<!--   function initAutocomplete() { -->
+<!--     autocomplete = new google.maps.places.Autocomplete( -->
+<!--       document.getElementById("autocomplete"), -->
+<!--       { -->
+<!--         types: ["street_address"], -->
+<!--         componentRestrictions: { country: ["us"] }, -->
+<!--       } -->
+<!--     ); -->
+<!--   } -->
+<!-- </script> -->
+<!-- <script -->
+<!--   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete" -->
+<!--   async -->
+<!--   defer -->
+<!-- ></script> -->
 {% endblock %}
