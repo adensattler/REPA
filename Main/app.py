@@ -229,9 +229,10 @@ def reset():
         resetDB()
         database = DatabaseManager('zillow_listings.db')
         database.create_database()
-        return redirect('/')
-    
-    return redirect('/')
+        flash('Database has been reset')
+        return redirect(url_for('property_search'))
+     
+    return redirect(url_for('property_search'))
 
 
 
