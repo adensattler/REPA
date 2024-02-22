@@ -191,4 +191,21 @@ class DatabaseManager:
         self.conn.commit()
         c.close()
         return unpacked
+    def add_to_favorites(self, zpid):
+        with self.conn:
+            c = self.conn.cursor()
+            # Check if the zpid already exists in the favoriteList to avoid duplicates
+            c.execute("SELECT COUNT(*) FROM favoriteList WHERE zillow_ID = ?", (zpid,))
+            if c.fetchone()[0] == 0:  # If not already in favorites
+                c.execute("INSERT INTO favoriteList (zillow_ID) VALUES (?)", (zpid,))
+        self.conn.commit()
+
+    def get_favorite_properties(self):
+        with self.conn:
+            self.conn.row_factory = sqlite3.Row
+            c = self.conn.cursor()
+            favorites = c.execute('''SELECT pd.* FROM propertyDetails pd
+                                  JOIN favoriteList fl ON pd.zillow_ID = fl.zillow_ID''').fetchall()
+            return [dict(ix) for ix in favorites]
+
 

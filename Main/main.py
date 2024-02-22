@@ -6,6 +6,7 @@ from data_acquisition import organize_property_details
 from database import DatabaseManager
 from analysis import perform_analysis
 from prediction import predict
+from config import API_KEY
 
 def main():
     database = DatabaseManager('zillow_listings.db')
@@ -27,7 +28,7 @@ def main():
 
     if args.url:
         try:
-            api_key = "33244655-efca-44b7-ada4-b8b5dd9b0e37"
+            api_key = API_KEY
             listing_url = args.url
 
             listing_response = get_listings(api_key, listing_url)

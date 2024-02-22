@@ -1,10 +1,57 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- property.html will be passes a variable called 'property' which holds all the data for a property-->
-<h1>{% block title %} {{ property['streetAddress'] }} {% endblock %}</h1>
-<img src="{{ property['images'] }}">
-<p>{{ property['description'] }}</p>
+<div class="container mt-5">
+    <!-- Property Picture -->
+    <div class="row mb-4">
+        <div class="col-md-12 property-image-container">
+            <img src="{{ property['images'] }}" class="img-fluid" alt="Property Image">
+        </div>
+        <form action="{{ url_for('add_to_favorites') }}" method="post">
+            <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}">
+            <button type="submit" class="btn btn-warning btn-lg">Add to Favorites</button>
+        </form>
+    </div>
 
+    <!-- Property Details -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <h2 class="mb-3">{{ property['streetAddress'] }}</h2>
+            <p><strong>Price:</strong> ${{ property['price'] }}</p>
+            <p><strong>Beds:</strong> {{ property['num_beds'] }} | <strong>Baths:</strong> {{ property['num_baths'] }} | <strong>Sqft:</strong> {{ property['sqft'] }}</p>
+            <p><strong>Zestimate®:</strong> ${{ property['zestimate'] }}</p>
+            <p><strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}</p>
+            <p><strong>House Type:</strong> {{ property['house_type'] }}</p>
+            <p><strong>Property Tax Rate:</strong> {{ property['property_tax'] }}%</p>
+        </div>
+    </div>
 
-{% endblock %}
+    <!-- Nearby Schools -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <h3>Nearby Schools</h3>
+            {% if property['nearby_schools'] %}
+            <ul class="list-group">
+                {% for school in property['nearby_schools'] %}
+                <li class="list-group-item">
+                    <h5 class="mb-1">{{ school['name'] }}</h5>
+                    <p class="mb-1">Grade: {{ school['grade'] }}</p>
+                    <p class="mb-1">Distance: {{ school['distance'] }} miles</p>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No nearby school information available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h3>Description</h3>
+            <p>{{ property['description'] }}</p>
+        </div>
+    </div>
+</div>
+
