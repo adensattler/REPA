@@ -1,4 +1,5 @@
 {% extends 'base.html' %} {% block content %}
+
 <!-- Page Title -->
 <h1>{% block title %} Property Search {% endblock %}</h1>
 
@@ -13,7 +14,6 @@
     <input
       type="text"
       name="search_term"
-      id="autocomplete_search"
       placeholder="Search by ZPID or Address"
       class="form-control"
       value="{{ request.form['search_term'] }}"
@@ -58,14 +58,24 @@
   <hr />
   {% endfor %}
 </div>
-{% endblock %}
 
 <!-- JavaScript Section for Google Places API Autocomplete -->
-<!-- <script>
-    function initAutocomplete() {
-        console.log('Autocomplete called')
-        var input = document.getElementById('autocomplete');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-    }
+<input id="autocomplete" placeholder="Enter a place" , type="text" />
+<script>
+  let autocomplete;
+  function initAutocomplete() {
+    autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("autocomplete"),
+      {
+        types: ["street_address"],
+        componentRestrictions: { country: ["us"] },
+      }
+    );
+  }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete" async defer></script> -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete"
+  async
+  defer
+></script>
+{% endblock %}
