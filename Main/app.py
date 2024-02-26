@@ -13,9 +13,8 @@ from db_debug import resetDB
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 
-if DatabaseManager._instance == None:
-    database = DatabaseManager('zillow_listings.db')
-    database.create_database()
+database = DatabaseManager('zillow_listings.db')
+database.create_database()
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
