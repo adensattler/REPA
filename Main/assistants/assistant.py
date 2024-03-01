@@ -1,3 +1,18 @@
+"""
+Module Name: assistant.py
+
+Description:
+This module contains functions for setting up, and interacting with a real estate assistant.
+It utilizes the OpenAI Assistants feature to pass a model/llm a property details json file.
+The AI assistant can then interact with a user and answer any questions they may have about a property.
+Th assistant serves as a stand-in for a real estate professional!
+
+Functions:
+- 
+
+Usage:
+"""
+
 from openai import OpenAI
 import os
 

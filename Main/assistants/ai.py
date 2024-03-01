@@ -1,3 +1,11 @@
+"""
+Module Name: assistant_operations.py
+
+Description:
+This module serves as an EXAMPLE for how to set up and interact with an OpenAI's assistants API.
+
+"""
+
 from openai import OpenAI
 import time
 import os
