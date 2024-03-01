@@ -23,15 +23,13 @@ print(completion.choices[0].message)
 
 # HELPER FUNCTIONS
 # ---------------------------------------------------------------------
-# Upload file
-# Returns an object that the assistant can interact with
+# Creates and returns an OpenAI File object 
 def upload_file(path):
     # Upload a file with an "assistants" purpose
     file = client.files.create(file=open(path, "rb"), purpose="assistants")
     return file
-# file = upload_file("prop-det-short.json")
 
-# STEP 1: Create an assistant
+# Creates and retuns an OpenAI Assistant object
 def create_assistant():
     assistant = client.beta.assistants.create(
         name="Math Tutor",
@@ -40,31 +38,22 @@ def create_assistant():
     )
     return assistant
 
-def submit_message(assistant_id, thread, user_message):
-    client.beta.threads.messages.create(
-        thread_id=thread.id, role="user", content=user_message
-    )
-    return client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id=assistant_id,
-    )
-
+# Creates a thread and then calls on that thread to run with a provided input
 def create_thread_and_run(user_input):
+    #returns a Thread object and a Run object
     thread = client.beta.threads.create()
     run = submit_message(MATH_ASSISTANT_ID, thread, user_input)
     return thread, run
 
-def get_response(thread):
-    return client.beta.threads.messages.list(thread_id=thread.id, order="asc")
+def submit_message(assistant_id, thread, user_message):
+    ''' 
+    Submits a message to an specific conversation thread and runs that thread
+    Returns the corresponding Run object 
+    '''
+    client.beta.threads.messages.create(thread_id=thread.id, role="user", content=user_message)
+    return client.beta.threads.runs.create(thread_id=thread.id, assistant_id=assistant_id)
 
-# Pretty printing helper
-def pretty_print(messages):
-    print("# Messages")
-    for m in messages:
-        print(f"{m.role}: {m.content[0].text.value}")
-    print()
-
-# Waiting in a loop
+# Waits for a run to complete before proceeding
 def wait_on_run(run, thread):
     while run.status != "completed":
         run = client.beta.threads.runs.retrieve(
@@ -74,18 +63,28 @@ def wait_on_run(run, thread):
         time.sleep(0.5)
     return run
 
+# Returns a list of OpenAI Message objects for a thread
+def get_response(thread):
+    return client.beta.threads.messages.list(thread_id=thread.id, order="asc")
+
+# Pretty prints the messages in a more readable format
+def pretty_print(messages):
+    print("# Messages")
+    for m in messages:
+        print(f"{m.role}: {m.content[0].text.value}")
+    print()
+
+
+
 
 
 # DRIVER
 # ------------------------------------------------------------------------------------------
-
 assistant = create_assistant()
 MATH_ASSISTANT_ID = assistant.id  # or a hard-coded ID like "asst-..."
 
-# Emulating concurrent user requests
-thread1, run1 = create_thread_and_run(
-    "I need to solve the equation `3x + 11 = 14`. Can you help me?"
-)
+# Create multiple threads that handle multiple asynchronous 
+thread1, run1 = create_thread_and_run("I need to solve the equation `3x + 11 = 14`. Can you help me?")
 thread2, run2 = create_thread_and_run("Could you explain linear algebra to me?")
 thread3, run3 = create_thread_and_run("I don't like math. What can I do?")
 
