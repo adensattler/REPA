@@ -32,22 +32,24 @@ def upload_file(path):
     return file
 
 def create_assistant(file):
-    assistant = client.beta.assistants.create(
-        name="WhatsApp AirBnb Assistant",
-        instructions="You're a helpful WhatsApp assistant that can assist guests that are staying in our Paris AirBnb. Use your knowledge base to best respond to customer queries. If you don't know the answer, say simply that you cannot help with question and advice to contact the host directly. Be concise.",
-        tools=[{"type": "retrieval"}],
-        model="gpt-4-1106-preview",
-        file_ids=[file.id],
-    )
     # assistant = client.beta.assistants.create(
-    #     name="Real Estate Advisor",
-    #     instructions="""You are a highly knowledgeable real estate advisor. 
-    #     Your role is to summarize extensive property data, extract key figures and data, and give advice on a property.
-    #     Answer questions thoroughly.""",
+    #     name="WhatsApp AirBnb Assistant",
+    #     instructions="You're a helpful WhatsApp assistant that can assist guests that are staying in our Paris AirBnb. Use your knowledge base to best respond to customer queries. If you don't know the answer, say simply that you cannot help with question and advice to contact the host directly. Be concise.",
     #     tools=[{"type": "retrieval"}],
     #     model="gpt-4-1106-preview",
     #     file_ids=[file.id],
     # )
+    assistant = client.beta.assistants.create(
+        name="Real Estate Advisor",
+        instructions="""You are a highly knowledgeable real estate advisor that can assist others looking for information about a property. 
+        Your role is to summarize extensive property data, extract key figures and data, and give advice on a property.
+        Use your knowledge base to best respond to customer queries. 
+        If you don't know the answer, say simply that you cannot help with question.
+        Be concise.""",
+        tools=[{"type": "retrieval"}],
+        model="gpt-4-1106-preview",
+        file_ids=[file.id],
+    )
     return assistant
 
 # --------------------------------------------------------------
@@ -126,8 +128,8 @@ def run_assistant(thread):
 # DRIVER
 # ------------------------------------------------------------------------------------------
 # STEP 1: Upload a file to OpenAI embeddings
-# filepath = "prop-det-short.json"
-filepath = "airbnb-faq.pdf"
+filepath = "prop-det-short.json"
+# filepath = "airbnb-faq.pdf"
 file_object = upload_file(filepath)
 
 
@@ -138,9 +140,9 @@ file_object = upload_file(filepath)
 
 # === Hardcoded assistant id (will be used after first run and the assistant is created) ===
 # we want ONE assistant with many different threads running off of it for specific applications!
-assistant_id = "asst_Aj192tzjTF9aIw99kuwHwLp2"
+assistant_id = "asst_jFHoy0AN60bFuwCKmy9To5hW"
 
-new_message = generate_response("What's the wifi password?", "123")
+new_message = generate_response("what is the year the hosue was built?", "123")
 
 # new_message = generate_response("What was my last question about?", "123")
 
