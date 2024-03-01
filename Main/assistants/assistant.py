@@ -33,14 +33,21 @@ def upload_file(path):
 
 def create_assistant(file):
     assistant = client.beta.assistants.create(
-        name="Real Estate Advisor",
-        instructions="""You are a highly knowledgeable real estate advisor. 
-        Your role is to summarize extensive property data, extract key figures and data, and give advice on a property.
-        Answer questions thoroughly.""",
+        name="WhatsApp AirBnb Assistant",
+        instructions="You're a helpful WhatsApp assistant that can assist guests that are staying in our Paris AirBnb. Use your knowledge base to best respond to customer queries. If you don't know the answer, say simply that you cannot help with question and advice to contact the host directly. Be concise.",
         tools=[{"type": "retrieval"}],
         model="gpt-4-1106-preview",
         file_ids=[file.id],
     )
+    # assistant = client.beta.assistants.create(
+    #     name="Real Estate Advisor",
+    #     instructions="""You are a highly knowledgeable real estate advisor. 
+    #     Your role is to summarize extensive property data, extract key figures and data, and give advice on a property.
+    #     Answer questions thoroughly.""",
+    #     tools=[{"type": "retrieval"}],
+    #     model="gpt-4-1106-preview",
+    #     file_ids=[file.id],
+    # )
     return assistant
 
 # --------------------------------------------------------------
@@ -91,7 +98,6 @@ def generate_response(message_body, zpid):
     print(f"To User:", new_message)
     return new_message
 
-
 # --------------------------------------------------------------
 # Run the assistant!
 # --------------------------------------------------------------
@@ -114,25 +120,29 @@ def run_assistant(thread):
     # Retrieve the Messages
     messages = client.beta.threads.messages.list(thread_id=thread.id)
     new_message = messages.data[0].content[0].text.value
-    print(f"Generated message: {new_message}")
     return new_message
 
 
 # DRIVER
 # ------------------------------------------------------------------------------------------
 # STEP 1: Upload a file to OpenAI embeddings
-filepath = "prop-det-short.json"
+# filepath = "prop-det-short.json"
+filepath = "airbnb-faq.pdf"
 file_object = upload_file(filepath)
 
 
 # STEP 2: Create your assistant (Uncomment this once a single assistant has been created)
 # assistant = create_assistant(file_object)
-# assis_id = assistant.id
-# print(assis_id)
+# assistant_id = assistant.id
+# print(assistant_id)
 
 # === Hardcoded assistant id (will be used after first run and the assistant is created) ===
 # we want ONE assistant with many different threads running off of it for specific applications!
-assistant_id = "asst_4R1G5OysL5oRCAwbiFEvxVYo"
+assistant_id = "asst_Aj192tzjTF9aIw99kuwHwLp2"
+
+new_message = generate_response("What's the wifi password?", "123")
+
+# new_message = generate_response("What was my last question about?", "123")
 
 
 
