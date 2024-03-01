@@ -1,4 +1,5 @@
 from openai import OpenAI
+import time
 import os
 
 # Utilizes an environmental variable for your api key. will error out if not set in your system.
@@ -20,15 +21,14 @@ print(completion.choices[0].message)
 '''
 
 
-
+# HELPER FUNCTIONS
+# ---------------------------------------------------------------------
 # Upload file
 # Returns an object that the assistant can interact with
 def upload_file(path):
     # Upload a file with an "assistants" purpose
     file = client.files.create(file=open(path, "rb"), purpose="assistants")
     return file
-
-
 # file = upload_file("prop-det-short.json")
 
 # STEP 1: Create an assistant
@@ -39,9 +39,6 @@ def create_assistant():
         model="gpt-4-1106-preview",
     )
     return assistant
-
-assistant = create_assistant()
-MATH_ASSISTANT_ID = assistant.id  # or a hard-coded ID like "asst-..."
 
 def submit_message(assistant_id, thread, user_message):
     client.beta.threads.messages.create(
@@ -57,17 +54,6 @@ def create_thread_and_run(user_input):
     run = submit_message(MATH_ASSISTANT_ID, thread, user_input)
     return thread, run
 
-
-# Emulating concurrent user requests
-thread1, run1 = create_thread_and_run(
-    "I need to solve the equation `3x + 11 = 14`. Can you help me?"
-)
-thread2, run2 = create_thread_and_run("Could you explain linear algebra to me?")
-thread3, run3 = create_thread_and_run("I don't like math. What can I do?")
-
-# Now all Runs are executing...
-
-import time
 def get_response(thread):
     return client.beta.threads.messages.list(thread_id=thread.id, order="asc")
 
@@ -78,10 +64,9 @@ def pretty_print(messages):
         print(f"{m.role}: {m.content[0].text.value}")
     print()
 
-
 # Waiting in a loop
 def wait_on_run(run, thread):
-    while run.status == "queued" or run.status == "in_progress":
+    while run.status != "completed":
         run = client.beta.threads.runs.retrieve(
             thread_id=thread.id,
             run_id=run.id,
@@ -89,6 +74,22 @@ def wait_on_run(run, thread):
         time.sleep(0.5)
     return run
 
+
+
+# DRIVER
+# ------------------------------------------------------------------------------------------
+
+assistant = create_assistant()
+MATH_ASSISTANT_ID = assistant.id  # or a hard-coded ID like "asst-..."
+
+# Emulating concurrent user requests
+thread1, run1 = create_thread_and_run(
+    "I need to solve the equation `3x + 11 = 14`. Can you help me?"
+)
+thread2, run2 = create_thread_and_run("Could you explain linear algebra to me?")
+thread3, run3 = create_thread_and_run("I don't like math. What can I do?")
+
+# Now all Runs are executing...
 
 # Wait for Run 1
 run1 = wait_on_run(run1, thread1)
