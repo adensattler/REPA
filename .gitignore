@@ -10,6 +10,9 @@
 # Ignore all pdf files
 *.pdf
 
+#Ignore os generated files
+.DS_Store
+
 heatmap.html
 price_difference_heatmap.html
 

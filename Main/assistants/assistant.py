@@ -128,8 +128,8 @@ def run_assistant(thread):
 # DRIVER
 # ------------------------------------------------------------------------------------------
 # STEP 1: Upload a file to OpenAI embeddings
-filepath = os.path.join("..","property_detail.json")
-# filepath = "airbnb-faq.pdf"
+filepath = os.path.join("..", "property_details.json")
+
 file_object = upload_file(filepath)
 
 
