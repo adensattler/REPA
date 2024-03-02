@@ -24,3 +24,8 @@ env
 
 # Ignore config.py (holds api key)
 Main/config.py
+
+# Ignore Python Shelves files
+*.dir
+*.dat
+*.bak
