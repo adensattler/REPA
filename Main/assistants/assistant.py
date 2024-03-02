@@ -140,9 +140,9 @@ file_object = upload_file(filepath)
 
 # === Hardcoded assistant id (will be used after first run and the assistant is created) ===
 # we want ONE assistant with many different threads running off of it for specific applications!
-assistant_id = "asst_jFHoy0AN60bFuwCKmy9To5hW"
+assistant_id = "asst_PJy8flbJEV6AdIhcJNqjwQgo"
 
-new_message = generate_response("what is the year the hosue was built?", "123")
+new_message = generate_response("what is capitalization rate generally?", "123")
 
 # new_message = generate_response("What was my last question about?", "123")
 
