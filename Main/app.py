@@ -234,7 +234,9 @@ def reset():
      
     return redirect(url_for('property_search'))
 
-
+@app.route('/assistant')
+def assistant():
+    return redirect('assistant.html')
 
 if __name__ == "__main__":
     app.run()
