@@ -124,19 +124,8 @@ def listings_search():
             try:
                 listing_url = url
 
-                listing_response = get_listings(API_KEY, listing_url)
+                print(get_listings_gui(listing_url, API_KEY))
 
-                # stores the columns we are interested in
-                columns = [
-                    'zpid', 'hdpData.homeInfo.price', 'hdpData.homeInfo.bedrooms', 'hdpData.homeInfo.bathrooms', 'area',
-                    'hdpData.homeInfo.zipcode', 'hdpData.homeInfo.livingArea', 'hdpData.homeInfo.homeType', 'hdpData.homeInfo.zestimate', 'hdpData.homeInfo.city', 'hdpData.homeInfo.latitude', 'hdpData.homeInfo.longitude',
-                    'hdpData.homeInfo.taxAssessedValue'
-                ]
-
-                # Takes all of the data and converts it into normalized, tabular data (.json_normalize)
-                den_listings = pd.json_normalize(listing_response["data"]["cat1"]["searchResults"]["mapResults"])
-                selected_den_listings = den_listings.loc[:, columns].dropna(thresh=13)
-                database.fill_database(selected_den_listings)
                 return render_template('listings_search.html', success_message = "Search was successful!")
             except:
                 flash("Error: Please check that the URL is valid and try again. If the problem persists, check if your API key has expired for the month.")
