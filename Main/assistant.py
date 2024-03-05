@@ -128,21 +128,15 @@ def run_assistant(thread):
 # DRIVER
 # ------------------------------------------------------------------------------------------
 # STEP 1: Upload a file to OpenAI embeddings
-filepath = os.path.join("..", "property_detail.json")
+filepath = os.path.join("property_details.json")
 file_object = upload_file(filepath)
 
 
 # STEP 2: Create your assistant
 # We want ONE assistant with many different threads running off of it for specific applications!
-assistant = create_assistant(file_object)
-assistant_id = assistant.id
+# assistant = create_assistant(file_object)
+# assistant_id = assistant.id
+assistant_id = 'asst_iAw4avGg18DWqV7zf9zVyvif'
 
-# while True:
-#     user_input = input("Please enter your message (or 'exit' to quit): ")
-#     if user_input.lower() == 'exit':
-#         break
-#     else:
-#         generate_response(user_input, "123")  # Assuming a fixed zpid for simplicity
-
-message = 'Testing. Please respond with "Yes".'
-print(generate_response(message, zpid='123'))
+# message = 'Testing. Please respond with "Yes".'
+# print(generate_response(message, zpid='123'))

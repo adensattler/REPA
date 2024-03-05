@@ -7,8 +7,9 @@ from data_acquisition import *
 from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
-from assistant import generate_response
+from assistant import upload_file, generate_response
 import json
+from os import path
 from db_debug import resetDB
 
 app = Flask(__name__)
@@ -238,10 +239,10 @@ def reset():
 @app.route('/assistant', methods=('GET', 'POST'))
 def assistant():
     if request.method == 'POST':
-        # Handle the form submission and interaction with the assistant here
         # user_input = request.json['message']
         input = request.form['message']
-        return render_template('assistant.html', response=input)
+        response = generate_response(input, zpid='123')
+        return render_template('assistant.html', input=input, response=response)
     return render_template('assistant.html')
 
 if __name__ == "__main__":
