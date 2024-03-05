@@ -1,38 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real Estate Assistant</title>
-</head>
-<body>
-    <h1>Real Estate Assistant</h1>
-    <form id="assistantForm">
-        <label for="message">Enter your message:</label><br>
-        <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
-        <input type="submit" value="Submit">
-    </form>
+{% extends 'base.html' %} {% block content %}
+<h1>{% block title %} Real Estate Assistant {% endblock %}</h1>
 
-    <div id="response"></div>
+<form id="assistantForm" method="post">
+  <div class="form-group">
+    <label for="message">Enter your message:</label>
+    <textarea
+      id="message"
+      name="message"
+      rows="4"
+      cols="50"
+      class="form-control"
+      value="{{ request.form['user_message'] }}"
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+<br>
+<br>
+<div>
+  User: {{response|safe}}
+</div>
 
-    <script>
-        document.getElementById("assistantForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            var message = document.getElementById("message").value;
+<!-- Display response from assistant here
+<div id="response"></div>
 
-            fetch("/assistant", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ message: message }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("response").innerHTML = data.response;
-            })
-            .catch(error => console.error("Error:", error));
-        });
-    </script>
-</body>
-</html>
+<script>
+  document
+    .getElementById("assistantForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+      var message = document.getElementById("message").value;
+
+      fetch("/assistant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: message }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("response").innerHTML = data.response;
+        })
+        .catch((error) => console.error("Error:", error));
+    });
+</script> -->
+
+{% endblock %}

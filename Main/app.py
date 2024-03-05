@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
 import pandas as pd
 import sqlite3
 from werkzeug.exceptions import abort
@@ -7,6 +7,7 @@ from data_acquisition import *
 from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
+from assistant import generate_response
 import json
 from db_debug import resetDB
 
@@ -234,9 +235,14 @@ def reset():
      
     return redirect(url_for('property_search'))
 
-@app.route('/assistant')
+@app.route('/assistant', methods=('GET', 'POST'))
 def assistant():
-    return redirect('assistant.html')
+    if request.method == 'POST':
+        # Handle the form submission and interaction with the assistant here
+        # user_input = request.json['message']
+        input = request.form['message']
+        return render_template('assistant.html', response=input)
+    return render_template('assistant.html')
 
 if __name__ == "__main__":
     app.run()
