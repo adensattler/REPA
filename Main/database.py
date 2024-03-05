@@ -135,6 +135,8 @@ class DatabaseManager:
                 self.update_property_db(zpid, "latitude", data["data"]["adTargets"]["mlat"])
                 self.update_property_db(zpid, "longitude", data["data"]["adTargets"]["mlong"])
                 self.update_property_db(zpid, "house_type", data["data"]["homeType"])
+                # self.add_nearby_homes(data["data"]["adTargets"]["mlat"], data["data"]["adTargets"]["mlong"])
+
     
                 # TODO: Schools
                 # TODO: Nearby Cities
@@ -208,4 +210,16 @@ class DatabaseManager:
                                   JOIN favoriteList fl ON pd.zillow_ID = fl.zillow_ID''').fetchall()
             return [dict(ix) for ix in favorites]
 
-
+    def add_nearby_homes(self, zpid):
+            lat = self.get_value_from_property_db(zpid, "latitude") 
+            long = self.get_value_from_property_db(zpid, "longitude")
+            # print("latitude is: "+ str(lat))
+            # print("longitude is: "+ str(long))
+            top = float(lat) + 0.2
+            bottom = float(lat) - 0.2
+            left = float(long) - 0.2
+            right = float(long) + 0.2
+        
+            zillow_url = "https://www.zillow.com/homes/for_sale/?searchQueryState=%7B%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A%7B%22west%22%3A"+str(left)+"%2C%22east%22%3A"+str(right)+"%2C%22south%22%3A"+str(bottom)+"%2C%22north%22%3A"+str(top)+"%7D%2C%22filterState%22%3A%7B%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%7D%2C%22isListVisible%22%3Atrue%7D"
+            self.conn.commit()
+            return zillow_url

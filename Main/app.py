@@ -175,6 +175,11 @@ def property_search():
             
             # Add property data to the database
             database.insert_property_db(zpid, data.text)
+            try:
+                url = database.add_nearby_homes(zpid)
+                print(get_listings_gui(url,API_KEY))
+            except:
+                print("nearby homes already in DB")
 
             # Redirect the user to the property page on submission
             return redirect(url_for('property', zpid=zpid))
