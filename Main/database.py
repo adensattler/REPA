@@ -77,6 +77,8 @@ class DatabaseManager:
             thirty_year_mortgage REAL,
             fifteen_year_mortgage REAL,
             interest_est REAL,
+            rel_price REAL,
+            rel_price_comps REAL,
             raw_json JSON,
 
 
@@ -238,6 +240,6 @@ class DatabaseManager:
         with self.conn:
             self.conn.row_factory = sqlite3.Row
             c = self.conn.cursor()
-            prices = c.execute("SELECT zillow_ID, price FROM listings WHERE zipcode = (?)",(zipcode,)).fetchall()
+            prices = c.execute("SELECT price FROM listings WHERE zipcode = (?)",(zipcode,)).fetchall()
             return [dict(ix) for ix in prices]
 
