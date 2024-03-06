@@ -179,7 +179,7 @@ def property_search():
             try:
                 url = database.add_nearby_homes(zpid)
                 print(get_listings_gui(url,API_KEY))
-                # evaluationFunctions.PriceRelativeArea(database.get_value_from_property_db(zpid,"price"),database.get_value_from_property_db(zpid,"zipcode"))
+                evaluationFunctions.PriceRelativeArea(zpid, database.get_value_from_property_db(zpid,"price"),database.get_value_from_property_db(zpid,"zipcode"))
             except:
                 print("nearby homes already in DB")
 
