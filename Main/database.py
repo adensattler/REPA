@@ -70,7 +70,14 @@ class DatabaseManager:
             nearby_cities BLOB,
             images TEXT,
             description TEXT,
+            monthly_rent_ REAL,
+            cap_rate REAL,
+            break_even REAL,
+            thirty_year_mortgage REAL,
+            fifteen_year_mortgage REAL,
+            interest_est REAL,
             raw_json JSON,
+
 
             CONSTRAINT zillow_ID_FK FOREIGN KEY (zillow_ID)
             REFERENCES listings(zillow_ID)
