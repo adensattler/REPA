@@ -39,15 +39,24 @@ def fifteenFixed(purchasePrice, downPayment, interestRate):
     return round(monthly, 2)
 
 # interest only 
-# interest_est
+# DB: interest_est
 def interestOnly(purchasePrice, downPayment, interestRate):
     loan = purchasePrice - downPayment
     monthly = loan * (interestRate / 12) 
     return round(monthly, 2)
 
-def PriceRelativeArea(purchasePrice, zipcode):
+def PriceRelativeArea(zpid, purchasePrice, zipcode):
     database = DatabaseManager('zillow_listings.db')
     prices = database.get_area_prices(zipcode)
-    print(prices)
+    total = 0
+    length = len(prices)
+    for i in prices:
+        total = total + i["price"]
+    average = total / (len(prices))
+    percentDif = round(((purchasePrice/average)-1) * 100, 2)
+    database.update_property_db(zpid,"rel_price",percentDif)
+
+    
+
 
 
