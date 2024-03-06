@@ -6,16 +6,19 @@ from database import DatabaseManager
 repairCosts = 0
 
 # calculate expected rent, minimum rent should be 1% of purchase
+# DB: monthly_rent
 def onePercentRule(purchasePrice, repairCosts, loanValue):
     closingCosts = 0.06 * loanValue
     return (purchasePrice + closingCosts + repairCosts) * 0.1
 
 # capitalization rate
+# DB: cap_rate
 def capRate(avgRent, avgAnnualCost, purchasePrice):
     return ((avgRent * 11.5 - avgAnnualCost) / purchasePrice) * 100
 
 # break-even ratio 
 # determines viability EXCLUDING initital costs like down payment
+# DB: break_even
 def breakEven(expenses, rentIncome):
     return (expenses / rentIncome) * 100
 
