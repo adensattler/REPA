@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, flash, redirect, jsonify
+from flask import Flask, render_template, request, url_for, flash, redirect
 import pandas as pd
 import sqlite3
 from werkzeug.exceptions import abort
@@ -7,7 +7,7 @@ from data_acquisition import *
 from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
-from assistant import upload_file, generate_response
+from Main.assistant_flask import upload_file, generate_response
 import json
 from os import path
 from db_debug import resetDB
