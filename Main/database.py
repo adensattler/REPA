@@ -56,6 +56,7 @@ class DatabaseManager:
             CREATE TABLE IF NOT EXISTS propertyDetails(
             zillow_ID INTEGER NOT NULL,
             streetAddress TEXT,
+            zipcode INTEGER,
             price INTEGER,
             num_beds INTEGER,
             num_baths INTEGER,
@@ -138,6 +139,7 @@ class DatabaseManager:
                 self.update_property_db(zpid, "sqft", data["data"]["adTargets"]["sqft"])
                 self.update_property_db(zpid, "price_per_sqft", data["data"]["resoFacts"]["pricePerSquareFoot"])
                 self.update_property_db(zpid, "property_tax", data["data"]["propertyTaxRate"])
+                self.update_property_db(zpid,"zipcode", data["data"]["zipcode"] )
     
                 self.update_property_db(zpid, "latitude", data["data"]["adTargets"]["mlat"])
                 self.update_property_db(zpid, "longitude", data["data"]["adTargets"]["mlong"])
@@ -215,7 +217,8 @@ class DatabaseManager:
             c = self.conn.cursor()
             favorites = c.execute('''SELECT pd.* FROM propertyDetails pd
                                   JOIN favoriteList fl ON pd.zillow_ID = fl.zillow_ID''').fetchall()
-            return [dict(ix) for ix in favorites]
+        self.conn.commit()
+        return [dict(ix) for ix in favorites]
 
     def add_nearby_homes(self, zpid):
             lat = self.get_value_from_property_db(zpid, "latitude") 
@@ -230,3 +233,11 @@ class DatabaseManager:
             zillow_url = "https://www.zillow.com/homes/for_sale/?searchQueryState=%7B%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A%7B%22west%22%3A"+str(left)+"%2C%22east%22%3A"+str(right)+"%2C%22south%22%3A"+str(bottom)+"%2C%22north%22%3A"+str(top)+"%7D%2C%22filterState%22%3A%7B%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%7D%2C%22isListVisible%22%3Atrue%7D"
             self.conn.commit()
             return zillow_url
+    
+    def get_area_prices(self, zipcode):
+        with self.conn:
+            self.conn.row_factory = sqlite3.Row
+            c = self.conn.cursor()
+            prices = c.execute("SELECT zillow_ID, price FROM listings WHERE zipcode = (?)",(zipcode,)).fetchall()
+            return [dict(ix) for ix in prices]
+
