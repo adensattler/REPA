@@ -25,23 +25,29 @@ def breakEven(expenses, rentIncome):
 # mortgage monthly payments
 
 # 30 year fixed
+# DB: thirty_year_mortgage
 def thirtyFixed(purchasePrice, downPayment, interestRate):
     loan = purchasePrice - downPayment
     monthly = (loan * (interestRate / 12) * (1 + (interestRate / 12))**(12*30)) / ((1 + (interestRate / 12))**(12*30) - 1)
     return round(monthly, 2)
 
 # 15 year fixed
+# DB: fifteen_year_mortgage
 def fifteenFixed(purchasePrice, downPayment, interestRate):
     loan = purchasePrice - downPayment
     monthly = (loan * (interestRate / 12) * (1 + (interestRate / 12))**(12*15)) / ((1 + (interestRate / 12))**(12*15) - 1)
     return round(monthly, 2)
 
 # interest only 
+# interest_est
 def interestOnly(purchasePrice, downPayment, interestRate):
     loan = purchasePrice - downPayment
     monthly = loan * (interestRate / 12) 
     return round(monthly, 2)
 
-
+def PriceRelativeArea(purchasePrice, zipcode):
+    database = DatabaseManager('zillow_listings.db')
+    prices = database.get_area_prices(zipcode)
+    print(prices)
 
 
