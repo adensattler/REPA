@@ -1,5 +1,5 @@
 """
-Module Name: assistant.py
+Module Name: assistant_flask.py
 
 Description:
 This module contains functions for setting up, and interacting with a real estate assistant.
@@ -32,13 +32,6 @@ def upload_file(path):
     return file
 
 def create_assistant(file):
-    # assistant = client.beta.assistants.create(
-    #     name="WhatsApp AirBnb Assistant",
-    #     instructions="You're a helpful WhatsApp assistant that can assist guests that are staying in our Paris AirBnb. Use your knowledge base to best respond to customer queries. If you don't know the answer, say simply that you cannot help with question and advice to contact the host directly. Be concise.",
-    #     tools=[{"type": "retrieval"}],
-    #     model="gpt-4-1106-preview",
-    #     file_ids=[file.id],
-    # )
     assistant = client.beta.assistants.create(
         name="Real Estate Advisor",
         instructions="""You are a highly knowledgeable real estate advisor that can assist others looking for information about a property. 

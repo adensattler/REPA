@@ -7,7 +7,7 @@ from data_acquisition import *
 from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
-from Main.assistant_flask import upload_file, generate_response
+from assistant_flask import upload_file, generate_response
 import json
 from os import path
 from db_debug import resetDB
@@ -239,11 +239,20 @@ def reset():
 @app.route('/assistant', methods=('GET', 'POST'))
 def assistant():
     if request.method == 'POST':
-        # user_input = request.json['message']
         input = request.form['message']
         response = generate_response(input, zpid='123')
         return render_template('assistant.html', input=input, response=response)
     return render_template('assistant.html')
+
+@app.route('/assistant2')
+def assistant2():
+    return render_template('assistant2.html')
+
+@app.route('/get')
+def get_assistant_response():
+    input = request.args.get('msg')
+    response = generate_response(input, zpid='123')
+    return response
 
 if __name__ == "__main__":
     app.run()
