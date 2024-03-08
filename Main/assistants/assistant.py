@@ -3,9 +3,11 @@ Module Name: assistant.py
 
 Description:
 This module contains functions for setting up, and interacting with a real estate assistant.
-It utilizes the OpenAI Assistants feature to pass a model/llm a property details json file.
-The AI assistant can then interact with a user and answer any questions they may have about a property.
-Th assistant serves as a stand-in for a real estate professional!
+It utilizes the OpenAI Assistants API to pass a model/llm a property details json file.
+Here is the link to the Assistants documentation: https://platform.openai.com/docs/assistants/overview
+
+The goal of assistant is to serve as a stand-in for someone more knowledgeable than the can user about real estate.
+As a result, they should be about to answer any questions a user may have about a property.
 
 Functions:
 - 
@@ -18,33 +20,28 @@ import os
 import shelve
 import time
 
-# Utilizes an environmental variable for your api key. will error out if not set in your system.
 client = OpenAI()
+# defaults to getting the key using os.environ.get("OPENAI_API_KEY") and will error out if not set in your system.
+# if you have the key set under a different name or not at all, you can pass the key as a parameter:
+# client = OpenAI(api_key="YOUR_API_KEY_HERE")
 
 
 # HELPER FUNCTIONS
 # ---------------------------------------------------------------------
 
-# Upload file
+# Upload file a that can be used across various endpoints. returns an OpenAI File object
 def upload_file(path):
-    # Upload a file with an "assistants" purpose
     file = client.files.create(file=open(path, "rb"), purpose="assistants")
     return file
 
+# Creates an assistant tied to your OpenAI account
 def create_assistant(file):
-    # assistant = client.beta.assistants.create(
-    #     name="WhatsApp AirBnb Assistant",
-    #     instructions="You're a helpful WhatsApp assistant that can assist guests that are staying in our Paris AirBnb. Use your knowledge base to best respond to customer queries. If you don't know the answer, say simply that you cannot help with question and advice to contact the host directly. Be concise.",
-    #     tools=[{"type": "retrieval"}],
-    #     model="gpt-4-1106-preview",
-    #     file_ids=[file.id],
-    # )
     assistant = client.beta.assistants.create(
         name="Real Estate Advisor",
         instructions="""You are a highly knowledgeable real estate advisor that can assist others looking for information about a property. 
         Your role is to summarize extensive property data, extract key figures and data, and give advice on a property.
         Use your knowledge base to best respond to customer queries. 
-        If you don't know the answer, say simply that you cannot help with question.
+        If you don't know the answer, simply say that the question is outside of your scope of knowledge.
         Be concise.""",
         tools=[{"type": "retrieval"}],
         model="gpt-4-1106-preview",
@@ -142,9 +139,6 @@ file_object = upload_file(filepath)
 # we want ONE assistant with many different threads running off of it for specific applications!
 assistant_id = "asst_PJy8flbJEV6AdIhcJNqjwQgo"
 
-#new_message = generate_response("what is the year the hosue was built?", "123")
-
-# # new_message = generate_response("What was my last question about?", "123")
 while True:
     user_input = input("Please enter your message (or 'exit' to quit): ")
     if user_input.lower() == 'exit':
