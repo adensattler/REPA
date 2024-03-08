@@ -19,6 +19,12 @@ from openai import OpenAI
 import os
 import shelve
 import time
+import sys
+import json
+
+sys.path.append('../Main')
+from data_acquisition import get_property_detail
+from config import API_KEY
 
 client = OpenAI()
 # defaults to getting the key using os.environ.get("OPENAI_API_KEY") and will error out if not set in your system.
@@ -32,6 +38,15 @@ client = OpenAI()
 # Upload file a that can be used across various endpoints. returns an OpenAI File object
 def upload_file(path):
     file = client.files.create(file=open(path, "rb"), purpose="assistants")
+    return file
+
+# upload the json data instead of a file! THIS IS PROOF OF CONCEPT.
+def upload_json():
+    response = get_property_detail(API_KEY, 2054235341)
+    data = response.json()
+
+    # Expected entry at `file` parameter to be bytes, an io.IOBase instance, PathLike or a tuple
+    file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
     return file
 
 # Creates an assistant tied to your OpenAI account
@@ -128,6 +143,7 @@ def run_assistant(thread):
 filepath = os.path.join("..", "property_details.json")
 
 file_object = upload_file(filepath)
+# file_object = upload_json()
 
 
 # STEP 2: Create your assistant (Uncomment this once a single assistant has been created)
@@ -137,7 +153,7 @@ file_object = upload_file(filepath)
 
 # === Hardcoded assistant id (will be used after first run and the assistant is created) ===
 # we want ONE assistant with many different threads running off of it for specific applications!
-assistant_id = "asst_PJy8flbJEV6AdIhcJNqjwQgo"
+assistant_id = "asst_cBtsRL27F9sPphy8dko7uiQ1"
 
 while True:
     user_input = input("Please enter your message (or 'exit' to quit): ")
