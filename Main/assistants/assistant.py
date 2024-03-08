@@ -24,6 +24,7 @@ import json
 
 sys.path.append('../Main')
 from data_acquisition import get_property_detail
+from database import DatabaseManager
 from config import API_KEY
 
 client = OpenAI()
@@ -41,10 +42,15 @@ def upload_file(path):
     return file
 
 # upload the json data instead of a file! THIS IS PROOF OF CONCEPT.
-def upload_json():
+def upload_json_test():
     response = get_property_detail(API_KEY, 2054235341)
     data = response.json()
 
+    # Expected entry at `file` parameter to be bytes, an io.IOBase instance, PathLike or a tuple
+    file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
+    return file
+
+def upload_json(data):
     # Expected entry at `file` parameter to be bytes, an io.IOBase instance, PathLike or a tuple
     file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
     return file
@@ -67,18 +73,20 @@ def create_assistant(file):
 # --------------------------------------------------------------
 # Thread Management Functions
 # --------------------------------------------------------------
+# Returns thread_id or None if DNE
 def check_if_thread_exists(zpid):
     with shelve.open("threads_db") as threads_shelf:
         return threads_shelf.get(zpid, None)
 
+# Adds a (zpid : thread_id) pair to the threads_db
 def store_thread(zpid, thread_id):
     with shelve.open("threads_db", writeback=True) as threads_shelf:
         threads_shelf[zpid] = thread_id
 
 # DESC: These functions utilize the "shelve" library.
 # Think of a shelf as a dictionary that persists on a filesystem
-# We are using them to store our threads for each zpid!  
-# notice there is no create thread func because its super easy( see generate_response) 
+# We are using them to store the thread_id corresponding to each zpid!  
+# Notice there is no create thread function because its just "thread = client.beta.threads.create()"
 
 
 # --------------------------------------------------------------
@@ -94,6 +102,26 @@ def generate_response(message_body, zpid):
         thread = client.beta.threads.create()
         store_thread(zpid, thread.id)
         thread_id = thread.id
+
+        # ALTERNATIVE: Initialize thread with a message containing the property file
+        # 1.) get the property json data from the database
+        # make db manager?? then call data = DatabaseManager.get_JSON(zpid)??
+
+        # 2.) convert the json to an OpenAI file object
+        # file = upload_file(data)
+
+        # 3.) create the thread. pass the thread the file object!
+        # thread = client.beta.threads.create(    
+        #     messages=[
+        #         {
+        #         "role": "user",
+        #         "content": "Utilize this file containing data on a property to answer any questions a user may have on the property going forward.",
+        #         "file_ids": [file.id]
+        #         }
+        #     ]
+        # ) 
+        # store_thread(zpid, thread.id)
+        # thread_id = thread.id
 
     # Otherwise, retrieve the existing thread from the shelf
     else:
@@ -140,10 +168,10 @@ def run_assistant(thread):
 # DRIVER
 # ------------------------------------------------------------------------------------------
 # STEP 1: Upload a file to OpenAI embeddings
-filepath = os.path.join("..", "property_details.json")
+filepath = os.path.join("property_details.json")
 
 file_object = upload_file(filepath)
-# file_object = upload_json()
+# file_object = upload_json_test()
 
 
 # STEP 2: Create your assistant (Uncomment this once a single assistant has been created)
