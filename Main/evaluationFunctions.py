@@ -1,4 +1,7 @@
 from database import DatabaseManager
+from datetime import datetime, timedelta
+import requests
+import json
 
 # evaulation functions
 
@@ -6,24 +9,19 @@ from database import DatabaseManager
 repairCosts = 0
 
 # calculate expected rent, minimum rent should be 1% of purchase
-def onePercentRule(purchasePrice, repairCosts, downPayment, zestimateRent):
-    loanValue = purchasePrice - downPayment
+# DB: monthly_rent
+def onePercentRule(purchasePrice, repairCosts, loanValue):
     closingCosts = 0.06 * loanValue
-    expectedRent = (purchasePrice + closingCosts + repairCosts) * 0.1
-    return expectedRent
-        
+    return (purchasePrice + closingCosts + repairCosts) * 0.1
 
+# capitalization rate
+# DB: cap_rate
+def capRate(avgRent, avgAnnualCost, purchasePrice):
+    return ((avgRent * 11.5 - avgAnnualCost) / purchasePrice) * 100
 
-# capitalization rate should be 5-10%, under 5% is lower risk but takes longer to recoup investment
-# higher means more risk
-# need to grab average rent of area, maybe zip code
-def capRate(purchasePrice, loanValue, monthlyPayment, homeValue, zestimateRent, propertyTax):
-
-    return ((zestimateRent * 12) - ((monthlyPayment * 12) + propertyTax) / homeValue)
-
-x = capRate()
 # break-even ratio 
-# determines viability EXCLUDING initital costs like down payment - under 85% is optimal
+# determines viability EXCLUDING initital costs like down payment
+# DB: break_even
 def breakEven(expenses, rentIncome):
     return (expenses / rentIncome) * 100
 
@@ -42,9 +40,23 @@ def fifteenFixed(purchasePrice, downPayment, interestRate):
     return round(monthly, 2)
 
 # interest only 
+# DB: interest_est
 def interestOnly(purchasePrice, downPayment, interestRate):
     loan = purchasePrice - downPayment
     monthly = loan * (interestRate / 12) 
     return round(monthly, 2)
 
-# adjustable rate 
+def PriceRelativeArea(zpid, purchasePrice, zipcode):
+    database = DatabaseManager('zillow_listings.db')
+    prices = database.get_area_prices(zipcode)
+    total = 0
+    length = len(prices)
+    for i in prices:
+        total = total + i["price"]
+    average = total / (len(prices))
+    percentDif = round(((purchasePrice/average)-1) * 100, 2)
+    database.update_property_db(zpid,"rel_price",percentDif)
+
+
+
+
