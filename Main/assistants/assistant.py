@@ -164,31 +164,35 @@ def run_assistant(thread):
     new_message = messages.data[0].content[0].text.value
     return new_message
 
-
-# DRIVER
-# ------------------------------------------------------------------------------------------
-# # STEP 1: Upload a file to OpenAI embeddings
-# filepath = os.path.join("property_details.json")
-
-# file_object = upload_file(filepath)
-# upload_json_test()
-
-
-# STEP 2: Create your assistant (Uncomment this once a single assistant has been created)
-# assistant = create_assistant()
-# assistant_id = assistant.id
-# print(assistant_id)
-
 # === Hardcoded assistant id (will be used after first run and the assistant is created) ===
 # we want ONE assistant with many different threads running off of it for specific applications!
 assistant_id = "asst_z6vFw3RlNtT0d8rhJG1Kxt7e"
 
-while True:
-    user_input = input("Please enter your message (or 'exit' to quit): ")
-    if user_input.lower() == 'exit':
-        break
-    else:
-        generate_response(user_input, "13297098")  # Assuming a fixed zpid for simplicity
+def main():
+    # DRIVER
+    # ------------------------------------------------------------------------------------------
+    # # STEP 1: Upload a file to OpenAI embeddings
+    # filepath = os.path.join("property_details.json")
+
+    # file_object = upload_file(filepath)
+    # upload_json_test()
 
 
+    # STEP 2: Create your assistant (Uncomment this once a single assistant has been created)
+    # assistant = create_assistant()
+    # assistant_id = assistant.id
+    # print(assistant_id)
+
+    
+
+    while True:
+        user_input = input("Please enter your message (or 'exit' to quit): ")
+        if user_input.lower() == 'exit':
+            break
+        else:
+            generate_response(user_input, "13297098")  # Assuming a fixed zpid for simplicity
+
+
+if __name__ == "__main__":
+    main()
 
