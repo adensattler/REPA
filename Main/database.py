@@ -61,6 +61,7 @@ class DatabaseManager:
             num_beds INTEGER,
             num_baths INTEGER,
             zestimate INTEGER,
+            rentZestimate INTEGER,
             sqft INTEGER,
             price_per_sqft INTEGER,
             house_type TEXT,
@@ -129,8 +130,11 @@ class DatabaseManager:
             inDB = c.execute(sql, (zpid,)).fetchone()[0]
             if (inDB < 1):
                 # Insert data into the table
-                c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
-                data = json.loads(self.get_JSON(zpid))
+                c.execute('INSERT INTO propertyDetails (zillow_ID) VALUES (?)',(zpid ,))
+
+                #For future: update data with the full JSON 
+                # data = json.loads(self.get_JSON(zpid))
+                data=json.loads(data)
                 
                 #Insert data for each column
                 self.update_property_db(zpid, "streetAddress" , data["data"]["address"]["streetAddress"])
@@ -150,6 +154,7 @@ class DatabaseManager:
 
                 self.update_property_db(zpid,"thirty_year_mortgage", data["data"]["mortgageRates"]["thirtyYearFixedRate"])
                 self.update_property_db(zpid,"fifteen_year_mortgage", data["data"]["mortgageRates"]["fifteenYearFixedRate"])
+                self.update_property_db(zpid,"rentZestimate", data["data"]["rentZestimate"])
 
     
                 # TODO: Schools
@@ -185,7 +190,8 @@ class DatabaseManager:
         with self.conn:
             self.conn.row_factory = sqlite3.Row
             c = self.conn.cursor()
-            property = c.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description, images FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+            # property = c.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description, images FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+            property = c.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
         self.conn.commit()
         c.close()
         if property is not None:
