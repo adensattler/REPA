@@ -45,6 +45,7 @@ def upload_file(path):
 def upload_json_test():
     response = get_property_detail(API_KEY, 2054235341)
     data = response.json()
+    print(type(data))
 
     # Expected entry at `file` parameter to be bytes, an io.IOBase instance, PathLike or a tuple
     file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
@@ -67,6 +68,19 @@ def create_assistant(file):
         tools=[{"type": "retrieval"}],
         model="gpt-4-1106-preview",
         file_ids=[file.id],
+    )
+    return assistant
+
+def create_blank_assistant():
+    assistant = client.beta.assistants.create(
+        name="Real Estate Advisor",
+        instructions="""You are a highly knowledgeable real estate advisor that can assist others looking for information about a property. 
+        Your role is to summarize extensive property data, extract key figures and data, and give advice on a property.
+        Use your knowledge base to best respond to customer queries. 
+        If you don't know the answer, simply say that the question is outside of your scope of knowledge.
+        Be concise.""",
+        tools=[{"type": "retrieval"}],
+        model="gpt-4-1106-preview",
     )
     return assistant
 
@@ -104,13 +118,18 @@ def generate_response(message_body, zpid):
         thread_id = thread.id
 
         # ALTERNATIVE: Initialize thread with a message containing the property file
-        # 1.) get the property json data from the database
-        # make db manager?? then call data = DatabaseManager.get_JSON(zpid)??
+        # print(f"Creating new thread for zpid {zpid}")
 
-        # 2.) convert the json to an OpenAI file object
-        # file = upload_file(data)
+        # # 1.) get the property json data from the database
+        # # make db manager?? then call data = DatabaseManager.get_JSON(zpid)??
+        # db = DatabaseManager('zillow_listings.db')
+        # json_obj = json.loads(db.get_JSON(zpid))
+        # print(type(json_obj)) # this type is a dict
 
-        # 3.) create the thread. pass the thread the file object!
+        # # 2.) convert the json to an OpenAI file object
+        # file = client.files.create(file=json.dumps(json_obj).encode(), purpose="assistants")
+
+        # # 3.) create the thread. pass the thread the file object!
         # thread = client.beta.threads.create(    
         #     messages=[
         #         {
@@ -171,7 +190,7 @@ def run_assistant(thread):
 filepath = os.path.join("property_details.json")
 
 file_object = upload_file(filepath)
-# file_object = upload_json_test()
+# upload_json_test()
 
 
 # STEP 2: Create your assistant (Uncomment this once a single assistant has been created)
@@ -179,16 +198,21 @@ file_object = upload_file(filepath)
 # assistant_id = assistant.id
 # print(assistant_id)
 
+# CREATING ASSISTANT THAT DOES NOT HOLD FILES
+# assistant = create_blank_assistant()
+# assistant_id = assistant.id
+# print(assistant_id)
+
 # === Hardcoded assistant id (will be used after first run and the assistant is created) ===
 # we want ONE assistant with many different threads running off of it for specific applications!
-assistant_id = "asst_cBtsRL27F9sPphy8dko7uiQ1"
+assistant_id = "asst_syr79gSVjuDNWRmxd9QmwgB5"
 
 while True:
     user_input = input("Please enter your message (or 'exit' to quit): ")
     if user_input.lower() == 'exit':
         break
     else:
-        generate_response(user_input, "123")  # Assuming a fixed zpid for simplicity
+        generate_response(user_input, "13297098")  # Assuming a fixed zpid for simplicity
 
 
 
