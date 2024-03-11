@@ -127,3 +127,7 @@ footer {
 .pac-container:after{
     content:none !important;
 }
+.map {
+    height: 400px;
+    width: 100%; 
+}

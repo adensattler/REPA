@@ -1,4 +1,7 @@
 from database import DatabaseManager
+from datetime import datetime, timedelta
+import requests
+import json
 
 # evaulation functions
 
@@ -25,14 +28,12 @@ def breakEven(expenses, rentIncome):
 # mortgage monthly payments
 
 # 30 year fixed
-# DB: thirty_year_mortgage
 def thirtyFixed(purchasePrice, downPayment, interestRate):
     loan = purchasePrice - downPayment
     monthly = (loan * (interestRate / 12) * (1 + (interestRate / 12))**(12*30)) / ((1 + (interestRate / 12))**(12*30) - 1)
     return round(monthly, 2)
 
 # 15 year fixed
-# DB: fifteen_year_mortgage
 def fifteenFixed(purchasePrice, downPayment, interestRate):
     loan = purchasePrice - downPayment
     monthly = (loan * (interestRate / 12) * (1 + (interestRate / 12))**(12*15)) / ((1 + (interestRate / 12))**(12*15) - 1)
@@ -56,7 +57,6 @@ def PriceRelativeArea(zpid, purchasePrice, zipcode):
     percentDif = round(((purchasePrice/average)-1) * 100, 2)
     database.update_property_db(zpid,"rel_price",percentDif)
 
-    
 
 
 

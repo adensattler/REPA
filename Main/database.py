@@ -148,6 +148,9 @@ class DatabaseManager:
                 self.update_property_db(zpid, "house_type", data["data"]["homeType"])
                 # self.add_nearby_homes(data["data"]["adTargets"]["mlat"], data["data"]["adTargets"]["mlong"])
 
+                self.update_property_db(zpid,"thirty_year_mortgage", data["data"]["mortgageRates"]["thirtyYearFixedRate"])
+                self.update_property_db(zpid,"fifteen_year_mortgage", data["data"]["mortgageRates"]["fifteenYearFixedRate"])
+
     
                 # TODO: Schools
                 # TODO: Nearby Cities
