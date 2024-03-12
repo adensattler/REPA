@@ -21,3 +21,8 @@ env
 
 # Ignore config.py (holds api key)
 Main/config.py
+
+# Ignore Assistant thread files
+*bak
+*dat
+*dir
