@@ -3,14 +3,11 @@ Module Name: assistant_flask.py
 
 Description:
 This module contains functions for setting up, and interacting with a real estate assistant.
-It utilizes the OpenAI Assistants feature to pass a model/llm a property details json file.
-The AI assistant can then interact with a user and answer any questions they may have about a property.
-Th assistant serves as a stand-in for a real estate professional!
+It utilizes the OpenAI Assistants API to pass a model/llm a property details json file.
+Here is the link to the Assistants documentation: https://platform.openai.com/docs/assistants/overview
 
-Functions:
-- 
-
-Usage:
+The goal of assistant is to serve as a stand-in for someone more knowledgeable than the can user about real estate.
+As a result, they should be about to answer any questions a user may have about a property.
 """
 
 from openai import OpenAI
@@ -18,9 +15,11 @@ import os
 import shelve
 import time
 
-# Utilizes an environmental variable for your api key. will error out if not set in your system.
-client = OpenAI()
 
+client = OpenAI()
+# defaults to getting the key using os.environ.get("OPENAI_API_KEY") and will error out if not set in your system.
+# if you have the key set under a different name or not at all, you can pass the key as a parameter:
+# client = OpenAI(api_key="YOUR_API_KEY_HERE")
 
 # HELPER FUNCTIONS
 # ---------------------------------------------------------------------
