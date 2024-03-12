@@ -14,7 +14,10 @@ from openai import OpenAI
 import os
 import shelve
 import time
-
+import json
+from data_acquisition import get_property_detail
+from database import DatabaseManager
+from config import API_KEY
 
 client = OpenAI()
 # defaults to getting the key using os.environ.get("OPENAI_API_KEY") and will error out if not set in your system.
@@ -24,29 +27,49 @@ client = OpenAI()
 # HELPER FUNCTIONS
 # ---------------------------------------------------------------------
 
-# Upload file
+# Upload file a that can be used across various endpoints. returns an OpenAI File object
 def upload_file(path):
-    # Upload a file with an "assistants" purpose
     file = client.files.create(file=open(path, "rb"), purpose="assistants")
     return file
 
+# upload the json data instead of a file! THIS IS PROOF OF CONCEPT.
+def upload_json_test():
+    response = get_property_detail(API_KEY, 2054235341)
+    data = response.json()
+    print(type(data))
+
+    # Expected entry at `file` parameter to be bytes, an io.IOBase instance, PathLike or a tuple
+    file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
+    return file
+
+def upload_json(data):
+    # Expected entry at `file` parameter to be bytes, an io.IOBase instance, PathLike or a tuple
+    file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
+    return file
+
+# Creates an assistant tied to your OpenAI account
 def create_assistant(file):
     assistant = client.beta.assistants.create(
         name="Real Estate Advisor",
         instructions="""You are a highly knowledgeable real estate advisor that can assist others looking for information about a property. 
         Your role is to summarize extensive property data, extract key figures and data, and give advice on a property.
         Use your knowledge base to best respond to customer queries. 
-        If you don't know the answer, say simply that you cannot help with question.
+        If you don't know the answer, simply say that the question is outside of your scope of knowledge.
         Be concise.""",
         tools=[{"type": "retrieval"}],
         model="gpt-4-1106-preview",
-        file_ids=[file.id],
+        file_ids=[],
     )
     return assistant
 
 # --------------------------------------------------------------
 # Thread Management Functions
+# DESC: These functions utilize the "shelve" library.
+# Think of a shelf as a dictionary that persists on a filesystem
+# We are using them to store our threads for each zpid!  
+# notice there is no create thread func because its super easy( see generate_response) 
 # --------------------------------------------------------------
+
 def check_if_thread_exists(zpid):
     with shelve.open("threads_db") as threads_shelf:
         return threads_shelf.get(zpid, None)
@@ -54,11 +77,6 @@ def check_if_thread_exists(zpid):
 def store_thread(zpid, thread_id):
     with shelve.open("threads_db", writeback=True) as threads_shelf:
         threads_shelf[zpid] = thread_id
-
-# DESC: These functions utilize the "shelve" library.
-# Think of a shelf as a dictionary that persists on a filesystem
-# We are using them to store our threads for each zpid!  
-# notice there is no create thread func because its super easy( see generate_response) 
 
 
 # --------------------------------------------------------------
@@ -70,8 +88,27 @@ def generate_response(message_body, zpid):
 
     # If there is no thread for a property, create one and store it
     if thread_id is None:
-        print(f"Creating new thread for zpid {zpid}")
-        thread = client.beta.threads.create()
+        # Thread should be initialized with a message containing the property file
+
+        # 1.) get the property json data from the database
+        db = DatabaseManager('zillow_listings.db')
+        json_obj = json.loads(db.get_JSON(zpid))
+        print(type(json_obj)) # this type is a dict
+
+        # 2.) convert the json to an OpenAI file object
+        file = client.files.create(file=json.dumps(json_obj).encode(), purpose="assistants")
+
+        # 3.) create the thread. pass the thread the file object!
+        # print(f"Creating new thread for zpid {zpid}")
+        thread = client.beta.threads.create(    
+            messages=[
+                {
+                "role": "user",
+                "content": "Utilize this file containing data on a property to answer any questions a user may have on the property going forward.",
+                "file_ids": [file.id]
+                }
+            ]
+        ) 
         store_thread(zpid, thread.id)
         thread_id = thread.id
 
@@ -91,6 +128,7 @@ def generate_response(message_body, zpid):
     new_message = run_assistant(thread)
     print(f"To User:", new_message)
     return new_message
+
 
 # --------------------------------------------------------------
 # Run the assistant!
@@ -120,8 +158,8 @@ def run_assistant(thread):
 # DRIVER
 # ------------------------------------------------------------------------------------------
 # STEP 1: Upload a file to OpenAI embeddings
-filepath = os.path.join("property_details.json")
-file_object = upload_file(filepath)
+# filepath = os.path.join("property_details.json")
+# file_object = upload_file(filepath)
 
 
 # STEP 2: Create your assistant

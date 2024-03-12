@@ -7,7 +7,7 @@ from data_acquisition import *
 from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
-from assistant_flask import upload_file, generate_response
+from assistant import upload_file, generate_response
 import json
 from os import path
 from db_debug import resetDB
@@ -92,7 +92,6 @@ def create():
 
         try:
             listing_url = url
-
             listing_response = get_listings(API_KEY, listing_url)
 
             # stores the columns we are interested in
@@ -235,18 +234,6 @@ def reset():
         return redirect(url_for('property_search'))
      
     return redirect(url_for('property_search'))
-
-@app.route('/assistant', methods=('GET', 'POST'))
-def assistant():
-    if request.method == 'POST':
-        input = request.form['message']
-        response = generate_response(input, zpid='123')
-        return render_template('assistant.html', input=input, response=response)
-    return render_template('assistant.html')
-
-@app.route('/assistant2')
-def assistant2():
-    return render_template('assistant2.html')
 
 @app.route('/get')
 def get_assistant_response():
