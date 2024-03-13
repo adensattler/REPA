@@ -166,7 +166,7 @@ def run_assistant(thread):
 # We want ONE assistant with many different threads running off of it for specific applications!
 # assistant = create_assistant(file_object)
 # assistant_id = assistant.id
-assistant_id = 'asst_iAw4avGg18DWqV7zf9zVyvif'
+assistant_id = 'asst_z6vFw3RlNtT0d8rhJG1Kxt7e'
 
 # message = 'Testing. Please respond with "Yes".'
 # print(generate_response(message, zpid='123'))

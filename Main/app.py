@@ -8,6 +8,7 @@ from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
 from assistant import upload_file, generate_response
+from assistants import assistant
 import json
 from os import path
 from db_debug import resetDB
@@ -238,7 +239,8 @@ def reset():
 @app.route('/get')
 def get_assistant_response():
     input = request.args.get('msg')
-    response = generate_response(input, zpid='123')
+    zpid = request.args.get('zpid')
+    response = assistant.generate_response(input, zpid=zpid)
     return response
 
 if __name__ == "__main__":

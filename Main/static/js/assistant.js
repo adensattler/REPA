@@ -1,3 +1,7 @@
+// Get zpid value from URL
+var url = window.location.href;
+var zpid = url.substring(url.lastIndexOf('/') + 1);
+
 // Add an event listener for the chatbot button
 $("#openChatbotButton").click(function () {
   // Toggle the visibility of the chatbot window when the button is clicked
@@ -51,7 +55,7 @@ $(function () {
     userMessage.draw();
 
     // Send an asynchronous request to get the chatbot's response
-    $.get("/get", { msg: text }).done(function (data) {
+    $.get("/get", { msg: text, zpid: zpid }).done(function (data) {
       // Create a new Message object for the chatbot's response and draw it
       var botMessage = new Message({
         text: data,
