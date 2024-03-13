@@ -83,9 +83,15 @@ button {
     margin-bottom: 20px;
     width: 500px;
 }
+.form-group4 {
+    display: flex;
+    flex-direction: column; /* Stack label and input vertically */
+    align-items: flex-start; /* Align items to the start of the flex container */
+    width: 100%; /* Full width of its parent container */
+  }
 
 form label {
-    display: block;
+    display: inline;
     margin-bottom: 5px;
 }
 
@@ -235,7 +241,7 @@ footer {
 }
 
 .content-section {
-    max-width: 800px;
+    max-width: 1000px;
     margin: auto;
     padding: 20px;
 }
@@ -310,5 +316,13 @@ footer {
     th, td {
       min-width: 120px; /* Or whatever minimum width you want for your cells */
     }
+  }
+  
+  .subtitle {
+    text-align: left;
+    padding-top: 2%;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
   }
   

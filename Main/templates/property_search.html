@@ -1,66 +1,71 @@
 {% extends 'base.html' %} {% block content %}
-
+<div class="content-section">
   <!-- Page Title -->
-  <h1 class="title">{% block title %} Get Property Details! {% endblock %}</h1>
+  <h1 class="content-title">{% block title %} Get Property Details! {% endblock %}</h1>
 
   <!-- Add search bar and submit button for an address/zpid here: -->
-  <form method="post">
-    <div class="form-group; subtitle">
-      <label for="search_term"
-        >Receive a comphensive breakdown of any property on Zillow and any
-        insights into whether it might be a good deal.</label
-      >
+  <div class="content-block">
+    <form 
+      method="post"
+      class="form"
+    >
+      <div class="form-group4">
+        <label 
+          for="search_term"
+          class="form-label"
+        >Receive a comphensive breakdown of any property on Zillow and any insights into whether it might be a good deal.
+        </label>
 
-      <input
-        id="autocomplete"
-        type="text"
-        name="search_term"
-        placeholder="Search by ZPID or Address"
-        class="form-control"
-        value="{{ request.form['search_term'] }}"
-      />
+        <input
+          id="autocomplete"
+          type="text"
+          name="search_term"
+          placeholder="Search by ZPID or Address"
+          class="form-control2"
+          value="{{ request.form['search_term'] }}"
+        />
 
-      <!-- Javascript to replace country name with ZIP code -->
-      <script>
-        let autocomplete;
-        let zipcode = "";
-        function initAutocomplete() {
-          autocomplete = new google.maps.places.Autocomplete(
-            document.getElementById("autocomplete"),
-            {
-              types: ["address"],
-              componentRestrictions: { country: ["us"] },
-            }
-          );
-          autocomplete.addListener("place_changed", getzip);
-        }
-        function getzip() {
-          const place = autocomplete.getPlace();
-          for (const component of place.address_components) {
-            if (component.types[0] == "postal_code") {
-              zipcode = component.long_name;
-            }
+        <!-- Javascript to replace country name with ZIP code -->
+        <script>
+          let autocomplete;
+          let zipcode = "";
+          function initAutocomplete() {
+            autocomplete = new google.maps.places.Autocomplete(
+              document.getElementById("autocomplete"),
+              {
+                types: ["address"],
+                componentRestrictions: { country: ["us"] },
+              }
+            );
+            autocomplete.addListener("place_changed", getzip);
           }
-          let inputF = document.getElementById("autocomplete");
-          inputF.value =
-            inputF.value.substring(0, inputF.value.length - 5) + " " + zipcode;
-        }
-      </script>
+          function getzip() {
+            const place = autocomplete.getPlace();
+            for (const component of place.address_components) {
+              if (component.types[0] == "postal_code") {
+                zipcode = component.long_name;
+              }
+            }
+            let inputF = document.getElementById("autocomplete");
+            inputF.value =
+              inputF.value.substring(0, inputF.value.length - 5) + " " + zipcode;
+          }
+        </script>
 
-      <!-- Import Google autocompletion -->
-      <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete"
-        async
-        defer
-      ></script>
-    </div>
-    <div class="form-group">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-  </form>
-
+        <!-- Import Google autocompletion -->
+        <script
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete"
+          async
+          defer
+        ></script>
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
   <h2
-    class="subtitle2"
+    class="subtitle"
     style="text-align: left; padding-top: 2%; font-size: 2rem"
   >
     Favorites
@@ -162,5 +167,5 @@
   {% else %}
   <p>No properties viewed yet.</p>
   {% endif %}
-
+</div>
 {% endblock %}
