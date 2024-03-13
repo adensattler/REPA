@@ -60,12 +60,9 @@
     </div>
   </form>
 
-  <!-- Add other page details here: -->
-
-  <!--Favorites-->
   <h2
     class="subtitle2"
-    style="text-align: left; padding-top: 10%; font-size: 2rem"
+    style="text-align: left; padding-top: 2%; font-size: 2rem"
   >
     Favorites
   </h2>
@@ -74,7 +71,11 @@
     {% for property in favorites %}
     <!-- Bootstrap card for each favorite property -->
     <div class="card m-2" style="width: 18rem; position: relative">
-      <form method="POST" action="{{ url_for('toggle_favorite') }}" style="position:fixed; top: 0; right: 0;">
+      <form
+        method="POST"
+        action="{{ url_for('toggle_favorite') }}"
+        style="position: fixed; top: 0; right: 0"
+      >
         <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
         {% if property.is_favorite %}
         <button type="submit" class="btn btn-light btn-sm" style="border: none">
