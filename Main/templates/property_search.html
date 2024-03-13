@@ -73,7 +73,7 @@
       <form
         method="POST"
         action="{{ url_for('toggle_favorite') }}"
-        style="position: fixed; top: 0; right: 0"
+        style="position: absolute; top: 0; right: 0"
       >
         <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
         {% if property.is_favorite %}
