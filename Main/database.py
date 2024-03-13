@@ -221,10 +221,20 @@ class DatabaseManager:
             return None
 
 
-    def get_prop_search_history(self):
-        properties = self.sql_data_to_list_of_dicts("SELECT * FROM propertyDetails LIMIT 8")
-        return properties
+    # def get_prop_search_history(self):
+    #     properties = self.sql_data_to_list_of_dicts("SELECT * FROM propertyDetails LIMIT 8")
+    #     return properties
 
+    def get_prop_search_history(self, zpids):
+        list = []
+        with self.conn:
+            self.conn.row_factory = sqlite3.Row
+            c = self.conn.cursor()
+            for z in zpids:
+                list.extend(self.sql_data_to_list_of_dicts("SELECT * FROM propertyDetails WHERE zillow_ID = " + str(z)))
+        self.conn.commit()
+        c.close()
+        return list
 
     def sql_data_to_list_of_dicts(self, select_query):
         # Returns data from an SQL query as a list of dicts.
@@ -301,3 +311,4 @@ class DatabaseManager:
             cursor.execute("SELECT COUNT(*) FROM favoriteList WHERE zillow_ID = ?", (zpid,))
             count = cursor.fetchone()[0]
             return count > 0
+    

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
+from flask_caching import Cache
 import pandas as pd
 import sqlite3
 from werkzeug.exceptions import abort
@@ -17,6 +18,8 @@ from urllib.parse import quote
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
+
+cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
 
 database = DatabaseManager('zillow_listings.db')
 database.create_database()
@@ -192,7 +195,10 @@ def property_search():
             flash('Please enter a valid Zillow ID')
 
     # Retrieve property search history from the database
-    properties = database.get_prop_search_history()
+    
+    recent_searches = cache.get('recent_searches') or []
+    properties = database.get_prop_search_history(recent_searches)
+    # properties = database.get_prop_search_history()
 
     favorite_properties = database.get_favorite_properties()
 
@@ -204,6 +210,17 @@ def property_search():
 def property(zpid):
     database = DatabaseManager('zillow_listings.db')
     property = database.get_property_from_db(zpid)
+
+    #Caching:
+    recent_searches = cache.get('recent_searches') or []
+
+    if zpid in recent_searches:
+        recent_searches.remove(zpid)
+    recent_searches.insert(0, zpid)
+    recent_searches = recent_searches[:4]
+    #Assign it to the cache
+    cache.set('recent_searches', recent_searches)
+    print(recent_searches)
 
     # Image URLs stored as list JSON-encoded in database
     images_json = database.get_images_from_property_db(zpid)
@@ -280,3 +297,5 @@ def get_assistant_response():
 
 if __name__ == "__main__":
     app.run()
+
+
