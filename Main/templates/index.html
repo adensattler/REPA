@@ -3,14 +3,14 @@
 {% block title %}Welcome to REPA{% endblock %}
 
 {% block content %}
-<div style="text-align: center;">
-    <h1>Welcome to REPA</h1>
-    <p>REPA offers comprehensive insights into the real estate market, leveraging advanced analytics to help you make informed decisions. With our software, you can:</p>
-    <ul class="features-list" style="text-align: center;">
-        <li>Access up-to-date market data and trends</li>
-        <li>Analyze property values with precision</li>
-        <li>Forecast investment potential and risks</li>
+<div class="welcome__container">
+    <h1 class="welcome__title">Welcome to REPA</h1>
+    <p class="welcome__description">REPA offers comprehensive insights into the real estate market, leveraging advanced analytics to help you make informed decisions. With our software, you can:</p>
+    <ul class="welcome__features-list">
+        <li class="welcome__features-list-item">Access up-to-date market data and trends</li>
+        <li class="welcome__features-list-item">Analyze property values with precision</li>
+        <li class="welcome__features-list-item">Forecast investment potential and risks</li>
     </ul>
-    <a href="{{ url_for('listings_search')}}" class="btn btn-primary">Discover More</a>
+    <a href="{{ url_for('listings_search')}}" class="welcome__btn-primary">Discover More</a>
 </div>
 {% endblock %}
