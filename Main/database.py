@@ -130,7 +130,7 @@ class DatabaseManager:
             inDB = c.execute(sql, (zpid,)).fetchone()[0]
             if (inDB < 1):
                 # Insert data into the table
-                c.execute('INSERT INTO propertyDetails (zillow_ID) VALUES (?)',(zpid ,))
+                c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
 
                 #For future: update data with the full JSON 
                 # data = json.loads(self.get_JSON(zpid))
