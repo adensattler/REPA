@@ -21,6 +21,7 @@ import shelve
 import time
 import sys
 import json
+import re
 
 sys.path.append('../Main')
 from data_acquisition import get_property_detail
@@ -161,8 +162,14 @@ def run_assistant(thread):
 
     # Retrieve the Messages
     messages = client.beta.threads.messages.list(thread_id=thread.id)
-    new_message = messages.data[0].content[0].text.value
-    return new_message
+    new_response = messages.data[0].content[0].text.value
+
+    # Use re.sub() to remove the matched source
+    # tags and their contents
+    pattern = r'【\d+†source】'
+    cleaned_response = re.sub(pattern, '', new_response)
+    
+    return cleaned_response
 
 # === Hardcoded assistant id (will be used after first run and the assistant is created) ===
 # we want ONE assistant with many different threads running off of it for specific applications!
