@@ -108,8 +108,7 @@
         <strong>Sqft:</strong> {{ "{:,.0f}".format(property['sqft']) }}
       </p>
       <p class="card-text">
-        <strong>Zestimate®:</strong> {{ "${:,.0f}".format(property['zestimate'])
-        }}
+        <strong>Zestimate®:</strong> {{ property['zestimate'] }}
       </p>
       <p class="card-text">
         <strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}
