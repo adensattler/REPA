@@ -56,10 +56,12 @@ class DatabaseManager:
             CREATE TABLE IF NOT EXISTS propertyDetails(
             zillow_ID INTEGER NOT NULL,
             streetAddress TEXT,
+            zipcode INTEGER,
             price INTEGER,
             num_beds INTEGER,
             num_baths INTEGER,
             zestimate INTEGER,
+            rentZestimate INTEGER,
             sqft INTEGER,
             price_per_sqft INTEGER,
             house_type TEXT,
@@ -70,7 +72,16 @@ class DatabaseManager:
             nearby_cities BLOB,
             images TEXT,
             description TEXT,
+            monthly_rent_ REAL,
+            cap_rate REAL,
+            break_even REAL,
+            thirty_year_mortgage REAL,
+            fifteen_year_mortgage REAL,
+            interest_est REAL,
+            rel_price REAL,
+            rel_price_comps REAL,
             raw_json JSON,
+
 
             CONSTRAINT zillow_ID_FK FOREIGN KEY (zillow_ID)
             REFERENCES listings(zillow_ID)
@@ -119,8 +130,11 @@ class DatabaseManager:
             inDB = c.execute(sql, (zpid,)).fetchone()[0]
             if (inDB < 1):
                 # Insert data into the table
-                c.execute('INSERT INTO propertyDetails (zillow_ID,raw_json) VALUES (?,?)',(zpid , data))
-                data = json.loads(self.get_JSON(zpid))
+                c.execute('INSERT INTO propertyDetails (zillow_ID) VALUES (?)',(zpid ,))
+
+                #For future: update data with the full JSON 
+                # data = json.loads(self.get_JSON(zpid))
+                data=json.loads(data)
                 
                 #Insert data for each column
                 self.update_property_db(zpid, "streetAddress" , data["data"]["address"]["streetAddress"])
@@ -131,10 +145,17 @@ class DatabaseManager:
                 self.update_property_db(zpid, "sqft", data["data"]["adTargets"]["sqft"])
                 self.update_property_db(zpid, "price_per_sqft", data["data"]["resoFacts"]["pricePerSquareFoot"])
                 self.update_property_db(zpid, "property_tax", data["data"]["propertyTaxRate"])
+                self.update_property_db(zpid,"zipcode", data["data"]["zipcode"] )
     
                 self.update_property_db(zpid, "latitude", data["data"]["adTargets"]["mlat"])
                 self.update_property_db(zpid, "longitude", data["data"]["adTargets"]["mlong"])
                 self.update_property_db(zpid, "house_type", data["data"]["homeType"])
+                # self.add_nearby_homes(data["data"]["adTargets"]["mlat"], data["data"]["adTargets"]["mlong"])
+
+                self.update_property_db(zpid,"thirty_year_mortgage", data["data"]["mortgageRates"]["thirtyYearFixedRate"])
+                self.update_property_db(zpid,"fifteen_year_mortgage", data["data"]["mortgageRates"]["fifteenYearFixedRate"])
+                self.update_property_db(zpid,"rentZestimate", data["data"]["rentZestimate"])
+
     
                 # TODO: Schools
                 # TODO: Nearby Cities
@@ -169,7 +190,8 @@ class DatabaseManager:
         with self.conn:
             self.conn.row_factory = sqlite3.Row
             c = self.conn.cursor()
-            property = c.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description, images FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+            # property = c.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description, images FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+            property = c.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
         self.conn.commit()
         c.close()
         if property is not None:
@@ -206,6 +228,27 @@ class DatabaseManager:
             c = self.conn.cursor()
             favorites = c.execute('''SELECT pd.* FROM propertyDetails pd
                                   JOIN favoriteList fl ON pd.zillow_ID = fl.zillow_ID''').fetchall()
-            return [dict(ix) for ix in favorites]
+        self.conn.commit()
+        return [dict(ix) for ix in favorites]
 
+    def add_nearby_homes(self, zpid):
+            lat = self.get_value_from_property_db(zpid, "latitude") 
+            long = self.get_value_from_property_db(zpid, "longitude")
+            # print("latitude is: "+ str(lat))
+            # print("longitude is: "+ str(long))
+            top = float(lat) + 0.2
+            bottom = float(lat) - 0.2
+            left = float(long) - 0.2
+            right = float(long) + 0.2
+        
+            zillow_url = "https://www.zillow.com/homes/for_sale/?searchQueryState=%7B%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A%7B%22west%22%3A"+str(left)+"%2C%22east%22%3A"+str(right)+"%2C%22south%22%3A"+str(bottom)+"%2C%22north%22%3A"+str(top)+"%7D%2C%22filterState%22%3A%7B%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%7D%2C%22isListVisible%22%3Atrue%7D"
+            self.conn.commit()
+            return zillow_url
+    
+    def get_area_prices(self, zipcode):
+        with self.conn:
+            self.conn.row_factory = sqlite3.Row
+            c = self.conn.cursor()
+            prices = c.execute("SELECT price FROM listings WHERE zipcode = (?)",(zipcode,)).fetchall()
+            return [dict(ix) for ix in prices]
 
