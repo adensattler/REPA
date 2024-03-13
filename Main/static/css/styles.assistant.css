@@ -96,6 +96,7 @@ body {
   font-family: "Calibri", "Roboto", sans-serif;
 }
 .chat_window {
+  z-index: 1000;
   position: fixed;
   width: calc(100% - 20px);
   max-width: 500px;

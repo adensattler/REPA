@@ -77,24 +77,7 @@
   {% if favorites %}
   <div class="d-flex flex-wrap" style="justify-content: space-between">
     {% for property in favorites %}
-    <!-- Bootstrap card for each favorite property -->
-    <div class="card m-2" style="width: 18rem; position: relative">
-      <form
-        method="POST"
-        action="{{ url_for('toggle_favorite') }}"
-        style="position: fixed; top: 0; right: 0"
-      >
-        <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
-        {% if property.is_favorite %}
-        <button type="submit" class="btn btn-light btn-sm" style="border: none">
-          <i class="fas fa-heart"></i>
-        </button>
-        {% else %}
-        <button type="submit" class="btn btn-light btn-sm" style="border: none">
-          <i class="far fa-heart"></i>
-        </button>
-        {% endif %}
-      </form>
+    <div class="card m-2" style="width: 18rem">
       <img
         class="card-img-top"
         src="{{ property['thumbnail'] }}"
@@ -112,6 +95,34 @@
           class="btn btn-primary"
           >View Details</a
         >
+        <form
+          method="POST"
+          action="{{ url_for('toggle_favorite') }}"
+          style="position: absolute; top: 5px; right: 5px"
+        >
+          <input
+            type="hidden"
+            name="zpid"
+            value="{{ property['zillow_ID'] }}"
+          />
+          {% if property.is_favorite %}
+          <button
+            type="submit"
+            class="btn btn-light btn-sm"
+            style="border: none"
+          >
+            <i class="fas fa-heart"></i>
+          </button>
+          {% else %}
+          <button
+            type="submit"
+            class="btn btn-light btn-sm"
+            style="border: none"
+          >
+            <i class="far fa-heart"></i>
+          </button>
+          {% endif %}
+        </form>
       </div>
     </div>
     {% endfor %}
@@ -134,7 +145,7 @@
       <form
         method="POST"
         action="{{ url_for('toggle_favorite') }}"
-        style="position: absolute; top: 0; right: 0"
+        style="position: absolute; top: 5px; right: 5px"
       >
         <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
         {% if property.is_favorite %}
