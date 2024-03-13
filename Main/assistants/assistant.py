@@ -168,12 +168,12 @@ def run_assistant(thread):
     # tags and their contents
     pattern = r'【\d+†source】'
     cleaned_response = re.sub(pattern, '', new_response)
-    
+
     return cleaned_response
 
 # === Hardcoded assistant id (will be used after first run and the assistant is created) ===
 # we want ONE assistant with many different threads running off of it for specific applications!
-assistant_id = "asst_z6vFw3RlNtT0d8rhJG1Kxt7e"
+assistant_id = "asst_jzMUaqyzjNcKF4oAKbzLYYjh"
 
 def main():
     # DRIVER
