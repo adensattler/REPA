@@ -150,6 +150,8 @@ class DatabaseManager:
                 self.update_property_db(zpid, "latitude", data["data"]["adTargets"]["mlat"])
                 self.update_property_db(zpid, "longitude", data["data"]["adTargets"]["mlong"])
                 self.update_property_db(zpid, "house_type", data["data"]["homeType"])
+                self.update_property_db(zpid, "fifteen_year_mortgage", data["data"]["mortgageRates"]["fifteenYearFixedRate"])
+                self.update_property_db(zpid, "thirty_year_mortgage", data["data"]["mortgageRates"]["thirtyYearFixedRate"])
                 # self.add_nearby_homes(data["data"]["adTargets"]["mlat"], data["data"]["adTargets"]["mlong"])
 
                 # TODO: Schools
@@ -212,7 +214,7 @@ class DatabaseManager:
         with self.conn:
             self.conn.row_factory = sqlite3.Row
             c = self.conn.cursor()
-            property = c.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description, images FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+            property = c.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description, images, thirty_year_mortgage, fifteen_year_mortgage FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
         self.conn.commit()
         c.close()
         if property is not None:
