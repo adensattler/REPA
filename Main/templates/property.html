@@ -1,57 +1,130 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
 
-{% block content %}
-<div class="container mt-5">
-    <!-- Property Picture -->
-    <div class="row mb-4">
-        <div class="col-md-12 property-image-container">
-            <img src="{{ property['images'] }}" class="img-fluid" alt="Property Image">
-        </div>
-        <form action="{{ url_for('add_to_favorites') }}" method="post">
-            <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}">
-            <button type="submit" class="btn btn-warning btn-lg">Add to Favorites</button>
-        </form>
-    </div>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/styles.assistant.css') }}"
+/>
 
-    <!-- Property Details -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-md-8">
-            <h2 class="mb-3">{{ property['streetAddress'] }}</h2>
-            <p><strong>Price:</strong> {{"${:,.0f}".format(property['price']) }}  </p>
-        <p><strong>Beds:</strong> {{ property['num_beds'] }} | <strong>Baths:</strong> {{ property['num_baths'] }} | <strong>Sqft:</strong> {{ "{:,.0f}".format(property['sqft']) }}</p>
-            <p><strong>Zestimate®:</strong> {{ "${:,.0f}".format(property['zestimate']) }}</p>
-            <p><strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}</p>
-            <p><strong>House Type:</strong> {{ property['house_type'] }}</p>
-            <p><strong>Property Tax Rate:</strong> {{ property['property_tax'] }}%</p>
-        </div>
-    </div>
-
-    <!-- Nearby Schools -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-md-8">
-            <h3>Nearby Schools</h3>
-            {% if property['nearby_schools'] %}
-            <ul class="list-group">
-                {% for school in property['nearby_schools'] %}
-                <li class="list-group-item">
-                    <h5 class="mb-1">{{ school['name'] }}</h5>
-                    <p class="mb-1">Grade: {{ school['grade'] }}</p>
-                    <p class="mb-1">Distance: {{ school['distance'] }} miles</p>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <p>No nearby school information available.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Description -->
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h3>Description</h3>
-            <p>{{ property['description'] }}</p>
-        </div>
-    </div>
+<div
+  class="chat"
+  id="openChatbotButton"
+  onclick="this.classList.toggle('active')"
+>
+  <div class="button-background"></div>
+  <svg class="chat-bubble" width="100" height="100" viewBox="0 0 100 100">
+    <g class="bubble">
+      <path
+        class="line line1"
+        d="M 30.7873,85.113394 30.7873,46.556405 C 30.7873,41.101961
+        36.826342,35.342 40.898074,35.342 H 59.113981 C 63.73287,35.342
+        69.29995,40.103201 69.29995,46.784744"
+      />
+      <path
+        class="line line2"
+        d="M 13.461999,65.039335 H 58.028684 C
+          63.483128,65.039335
+          69.243089,59.000293 69.243089,54.928561 V 45.605853 C
+          69.243089,40.986964 65.02087,35.419884 58.339327,35.419884"
+      />
+    </g>
+    <circle class="circle circle1" r="1.9" cy="50.7" cx="42.5" />
+    <circle class="circle circle2" cx="49.9" cy="50.7" r="1.9" />
+    <circle class="circle circle3" r="1.9" cy="50.7" cx="57.3" />
+  </svg>
 </div>
+
+<!-- Initially hide the chatbot window -->
+<div class="chat_window" style="display: none">
+  <div class="top_menu">
+    <div class="title">Real Estate Assistant</div>
+  </div>
+  <ul class="messages"></ul>
+  <div class="bottom_wrapper clearfix">
+    <div class="message_input_wrapper">
+      <input class="message_input" placeholder="Type your message here..." />
+    </div>
+    <div class="send_message">
+      <div class="icon"></div>
+      <div class="text">Send</div>
+    </div>
+  </div>
+  <div class="message_template">
+    <li class="message">
+      <div class="avatar"></div>
+      <div class="text_wrapper">
+        <div class="text"></div>
+      </div>
+    </li>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <!-- Property Picture -->
+  <div class="row mb-4">
+    <div class="col-md-12 property-image-container">
+      <img
+        src="{{ property['images'] }}"
+        class="img-fluid"
+        alt="Property Image"
+      />
+    </div>
+    <form action="{{ url_for('add_to_favorites') }}" method="post">
+      <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
+      <button type="submit" class="btn btn-warning btn-lg">
+        Add to Favorites
+      </button>
+    </form>
+  </div>
+
+  <!-- Property Details -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+      <h2 class="mb-3">{{ property['streetAddress'] }}</h2>
+      <p><strong>Price:</strong> {{"${:,.0f}".format(property['price']) }}</p>
+      <p>
+        <strong>Beds:</strong> {{ property['num_beds'] }} |
+        <strong>Baths:</strong> {{ property['num_baths'] }} |
+        <strong>Sqft:</strong> {{ "{:,.0f}".format(property['sqft']) }}
+      </p>
+      <p>
+        <strong>Zestimate®:</strong> {{ property['zestimate'] }}
+      </p>
+      <p><strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}</p>
+      <p><strong>House Type:</strong> {{ property['house_type'] }}</p>
+      <p><strong>Property Tax Rate:</strong> {{ property['property_tax'] }}%</p>
+    </div>
+  </div>
+
+  <!-- Nearby Schools -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+      <h3>Nearby Schools</h3>
+      {% if property['nearby_schools'] %}
+      <ul class="list-group">
+        {% for school in property['nearby_schools'] %}
+        <li class="list-group-item">
+          <h5 class="mb-1">{{ school['name'] }}</h5>
+          <p class="mb-1">Grade: {{ school['grade'] }}</p>
+          <p class="mb-1">Distance: {{ school['distance'] }} miles</p>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No nearby school information available.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h3>Description</h3>
+      <p>{{ property['description'] }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Import jquery and AI assistant functions -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='js/assistant.js') }}"></script>
 {% endblock %}
