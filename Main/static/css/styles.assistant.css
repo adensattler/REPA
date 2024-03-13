@@ -102,9 +102,8 @@ body {
   height: 500px;
   border-radius: 10px;
   background-color: #fff;
-  left: 80.5%;
-  top: 67%;
-  transform: translateX(-50%) translateY(-50%);
+  bottom: 70px;
+  right: 120px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
   background-color: #fff;
   overflow: hidden;
