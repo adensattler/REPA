@@ -1,6 +1,5 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="overlay2">
   <!-- Page Title -->
   <h1 class="title">{% block title %} Get Property Details! {% endblock %}</h1>
 
@@ -67,7 +66,7 @@
     Favorites
   </h2>
   {% if favorites %}
-  <div class="d-flex flex-wrap" style="justify-content: space-between">
+  <div class="d-flex flex-wrap" style="justify-content: flex-start">
     {% for property in favorites %}
     <!-- Bootstrap card for each favorite property -->
     <div class="card m-2" style="width: 18rem; position: relative">
@@ -119,7 +118,7 @@
     Search History
   </h2>
   {% if properties%}
-  <div class="d-flex flex-wrap" style="justify-content: space-between">
+  <div class="d-flex flex-wrap" style="justify-content:flex-start">
     {% for property in properties %}
     <!-- Bootstrap card for each favorite property -->
     <div class="card m-2" style="width: 18rem; position: relative">
@@ -163,5 +162,5 @@
   {% else %}
   <p>No properties viewed yet.</p>
   {% endif %}
-</div>
+
 {% endblock %}

@@ -184,8 +184,3 @@ footer {
 .carousel-control-next-icon {
   filter: invert(100%); /* Makes the arrows white */
 }
-
-.favorite-form i.fa-heart {
-    color: #ff0000; /* Change the color as needed */
-    font-size: 1.5em; /* Adjust the size as needed */
-}
