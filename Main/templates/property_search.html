@@ -1,101 +1,175 @@
 {% extends 'base.html' %} {% block content %}
 
-<!-- Page Title -->
-<h1>{% block title %} Get Property Details! {% endblock %}</h1>
+<div class="overlay2">
+  <!-- Page Title -->
+  <h1 class="title">{% block title %} Get Property Details! {% endblock %}</h1>
 
-<!-- Import street address autocomplete function -->
-<script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete"
-  async
-  defer
-></script>
+  <!-- Import street address autocomplete function -->
+  <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete"
+    async
+    defer
+  ></script>
 
-<!-- Add search bar and submit button for an address/zpid here: -->
-<form method="post">
-  <div class="form-group">
-    <label for="search_term"
-      >Receive a comphensive breakdown of any property on Zillow and any
-      insights into whether it might be a good deal.</label
-    >
-    <input
-      id="autocomplete"
-      type="text"
-      name="search_term"
-      placeholder="Search by ZPID or Address"
-      class="form-control"
-      value="{{ request.form['search_term'] }}"
-    />
-  </div>
-  <div class="form-group">
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </div>
-</form>
-
-<!-- Add other page details here: -->
-
-<!--Favorites-->
-<h2>Favorites</h2>
-{% if favorites %}
-<div class="d-flex flex-wrap">
-  {% for property in favorites %}
-  <!-- Bootstrap card for each favorite property -->
-  <div class="card m-2" style="width: 18rem">
-    <img
-      class="card-img-top"
-      src="{{ property['images'] }}"
-      alt="Property image"
-    />
-    <div class="card-body">
-      <h5 class="card-title">{{ property['streetAddress'] }}</h5>
-      <p class="card-text">
-        Price: {{"${:,.0f}".format(property['price']) }} | Beds: {{
-        property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft: {{
-        "{:,.0f}".format(property['sqft']) }}
-      </p>
-      <a
-        href="{{ url_for('property', zpid=property['zillow_ID']) }}"
-        class="btn btn-primary"
-        >View Details</a
+  <!-- Add search bar and submit button for an address/zpid here: -->
+  <form method="post">
+    <div class="form-group; subtitle">
+      <label for="search_term"
+        >Receive a comphensive breakdown of any property on Zillow and any
+        insights into whether it might be a good deal.</label
       >
-    </div>
-  </div>
-  {% endfor %}
-</div>
-{% else %}
-<p>No favorite properties added yet.</p>
-{% endif %}
 
-<!-- Displays ALL Properties in DB (History essentially) -->
-<!-- right now it is just a series of links but eventually each property will be displayed w/ a bootstrap CARD -->
-<br />
-<h2>Search History</h2>
-{% if properties%}
-<div class="d-flex flex-wrap">
-  {% for property in properties %}
-  <!-- Bootstrap card for each favorite property -->
-  <div class="card m-2" style="width: 18rem">
-    <img
-      class="card-img-top"
-      src="{{ property['images'] }}"
-      alt="Property image"
-    />
-    <div class="card-body">
-      <h5 class="card-title">{{ property['streetAddress'] }}</h5>
-      <p class="card-text">
-        Price: {{"${:,.0f}".format(property['price']) }} | Beds: {{
-        property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft: {{
-        "{:,.0f}".format(property['sqft']) }}
-      </p>
-      <a
-        href="{{ url_for('property', zpid=property['zillow_ID']) }}"
-        class="btn btn-primary"
-        >View Details</a
-      >
+      <input
+        id="autocomplete"
+        type="text"
+        name="search_term"
+        placeholder="Search by ZPID or Address"
+        class="form-control"
+        value="{{ request.form['search_term'] }}"
+      />
+
+      <!-- Javascript to replace country name with ZIP code -->
+      <script>
+        let autocomplete;
+        let zipcode = "";
+        function initAutocomplete() {
+          autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById("autocomplete"),
+            {
+              types: ["address"],
+              componentRestrictions: { country: ["us"] },
+            }
+          );
+          autocomplete.addListener("place_changed", getzip);
+        }
+        function getzip() {
+          const place = autocomplete.getPlace();
+          for (const component of place.address_components) {
+            if (component.types[0] == "postal_code") {
+              zipcode = component.long_name;
+            }
+          }
+          let inputF = document.getElementById("autocomplete");
+          inputF.value =
+            inputF.value.substring(0, inputF.value.length - 5) + " " + zipcode;
+        }
+      </script>
+
+      <!-- Import Google autocompletion -->
+      <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt2-1vBRwTagtv__v6WeN5V1gPCDOO3R8&libraries=places&callback=initAutocomplete"
+        async
+        defer
+      ></script>
     </div>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+
+  <h2
+    class="subtitle2"
+    style="text-align: left; padding-top: 2%; font-size: 2rem"
+  >
+    Favorites
+  </h2>
+  {% if favorites %}
+  <div class="d-flex flex-wrap" style="justify-content: space-between">
+    {% for property in favorites %}
+    <!-- Bootstrap card for each favorite property -->
+    <div class="card m-2" style="width: 18rem; position: relative">
+      <form
+        method="POST"
+        action="{{ url_for('toggle_favorite') }}"
+        style="position: fixed; top: 0; right: 0"
+      >
+        <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
+        {% if property.is_favorite %}
+        <button type="submit" class="btn btn-light btn-sm" style="border: none">
+          <i class="fas fa-heart"></i>
+        </button>
+        {% else %}
+        <button type="submit" class="btn btn-light btn-sm" style="border: none">
+          <i class="far fa-heart"></i>
+        </button>
+        {% endif %}
+      </form>
+      <img
+        class="card-img-top"
+        src="{{ property['thumbnail'] }}"
+        alt="Property image"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ property['streetAddress'] }}</h5>
+        <p class="card-text">
+          Price: {{"${:,.0f}".format(property['price']) }} | Beds: {{
+          property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft:
+          {{ "{:,.0f}".format(property['sqft']) }}
+        </p>
+        <a
+          href="{{ url_for('property', zpid=property['zillow_ID']) }}"
+          class="btn btn-primary"
+          >View Details</a
+        >
+      </div>
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
+  {% else %}
+  <p>No favorite properties added yet.</p>
+  {% endif %}
+
+  <!-- Displays ALL Properties in DB (History essentially) -->
+  <!-- right now it is just a series of links but eventually each property will be displayed w/ a bootstrap CARD -->
+  <br />
+  <h2 class="subtitle2" style="text-align: left; font-size: 2rem">
+    Search History
+  </h2>
+  {% if properties%}
+  <div class="d-flex flex-wrap" style="justify-content: space-between">
+    {% for property in properties %}
+    <!-- Bootstrap card for each favorite property -->
+    <div class="card m-2" style="width: 18rem; position: relative">
+      <form
+        method="POST"
+        action="{{ url_for('toggle_favorite') }}"
+        style="position: absolute; top: 0; right: 0"
+      >
+        <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
+        {% if property.is_favorite %}
+        <button type="submit" class="btn btn-light btn-sm" style="border: none">
+          <i class="fas fa-heart"></i>
+        </button>
+        {% else %}
+        <button type="submit" class="btn btn-light btn-sm" style="border: none">
+          <i class="far fa-heart"></i>
+        </button>
+        {% endif %}
+      </form>
+      <img
+        class="card-img-top"
+        src="{{ property['thumbnail'] }}"
+        alt="Property image"
+      />
+      <div class="card-body">
+        <h5 class="card-title">{{ property['streetAddress'] }}</h5>
+        <p class="card-text">
+          Price: {{"${:,.0f}".format(property['price']) }} | Beds: {{
+          property['num_beds'] }} | Baths: {{ property['num_baths'] }} | Sqft:
+          {{ "{:,.0f}".format(property['sqft']) }}
+        </p>
+        <a
+          href="{{ url_for('property', zpid=property['zillow_ID']) }}"
+          class="btn btn-primary"
+          >View Details</a
+        >
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No properties viewed yet.</p>
+  {% endif %}
 </div>
-{% else %}
-<p>No properties viewed yet.</p>
-{% endif %} {% endblock %}
+{% endblock %}

@@ -71,12 +71,42 @@ button {
     cursor: pointer;
 } */
 
+.form-control{
+    width: 500px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100px;
+}
+.form-group2 {
+    margin-bottom: 20px;
+    width: 500px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+form input, form button {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
 /* Alert styles */
 .alert {
     background-color: #d4edda;
     color: #155724;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 /* Table styles */
@@ -109,6 +139,7 @@ footer {
 }
 
 .property-image-container {
+    width: auto;
     height: 300px; /* Fixed height */
     overflow: hidden;
     display: flex;
@@ -130,4 +161,31 @@ footer {
 .map {
     height: 400px;
     width: 100%; 
+}
+
+.carousel-img {
+    max-height: 400px; /* Adjust this value to fit your needs */
+    max-width: 100%;
+    display: block; /* Ensures the image is centered in its container */
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+  }
+  
+.carousel-control-prev,
+.carousel-control-next {
+  background-color: rgba(255, 255, 255, 0.5); /* White background with opacity */
+  border-radius: 50%; /* Circular shape */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(100%); /* Makes the arrows white */
+}
+
+.favorite-form i.fa-heart {
+    color: #ff0000; /* Change the color as needed */
+    font-size: 1.5em; /* Adjust the size as needed */
 }

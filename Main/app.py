@@ -13,6 +13,7 @@ import json
 from os import path
 from db_debug import resetDB
 import evaluationFunctions
+from urllib.parse import quote
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
@@ -48,7 +49,7 @@ def home():
             
             top_five_properties = perform_prediction_gui(dataframe)
             zillow_id_list = top_five_properties['zillow_ID'].to_list()
-            print(zillow_id_list)
+
             address_list = []
             for zillow_id in zillow_id_list:
                 address_list.append(get_address(API_KEY, zillow_id))
@@ -203,9 +204,17 @@ def property_search():
 def property(zpid):
     database = DatabaseManager('zillow_listings.db')
     property = database.get_property_from_db(zpid)
+
+    # Image URLs stored as list JSON-encoded in database
+    images_json = database.get_images_from_property_db(zpid)
+    image_urls = json.loads(images_json) if images_json else []
+
+    # Properly encode each URL in the images list
+    encoded_images = [quote(url, safe=':/') for url in image_urls]
+
     # rawjson = json.loads(database.get_JSON(zpid))
     # return render_template('property.html', property=property, rawjson=rawjson)
-    return render_template('property.html', property=property)
+    return render_template('property.html', property=property, images=encoded_images)
 
 @app.route('/add_to_favorites', methods=['POST'])
 def add_to_favorites():
@@ -231,6 +240,36 @@ def reset():
         return redirect(url_for('property_search'))
      
     return redirect(url_for('property_search'))
+
+@app.route('/remove_from_favorites', methods=['POST'])
+def remove_from_favorites():
+    zpid = request.form.get('zpid')
+    if zpid:
+        try:
+            database.remove_from_favorites(zpid)
+            flash('Property removed from favorites successfully.', 'success')
+        except Exception as e:
+            flash('An error occurred while removing from favorites: ' + str(e), 'error')
+    else:
+        flash('Invalid property ID.', 'error')
+    return redirect(url_for('property_search'))
+
+@app.route('/toggle_favorite', methods=['POST'])
+def toggle_favorite():
+    zpid = request.form.get('zpid')
+    if zpid:
+        try:
+            if database.is_favorite(zpid):
+                database.remove_from_favorites(zpid)
+                flash('Property removed from favorites successfully.', 'success')
+            else:
+                database.add_to_favorites(zpid)
+                flash('Property added to favorites successfully.', 'success')
+        except Exception as e:
+            flash(f'An error occurred: {e}', 'error')
+    else:
+        flash('Invalid property ID.', 'error')
+    return redirect(request.referrer or url_for('property_search'))
 
 @app.route('/get')
 def get_assistant_response():

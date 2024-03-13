@@ -59,67 +59,108 @@
 </div>
 
 <div class="container mt-5">
-  <!-- Property Picture -->
-  <div class="row mb-4">
-    <div class="col-md-12 property-image-container">
-      <img
-        src="{{ property['images'] }}"
-        class="img-fluid"
-        alt="Property Image"
-      />
-    </div>
-    <form action="{{ url_for('add_to_favorites') }}" method="post">
-      <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
-      <button type="submit" class="btn btn-warning btn-lg">
-        Add to Favorites
+  <div class="card mb-4">
+    <div
+      id="propertyImagesCarousel"
+      class="carousel slide"
+      data-bs-ride="carousel"
+    >
+      <div class="carousel-inner">
+        {% for image in images %}
+        <div class="carousel-item{% if loop.first %} active{% endif %}">
+          <img
+            src="{{ image }}"
+            class="d-block w-100 carousel-img"
+            alt="Property Image"
+          />
+        </div>
+        {% endfor %}
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#propertyImagesCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
       </button>
-    </form>
-  </div>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#propertyImagesCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
 
-  <!-- Property Details -->
-  <div class="row justify-content-center mb-4">
-    <div class="col-md-8">
-      <h2 class="mb-3">{{ property['streetAddress'] }}</h2>
-      <p><strong>Price:</strong> {{"${:,.0f}".format(property['price']) }}</p>
-      <p>
+    <!-- Property Information -->
+    <div class="card-body">
+      <h2 class="card-title">{{ property['streetAddress'] }}</h2>
+      <p class="card-text">
+        <strong>Price:</strong> {{ "${:,.0f}".format(property['price']) }}
+      </p>
+      <p class="card-text">
         <strong>Beds:</strong> {{ property['num_beds'] }} |
         <strong>Baths:</strong> {{ property['num_baths'] }} |
         <strong>Sqft:</strong> {{ "{:,.0f}".format(property['sqft']) }}
       </p>
-      <p>
-        <strong>Zestimate®:</strong> {{ property['zestimate'] }}
+      <p class="card-text">
+        <strong>Zestimate®:</strong> {{ "${:,.0f}".format(property['zestimate'])
+        }}
       </p>
-      <p><strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}</p>
-      <p><strong>House Type:</strong> {{ property['house_type'] }}</p>
-      <p><strong>Property Tax Rate:</strong> {{ property['property_tax'] }}%</p>
-    </div>
-  </div>
+      <p class="card-text">
+        <strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}
+      </p>
+      <p class="card-text">
+        <strong>House Type:</strong> {{ property['house_type'] }}
+      </p>
+      <p class="card-text">
+        <strong>Property Tax Rate:</strong> {{ property['property_tax'] }}%
+      </p>
 
-  <!-- Nearby Schools -->
-  <div class="row justify-content-center mb-4">
-    <div class="col-md-8">
-      <h3>Nearby Schools</h3>
-      {% if property['nearby_schools'] %}
-      <ul class="list-group">
-        {% for school in property['nearby_schools'] %}
-        <li class="list-group-item">
-          <h5 class="mb-1">{{ school['name'] }}</h5>
-          <p class="mb-1">Grade: {{ school['grade'] }}</p>
-          <p class="mb-1">Distance: {{ school['distance'] }} miles</p>
-        </li>
-        {% endfor %}
-      </ul>
+      <!-- Toggle Favorites Button -->
+      {% if property['is_favorite'] %}
+      <form action="{{ url_for('remove_from_favorites') }}" method="post">
+        <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
+        <button type="submit" class="btn btn-danger">
+          Remove from Favorites
+        </button>
+      </form>
       {% else %}
-      <p>No nearby school information available.</p>
+      <form action="{{ url_for('add_to_favorites') }}" method="post">
+        <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
+        <button type="submit" class="btn btn-warning">Add to Favorites</button>
+      </form>
       {% endif %}
     </div>
   </div>
-
-  <!-- Description -->
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <h3>Description</h3>
-      <p>{{ property['description'] }}</p>
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <!-- Description Section -->
+      <div>
+        <h3>Description</h3>
+        <p>{{ property['description'] }}</p>
+      </div>
+      <!-- Nearby Schools Section -->
+      <div class="mb-4">
+        <h3>Nearby Schools</h3>
+        {% if property['nearby_schools'] %}
+        <ul class="list-group">
+          {% for school in property['nearby_schools'] %}
+          <li class="list-group-item">
+            <strong>{{ school['name'] }}</strong>
+            <span>Grade: {{ school['grade'] }}</span>
+            <span>Distance: {{ school['distance'] }} miles</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No nearby school information available.</p>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
