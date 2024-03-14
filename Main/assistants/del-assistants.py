@@ -1,3 +1,17 @@
+"""
+Script to delete all OpenAI assistants.
+
+This script retrieves a list of assistant IDs, deletes each assistant, and confirms successful deletion.
+
+Usage:
+    - Ensure OpenAI API credentials are configured.
+    - Run the script.
+
+Note: Be cautious as this script permanently deletes assistants. 
+You will have to create a new assistant before running the assistant again.
+
+"""
+
 from openai import OpenAI
 
 client = OpenAI()
