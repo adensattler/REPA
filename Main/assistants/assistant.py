@@ -2,17 +2,29 @@
 Module Name: assistant.py
 
 Description:
-This module contains functions for setting up, and interacting with a real estate assistant.
-It utilizes the OpenAI Assistants API to pass a model/llm a property details json file.
-Here is the link to the Assistants documentation: https://platform.openai.com/docs/assistants/overview
+This module contains functions for setting up and interacting with a real estate assistant. 
+The assistant leverages the OpenAI Assistants API to process property details provided in a JSON format.
+For more information on Assistants API, refer to the documentation: https://platform.openai.com/docs/assistants/overview
 
-The goal of assistant is to serve as a stand-in for someone more knowledgeable than the can user about real estate.
-As a result, they should be about to answer any questions a user may have about a property.
+The goal of this assistant is to act as a substitute for someone with deep knowledge of real estate, capable of answering user inquiries regarding a property.
+
+For setting up your OpenAI Key, please follow the instructions at: https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key
+
+In our application there is ONE Assistant with many different threads (or conversations) tied to that assistant.
+Each thread represents a conversation about a specific property. The references to these conversations are stored in threads_db.
 
 Functions:
-- 
+- upload_data(data): Uploads a file-like object to be used across various endpoints and returns an OpenAI File object.
+- create_assistant(): Creates a Real Estate assistant tied to your OpenAI account.
+- check_if_thread_exists(zpid): Checks if there's an existing thread for a given Zillow Property ID (ZPID).
+- store_thread(zpid, thread_id): Stores a ZPID-thread ID pair in the database for thread management.
+- generate_response(message_body, zpid): Generates a response to a message about a property, managing threads as needed.
+- run_assistant(thread): Runs the assistant thread and returns the response.
+- main(): Driver function to test the AI Assistant from the command line.
 
 Usage:
+1. Ensure you have set up your OpenAI API key.
+2. Use the main() function to interact with the assistant via command line.
 """
 
 from openai import OpenAI
@@ -28,8 +40,8 @@ from data_acquisition import get_property_detail
 from database import DatabaseManager
 from config import API_KEY
 
-# === Hardcoded assistant id ===
-ASSISTANT_ID = "asst_jzMUaqyzjNcKF4oAKbzLYYjh"  # we want ONE assistant with many different threads running off of it for specific applications!
+# Hardcoded Assistant ID
+ASSISTANT_ID = "asst_jzMUaqyzjNcKF4oAKbzLYYjh"
 
 client = OpenAI()
 # NOTE: OpenAI() defaults to getting your key using os.environ.get("OPENAI_API_KEY") and will error out if not set in your system.
@@ -37,7 +49,7 @@ client = OpenAI()
 # client = OpenAI(api_key="YOUR_API_KEY_HERE")
 
 
-# HELPER FUNCTIONS
+# FUNCTIONS
 # ---------------------------------------------------------------------
 
 # Upload file-like object that can be used across various endpoints. returns an OpenAI File object.
@@ -46,7 +58,7 @@ def upload_data(data):
     file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
     return file
 
-# Creates an assistant tied to your OpenAI account
+# Creates a Real Estate assistant tied to your OpenAI account
 def create_assistant():
     assistant = client.beta.assistants.create(
         name="Real Estate Advisor",
@@ -59,30 +71,29 @@ def create_assistant():
         model="gpt-4-1106-preview",
         file_ids=[],
     )
+    # In order for an assistant to handle files from threads, you MUST set the file_ids parameter to [].
     return assistant
 
-# --------------------------------------------------------------
+
 # Thread Management Functions
 # --------------------------------------------------------------
-# Returns thread_id or None if DNE
+# DESC: These functions utilize the "shelve" library.
+# Think of a shelf as a dictionary that persists on a filesystem
+# We are using shelve to store the {zpid : thread_id} pair so we can "remember" current conversations.
+# Note that thread creation is handled when generating a response.
+
+# Returns thread_id from threads_db or None if DNE
 def check_if_thread_exists(zpid):
     with shelve.open("threads_db") as threads_shelf:
         return threads_shelf.get(zpid, None)
 
-# Adds a (zpid : thread_id) pair to the threads_db
+# Adds a (zpid : thread_id) pair to threads_db
 def store_thread(zpid, thread_id):
     with shelve.open("threads_db", writeback=True) as threads_shelf:
         threads_shelf[zpid] = thread_id
 
-# DESC: These functions utilize the "shelve" library.
-# Think of a shelf as a dictionary that persists on a filesystem
-# We are using them to store the thread_id corresponding to each zpid!  
-# Notice there is no create thread function because its just "thread = client.beta.threads.create()"
 
-
-# --------------------------------------------------------------
 # Get a response to a message about a property!
-# --------------------------------------------------------------
 def generate_response(message_body, zpid):
     # Check if there is already a thread_id for a zpid that is saved
     thread_id = check_if_thread_exists(zpid)
@@ -95,8 +106,7 @@ def generate_response(message_body, zpid):
         db = DatabaseManager('zillow_listings.db')
         data_obj = json.loads(db.get_JSON(zpid))
 
-        # 2.) convert the json to an OpenAI file object
-        # file = client.files.create(file=json.dumps(json_obj).encode(), purpose="assistants")
+        # 2.) convert the data to an OpenAI file object
         file = upload_data(data_obj)
 
         # 3.) create the thread. pass the thread the file object!
@@ -130,9 +140,7 @@ def generate_response(message_body, zpid):
     print(f"To User:", new_message)     # logging the response for debugging
     return new_message
 
-# --------------------------------------------------------------
-# Run the assistant!
-# --------------------------------------------------------------
+
 def run_assistant(thread):
     # Retrieve the Assistant
     assistant = client.beta.assistants.retrieve(ASSISTANT_ID)
