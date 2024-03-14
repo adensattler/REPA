@@ -8,8 +8,7 @@ from data_acquisition import *
 from database import DatabaseManager
 from analysis import create_summary_table
 from prediction import perform_prediction_gui
-from assistant import upload_file, generate_response
-from assistants import assistant
+from assistant import generate_response
 import json
 from os import path
 from db_debug import resetDB
@@ -292,7 +291,7 @@ def toggle_favorite():
 def get_assistant_response():
     input = request.args.get('msg')
     zpid = request.args.get('zpid')
-    response = assistant.generate_response(input, zpid=zpid)
+    response = generate_response(input, zpid=zpid)
     return response
 
 if __name__ == "__main__":
