@@ -34,7 +34,39 @@ def get_listings_gui(url:str, api_key:str)->str:
     den_listings = pd.json_normalize(data["data"]["cat1"]["searchResults"]["mapResults"])
     
     selected_den_listings = den_listings.loc[:, columns_of_interest].dropna(thresh=13) # Discard rows with over 13 null values
-    database.fill_database(selected_den_listings)
+    database.fill_database("listings" , selected_den_listings)
+
+    return f"{num_of_properties_fetched} properties fetched."
+
+def get_listings_nearby(url:str, api_key:str)->str:
+    scraper_api_url = "https://app.scrapeak.com/v1/scrapers/zillow/listing"
+
+    api_query_string = {
+    "api_key": api_key,
+    "url": url
+    }
+
+    api_response = requests.get(scraper_api_url, params=api_query_string)    
+    # Successful API call: Status 200
+    if api_response.status_code != 200:
+        return ""
+
+    data = api_response.json()
+
+    num_of_properties_fetched = data["data"]["categoryTotals"]["cat1"]["totalResultCount"]
+
+    # Store the columns we are interested in
+    columns_of_interest = [
+        'zpid', 'hdpData.homeInfo.price', 'hdpData.homeInfo.bedrooms', 'hdpData.homeInfo.bathrooms', 'area',
+        'hdpData.homeInfo.zipcode', 'hdpData.homeInfo.livingArea', 'hdpData.homeInfo.homeType', 'hdpData.homeInfo.zestimate', 'hdpData.homeInfo.city', 'hdpData.homeInfo.latitude', 'hdpData.homeInfo.longitude',
+        'hdpData.homeInfo.taxAssessedValue'
+    ]
+
+    # Get DataFrame from .json
+    den_listings = pd.json_normalize(data["data"]["cat1"]["searchResults"]["mapResults"])
+    
+    selected_den_listings = den_listings.loc[:, columns_of_interest].dropna(thresh=13) # Discard rows with over 13 null values
+    database.fill_database("nearby_listings" , selected_den_listings)
 
     return f"{num_of_properties_fetched} properties fetched."
 
