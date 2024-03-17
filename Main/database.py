@@ -241,9 +241,6 @@ class DatabaseManager:
             return None
 
 
-    # def get_prop_search_history(self):
-    #     properties = self.sql_data_to_list_of_dicts("SELECT * FROM propertyDetails LIMIT 8")
-    #     return properties
 
     def get_prop_search_history(self, zpids):
         list = []
