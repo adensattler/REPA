@@ -93,11 +93,11 @@ def property_search():
             database.insert_property_db(zpid, data.text)
             try:
                 url = database.add_nearby_homes(zpid)
-                print(get_listings_gui(url,API_KEY))
-                evaluationFunctions.PriceRelativeArea(zpid, database.get_value_from_property_db(zpid,"price"),database.get_value_from_property_db(zpid,"zipcode"))
+                print(get_listings_nearby(url,API_KEY))
             except:
                 print("nearby homes already in DB")
 
+            evaluationFunctions.PriceRelativeArea(zpid, database.get_value_from_property_db(zpid,"price"),database.get_value_from_property_db(zpid,"zipcode"))
             # Redirect the user to the property page on submission
             return redirect(url_for('property', zpid=zpid))
         else:
@@ -203,6 +203,8 @@ def get_assistant_response():
     zpid = request.args.get('zpid')
     response = generate_response(input, zpid=zpid)
     return response
+
+
 
 if __name__ == "__main__":
     app.run()
