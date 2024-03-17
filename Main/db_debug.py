@@ -7,6 +7,7 @@ def resetDB():
     c.execute(' DROP TABLE IF EXISTS favoriteList')
     c.execute(' DROP TABLE IF EXISTS propertyDetails;')
     c.execute(' DROP TABLE IF EXISTS listings;')
+    c.execute(' DROP TABLE IF EXISTS nearby_listings;')
     
     # c.execute(' VACUUM ')
     
