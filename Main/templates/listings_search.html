@@ -10,7 +10,7 @@
         class="form"
         >
             <div class="form-group3">
-                <input type="text" name="url" placeholder="Paste URL here" class="form-control2" value="{{ request.form['url'] }}"></input>
+                <input type="text" name="url" placeholder="Paste URL here" class="form-control" value="{{ request.form['url'] }}"></input>
             </div>
             <div class="form-group3">
                 <button type="submit" class="btn-primary">Submit</button>
@@ -23,6 +23,7 @@
     
     <div class="content-block">
         <h1 class="content-title">Predict Good Deals</h1>
+        <p class="content-description">Use a linear regression machine learning model to get predicted prices of the properties in the database and compare them with the actual prices to find undervalued properties.</p>
         <form 
         method="post" 
         class="form"
@@ -38,6 +39,7 @@
 
     <div class="content-block">
         <h1 class="content-title">Analyze Area Trends</h1>
+        <p class="content-description">Conduct Exploratory Data Analysis (EDA) on the properties in the database.</p>
         <form 
         method="post" 
         class="form"

@@ -10,7 +10,6 @@ from analysis import create_summary_table
 from prediction import perform_prediction_gui
 from assistant import generate_response
 import json
-from os import path
 from db_debug import resetDB
 import evaluationFunctions
 from urllib.parse import quote

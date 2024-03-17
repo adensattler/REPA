@@ -135,7 +135,12 @@
       </form>
       {% endif %}
       <!-- mortgage calculator button-->
-      <button type="submit" class="btn btn-large btn-secondary" data-bs-toggle="modal" data-bs-target="#mortgageCalculator">
+      <button
+        type="submit"
+        class="btn btn-large btn-secondary"
+        data-bs-toggle="modal"
+        data-bs-target="#mortgageCalculator"
+      >
         Mortgage Calculator
       </button>
     </div>
@@ -175,18 +180,36 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Mortgage Calculator</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
         <!-- Form inside the modal -->
         <form id="mortgageForm">
-            <div class="mb-3">
-              <label for="downPayment-input" class="form-label">Down Payment</label>
-              <input type="number" class="form-control" id="downPayment-input" required>
-            </div>
-            <button type="submit" class="btn btn-primary" onclick="calculateMortgage()">Submit</button>
-          </form>
-          <div id="mortgageResults"></div>
+          <div class="mb-3">
+            <label for="downPayment-input" class="form-label"
+              >Down Payment</label
+            >
+            <input
+              type="number"
+              class="mortgage-modal"
+              id="downPayment-input"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            onclick="calculateMortgage()"
+          >
+            Submit
+          </button>
+        </form>
+        <div id="mortgageResults"></div>
       </div>
     </div>
   </div>
@@ -194,33 +217,46 @@
 
 <!-- mortgage calculator function-->
 <script>
- function calculateMortgage() {
+  function calculateMortgage() {
     // prevent form submission if called on form submit
     event.preventDefault();
-    
+
     // get input values
-    const downPayment = parseFloat(document.getElementById('downPayment-input').value);
+    const downPayment = parseFloat(
+      document.getElementById("downPayment-input").value
+    );
     // loan amount
     const loanAmount = "{{property['price']}}" - downPayment;
 
     // convert interest rate to decimal
     const fifteenInterestRate = "{{property['fifteen_year_mortgage']}}" / 100;
-    const thirtyInterestRate =  "{{property['thirty_year_mortgage']}}" / 100;
-
+    const thirtyInterestRate = "{{property['thirty_year_mortgage']}}" / 100;
 
     // Calculate payments for fixed terms
-    const fifteenFixed = (loanAmount * (fifteenInterestRate / 12) * (1 + (fifteenInterestRate / 12))**(12*15)) / ((1 + (fifteenInterestRate / 12))**(12*15) - 1)
-    const thirtyFixed = (loanAmount * (thirtyInterestRate / 12) * (1 + (thirtyInterestRate / 12))**(12*30)) / ((1 + (thirtyInterestRate / 12))**(12*30) - 1)
+    const fifteenFixed =
+      (loanAmount *
+        (fifteenInterestRate / 12) *
+        (1 + fifteenInterestRate / 12) ** (12 * 15)) /
+      ((1 + fifteenInterestRate / 12) ** (12 * 15) - 1);
+    const thirtyFixed =
+      (loanAmount *
+        (thirtyInterestRate / 12) *
+        (1 + thirtyInterestRate / 12) ** (12 * 30)) /
+      ((1 + thirtyInterestRate / 12) ** (12 * 30) - 1);
 
     // interest only loans
-    //const interestOnly = loanAmount * (interestRate / 12) 
+    //const interestOnly = loanAmount * (interestRate / 12)
     // results
-    let resultsHTML = `15-Year Fixed Monthly Payment: $${fifteenFixed.toFixed(2)}<br>`;
-    resultsHTML += `30-Year Fixed Monthly Payment: $${thirtyFixed.toFixed(2)}<br>`;
+    let resultsHTML = `15-Year Fixed Monthly Payment: $${fifteenFixed.toFixed(
+      2
+    )}<br>`;
+    resultsHTML += `30-Year Fixed Monthly Payment: $${thirtyFixed.toFixed(
+      2
+    )}<br>`;
     //resultsHTML += `Interest Only Monthly Payment: $${interestOnly.toFixed(2)}<br>`;
 
-    document.getElementById('mortgageResults').innerHTML = resultsHTML;
- } 
+    document.getElementById("mortgageResults").innerHTML = resultsHTML;
+  }
 </script>
 
 <!-- Import jquery and AI assistant functions -->
