@@ -1,189 +1,122 @@
-/* h1 {
-    border: 2px #eee solid;
-    color: brown;
-    text-align: center;
-    padding: 10px;
-} */
-
-/* Reset some default styles */
-
-/* body, h1, h2, h3, p, ul, li {
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-} */
-
 /* Header styles */
 header {
-    background-color: #4285f4;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
+  background-color: #4285f4;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
 }
 
-/* Navigation styles */
-/* nav {
-    background-color: #333;
-}
-
-nav a {
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 15px;
-    display: inline-block;
-} */
-
-/* Form styles */
-/* form {
-    margin-top: 20px;
+.form-control {
+  width: 500px;
 }
 
 .form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-input, button {
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-button {
-    background-color: #4285f4;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-} */
-
-.form-control{
-    width: 500px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    width: 100px;
+  margin-bottom: 20px;
+  width: 100px;
 }
 .form-group2 {
-    margin-bottom: 20px;
-    width: 500px;
+  margin-bottom: 20px;
+  width: 500px;
 }
+
 .form-group4 {
-    display: flex;
-    flex-direction: column; /* Stack label and input vertically */
-    align-items: flex-start; /* Align items to the start of the flex container */
-    width: 100%; /* Full width of its parent container */
-  }
+  display: flex;
+  flex-direction: column; /* Stack label and input vertically */
+  align-items: flex-start; /* Align items to the start of the flex container */
+  width: 100%; /* Full width of its parent container */
+}
 
 form label {
-    display: inline;
-    margin-bottom: 5px;
+  display: inline;
+  margin-bottom: 5px;
 }
 
-form input, form button {
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
+form input,
+form button {
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 button {
-    background-color: #4285f4;
-    color: #fff;
-    border: none;
-    cursor: pointer;
+  background-color: #4285f4;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
 }
 /* Alert styles */
 .alert {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px;
-    margin-top: 20px;
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  margin-top: 20px;
 }
 
 /* Table styles */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
 }
 
 th {
-    background-color: #4285f4;
-    color: #fff;
+  background-color: #4285f4;
+  color: #fff;
 }
 
 /* Footer styles */
 footer {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 .property-image-container {
-    width: auto;
-    height: 300px; /* Fixed height */
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px; /* Space between image and button */
+  width: auto;
+  height: 300px; /* Fixed height */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px; /* Space between image and button */
 }
 .property-image-container img {
-    width: auto;
-    max-height: 100%;
+  width: auto;
+  max-height: 100%;
 }
 .add-favorite-btn {
-    display: block;
-    width: 100%;
+  display: block;
+  width: 100%;
 }
-.pac-container:after{
-    content:none !important;
+.pac-container:after {
+  content: none !important;
 }
 .map {
-    height: 400px;
-    width: 100%; 
+  height: 400px;
+  width: 100%;
 }
 
 .carousel-img {
-    max-height: 400px; /* Adjust this value to fit your needs */
-    max-width: 100%;
-    display: block; /* Ensures the image is centered in its container */
-    margin-left: auto;
-    margin-right: auto;
-    height: auto;
-    width: auto;
-    object-fit: contain;
-  }
-  
-.carousel-control-prev,
-.carousel-control-next {
-  background-color: rgba(255, 255, 255, 0.5); /* White background with opacity */
-  border-radius: 50%; /* Circular shape */
+  max-height: 400px; /* Adjust this value to fit your needs */
+  max-width: 100%;
+  display: block; /* Ensures the image is centered in its container */
+  margin-left: auto;
+  margin-right: auto;
+  height: auto;
+  width: auto;
+  object-fit: contain;
 }
 
 .carousel-control-prev-icon,
@@ -194,135 +127,143 @@ footer {
 /* Welcome page styles */
 
 .welcome__container {
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 20px;
-    background: #fff;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .welcome__title {
-    margin-bottom: 20px;
-    color: #000000;
-    font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #000000;
+  font-size: 2.5rem;
 }
 
 .welcome__description {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
 }
 
 .welcome__features-list {
-    text-align: left;
-    list-style: inside square;
-    padding-left: 0;
-    margin-bottom: 20px;
+  text-align: left;
+  list-style: inside square;
+  padding-left: 0;
+  margin-bottom: 20px;
 }
 
 .welcome__features-list-item {
-    font-weight: bold;
-    margin-bottom: 10px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .welcome__btn-primary {
-    display: inline-block;
-    background-color: #4285f4;
-    color: #fff;
-    padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+  display: inline-block;
+  background-color: #4285f4;
+  color: #fff;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
 .welcome__btn-primary:hover {
-    background-color: #3276d1;
+  background-color: #3276d1;
 }
 
 .content-section {
-    max-width: 1000px;
-    margin: auto;
-    padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
 }
 
 .content-block {
-    background: #fff;
-    margin-bottom: 30px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 .content-title {
-    color: #000000;
-    margin-bottom: 20px;
+  color: #000000;
+  margin-bottom: 20px;
 }
 
 .content-description {
-    margin-bottom: 20px;
-    line-height: 1.6;
+  margin-bottom: 20px;
+  line-height: 1.6;
 }
 
 .form {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .form-group3 {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
-.form-control2 {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
+.mortgage-modal {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
 .responsive-table {
-    overflow-x: auto;
-    margin-bottom: 20px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .responsive-table {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
   }
-  
-  @media (max-width: 768px) {
-    .responsive-table {
-      -ms-overflow-style: -ms-autohiding-scrollbar;
-    }
-  }
-  
-  /* Ensure tables don't have a fixed width that can overflow the container */
+}
+
+/* Ensure tables don't have a fixed width that can overflow the container */
+table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+}
+
+/* Table styles for better readability on smaller screens */
+@media screen and (max-width: 768px) {
   table {
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 20px;
-    border-collapse: collapse;
+    display: block;
   }
-  
-  /* Table styles for better readability on smaller screens */
-  @media screen and (max-width: 768px) {
-    table {
-      display: block;
-    }
-    
-    thead {
-      display: block;
-    }
-  
-    tbody {
-      display: block;
-    }
-  
-    th, td {
-      min-width: 120px; /* Or whatever minimum width you want for your cells */
-    }
+
+  thead {
+    display: block;
   }
-  
-  .subtitle {
-    text-align: left;
-    padding-top: 2%;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #333;
+
+  tbody {
+    display: block;
   }
-  
+
+  th,
+  td {
+    min-width: 120px; /* Or whatever minimum width you want for your cells */
+  }
+}
+
+.subtitle {
+  text-align: left;
+  padding-top: 2%;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
