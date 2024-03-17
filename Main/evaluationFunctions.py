@@ -16,8 +16,11 @@ def onePercentRule(purchasePrice, repairCosts, loanValue):
 
 # capitalization rate
 # DB: cap_rate
-def capRate(avgRent, avgAnnualCost, purchasePrice):
-    return ((avgRent * 11.5 - avgAnnualCost) / purchasePrice) * 100
+def capRate(zpid, avgRent, avgAnnualCost, purchasePrice):
+    cap = ((avgRent * 11.5 - avgAnnualCost) / purchasePrice) * 100
+    database = DatabaseManager('zillow_listings.db')
+    
+    return cap
 
 # break-even ratio 
 # determines viability EXCLUDING initital costs like down payment
@@ -50,7 +53,6 @@ def PriceRelativeArea(zpid, purchasePrice, zipcode):
     database = DatabaseManager('zillow_listings.db')
     prices = database.get_area_prices(zipcode)
     total = 0
-    length = len(prices)
     for i in prices:
         total = total + i["price"]
     average = total / (len(prices))
