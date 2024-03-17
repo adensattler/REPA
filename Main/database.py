@@ -71,7 +71,7 @@ class DatabaseManager:
             images TEXT,
             thumbnail TEXT,
             description TEXT,
-            monthly_rent_ REAL,
+            monthly_rent REAL,
             cap_rate REAL,
             break_even REAL,
             thirty_year_mortgage REAL,
@@ -94,17 +94,34 @@ class DatabaseManager:
                 REFERENCES listings(zillow_ID)
             )
             ''')
+            c.execute('''
+            CREATE TABLE IF NOT EXISTS nearby_listings (
+                zillow_ID INTEGER PRIMARY KEY NOT NULL,
+                price INTEGER NOT NULL,
+                num_beds INTEGER NOT NULL,
+                num_baths INTEGER NOT NULL,
+                area INTEGER NOT NULL,
+                zipcode INTEGER NOT NULL,
+                living_area INTEGER NOT NULL,
+                house_type TEXT NOT NULL,
+                zestimate INTEGER NOT NULL,
+                city TEXT NOT NULL,
+                latitude INTEGER NOT NULL,
+                longitude INTEGER NOT NULL,
+                tax_ass_val INTEGER NOT NULL
+            )
+            ''')
         self.conn.commit()
         c.close()
 
 
-    def fill_database(self, dataframe):
+    def fill_database(self, table, dataframe):
         with self.conn:
             c = self.conn.cursor()
             columns = list(dataframe.columns)
             columns = [column.replace('.', '_') for column in columns]
             for i, row in dataframe.iterrows():
-                c.execute('INSERT INTO listings (zillow_ID, price, num_beds, num_baths, area, zipcode, living_area, house_type, zestimate, city, latitude, longitude, tax_ass_val) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+                c.execute('INSERT INTO ' + table + ' (zillow_ID, price, num_beds, num_baths, area, zipcode, living_area, house_type, zestimate, city, latitude, longitude, tax_ass_val) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
                           (row['zpid'], row['hdpData.homeInfo.price'], row['hdpData.homeInfo.bedrooms'], row['hdpData.homeInfo.bathrooms'], row['area'], row['hdpData.homeInfo.zipcode'], row['hdpData.homeInfo.livingArea'], row['hdpData.homeInfo.homeType'], row['hdpData.homeInfo.zestimate'], row['hdpData.homeInfo.city'], row['hdpData.homeInfo.latitude'], row['hdpData.homeInfo.longitude'], row['hdpData.homeInfo.taxAssessedValue']))
         self.conn.commit()
         c.close()
@@ -152,7 +169,7 @@ class DatabaseManager:
                 self.update_property_db(zpid, "house_type", data["data"]["homeType"])
                 self.update_property_db(zpid, "fifteen_year_mortgage", data["data"]["mortgageRates"]["fifteenYearFixedRate"])
                 self.update_property_db(zpid, "thirty_year_mortgage", data["data"]["mortgageRates"]["thirtyYearFixedRate"])
-                # self.add_nearby_homes(data["data"]["adTargets"]["mlat"], data["data"]["adTargets"]["mlong"])
+                self.update_property_db(zpid, "monthly_rent", data["data"]["rentZestimate"])
 
                 # TODO: Schools
                 # TODO: Nearby Cities
@@ -214,7 +231,8 @@ class DatabaseManager:
         with self.conn:
             self.conn.row_factory = sqlite3.Row
             c = self.conn.cursor()
-            property = c.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description, images, thirty_year_mortgage, fifteen_year_mortgage FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+            # property = c.execute('SELECT zillow_ID, streetAddress, price, num_beds, num_baths, zestimate, sqft, price_per_sqft, house_type, property_tax, nearby_schools, nearby_cities, images, description, images, thirty_year_mortgage, fifteen_year_mortgage FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
+            property = c.execute('SELECT * FROM propertyDetails WHERE zillow_ID = ?', (zpid,)).fetchone()
         self.conn.commit()
         c.close()
         if property is not None:
@@ -271,6 +289,7 @@ class DatabaseManager:
 
 
     def add_nearby_homes(self, zpid):
+        with self.conn:
             lat = self.get_value_from_property_db(zpid, "latitude") 
             long = self.get_value_from_property_db(zpid, "longitude")
             # print("latitude is: "+ str(lat))
@@ -280,15 +299,15 @@ class DatabaseManager:
             left = float(long) - 0.2
             right = float(long) + 0.2
             zillow_url = "https://www.zillow.com/homes/for_sale/?searchQueryState=%7B%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A%7B%22west%22%3A"+str(left)+"%2C%22east%22%3A"+str(right)+"%2C%22south%22%3A"+str(bottom)+"%2C%22north%22%3A"+str(top)+"%7D%2C%22filterState%22%3A%7B%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%7D%2C%22isListVisible%22%3Atrue%7D"
-            self.conn.commit()
-            return zillow_url
+        self.conn.commit()
+        return zillow_url
     
 
     def get_area_prices(self, zipcode):
         with self.conn:
             self.conn.row_factory = sqlite3.Row
             c = self.conn.cursor()
-            prices = c.execute("SELECT price FROM listings WHERE zipcode = (?)",(zipcode,)).fetchall()
+            prices = c.execute("SELECT price FROM nearby_listings WHERE zipcode = (?)",(zipcode,)).fetchall()
             return [dict(ix) for ix in prices]
 
 
