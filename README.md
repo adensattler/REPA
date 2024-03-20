@@ -4,17 +4,35 @@ Real Estate Price Prediction and Investment Analysis
 ## Client
 
 Leo Dixon, Executive MBA PhD Candidate, Adjunct Faculty, Daniels College of Business, University of Denver, leo.dixon@du.edu
-Description
 
 ## Description
 
-This project aims to develop a potentially profitable investment opportunities in the housing market.
-By leveraging historical and current data from the real estate market and a machine learning model, the
-tool enables user to make informed decisions and navigate the market with confidence.
+This project aims to help users find potentially profitable investment opportunities or "good deals" in the housing market.
 
-The project utilizes Python as the primary programming language and leverages the Scrapeak API to
-scrape data from Zillow, a leading real estate marketplace. This ensures access to comprehensive and
-up-to-date information for analysis and modeling.
+By leveraging large amounts of data from the real estate market, a machine learning model, an AI Assistant, and numerous evaluation metrics, this tool enables user to make more informed decisions and navigate the market with confidence. 
+
+
+Here's a brief overview of the tools and technologies used in the project:
+
+### Technologies:
+**Python**: Our project is primarily built using Python, a versatile and powerful programming language.
+
+**Flask**: We rely on Flask, a Python-based web framework, for building our web application and managing server-side logic.
+
+**HTML/CSS/JS**: For the frontend user interface design, we utilize a combination of HTML, CSS, and JavaScript to create an engaging and intuitive experience. We used the frontend framework [Bootstrap](https://getbootstrap.com/) for most of our UI design.
+
+### APIs:   
+**Scrapeak API**: Scrapes data from Zillow, allowing us to access comprehensive and up-to-date property information effortlessly.
+
+**Google Places API**: To enhance user experience, we integrated the Google Places API for address search autocompletion.
+
+**OpenAI Assistants API**: Allows us to create and interact with an AI Real Estate Assistant. This assistant adds an intelligent layer to our application, assisting users with various real estate-related inquiries and tasks.
+
+### Other Tools:
+**SQLite3**: We utilize SQLite3, a lightweight and self-contained SQL database engine, for managing our databases. SQLite3 offers simplicity and efficiency, making it an ideal choice for our application's data storage needs.
+
+**scikit-learn (ML Linear Regression)**: Utilized to implement a linear regression model for property price prediction. This model enhances our application by providing users with estimated property prices based on relevant features.
+
 
 The system architecture is designed with two keys objectives in mind:
 
@@ -27,44 +45,58 @@ property prices and investment opportunities.
 properties they wish to explore further. It provides detailed and specific information about the selected
 property, allowing users to make informed decisions based on their preferences and requirements.
 
-This program does not necessitate the use of a particular development environment or anything like
-that, so feel free to download the program and use it right away (after following the instructions 
-below).
+The `Running the Program` section found below will walk you through setting up the program and how to get it to run on your system.
 
-Below, in the `Getting the Program to Work` section, you will find a guide on how to set up your system for the program, how to get started with
-the program, how to use it, the expected outputs, and visions for the future!
+The `Functionality` section will describe how to use each part of the app and how they function. 
 
 For technical look at the system architecture, please refer to the diagram below also found in the
 `Diagrams` folder:
 
 <img width="373" alt="software architecture diagram" src="https://github.com/dussec/real-estate-price-analysis/assets/95201389/eccf48b2-e3d0-46fb-8cf8-4843819fe4ed">
 
-## Getting the Program to work
+## Running the Program
 
-**`!NOTE`**: Please use `pip3` instead of `pip` in the following install instructions if you have the latest python release.
-
-1. If you haven't already, install the latest version of Python. You can install it from here: [website](https://www.python.org/downloads/)
-2. In a terminal window, run the following command lines to install the necessary dependencies for the program:
-`pip install pandas`
-`pip install plotly`
-`pip install seaborn`
-`pip install matplotlib`
-`pip install folium`
-`pip install requests`
-`pip install scikit-learn`
-
-3. Clone the repository onto your local machine. Choose a directory that you plan to have the program in, open a terminal window on that directory, and run the following command line to clone:
+1. Clone the repository onto your local machine. Choose a directory that you plan to have the program in, open a terminal window on that directory, and run the following command line to clone:
 `git clone https://github.com/dussec/real-estate-price-analysis.git`
-4. Go to the Zillow website ([website](https://www.zillow.com/)) and search for homes (for sale) in the Denver. Try to include a variety of areas (Aurora, Centennial, etc) and a broad criteron for a large dataset. Once you're done with the search, copy the link in the address bar. If you wish, you can use this link already provided in the `zillow_example.txt` file under the 'Examples' folder.
 
-5. Open a new terminal window on the folder `Main`.  
+2. If you haven't already, install the latest version of Python. You can install it from here: [website](https://www.python.org/downloads/)
 
-## Commands 
+3. In a terminal window, run the following command to install the necessary dependencies for the program:
+`pip install -r requirements.txt`
 
-**`!NOTE`**: Please use `python3` instead of `python` in the following commands if you have the latest python release.
+    **`!NOTE`**: Please use `pip3` instead of `pip` in the following install instructions if you have the latest python release.
 
-### --url 
-Command: `python main.py --url "[Zillow search url]"`
+4. Navigate to the `Main` directory and create a file called config.py. Add the following line with your Scrapeak API key to the file.
+    `API_KEY = "YOUR_SCRAPEAK_API_KEY_HERE"`
+
+5. Set your OpenAI API key using the instructions found [here](https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key?context=python#:~:text=Set%20up%20your%20API%20key%20for%20all%20projects%20(recommended)) to enable the assistant functionality.
+
+6. Change direectory or open a new terminal window on the folder `Main`. 
+
+7. Run the Flask app by entering the command `flask run`, `python3 app.py`, or just hit the run button in your IDE. Open a browser and go to http://127.0.0.1:5000 to view the app.
+
+4. Go to the Zillow [website](https://www.zillow.com/) and search for homes (for sale) in the Denver. Try to include a variety of areas (Aurora, Centennial, etc) and a broad criteron for a large dataset. Once you're done with the search, copy the link in the address bar. If you wish, you can use this link already provided in the `zillow_example.txt` file under the 'Examples' folder.
+
+## Routes & Functionality 
+### Property Search
+TODO:
+
+### Property Details Page
+TODO:
+
+### AI Assistant
+The AI Assistant serves as a virtual real estate professional, providing assistance on property pages. It accesses specific property data stored in the `propertyDetails` table of the database, accessible through the `raw_json` tab.
+
+#### Files Related to the Assistant:
+
+- **assistant.py**: This file contains all information related to the creation and usage of the AI Assistant. Refer to the file's comments for detailed instructions.
+- **assistants/del-assistants.py**: A script designed to delete all assistant objects associated with your OpenAI account/key.
+- **static/js/assistant.js**: This file contains the frontend code for interacting with the assistant on the `property.html` page.
+
+
+### Listings Search
+Usage:
+The listings search is composed of three elements: a url search, a predict button, and an analyze button.
 
 Purpose: It will create a SQLite database of listings from the search url you obtained previously. The url is a required argument for the command.
 
@@ -97,88 +129,6 @@ Expected output:
 * a list of 5 properties with the best value. It will have their Zillow ID, actual price, predicted price, and the difference between the two. It will be shown in the terminal.
 * a variety of graphs (should be 5) that will appear in a seperate popup window (the next graph will not be shown unless you exit out of the window of the current graph).
 * a heat geographic heat map (should appear as `price_difference_heatmap.html`) that will be saved to the current directory (inside `Main`). You can open it in your browser to interact with it.
-
-## --info
-Command: `python main.py --info [zillow id]`
-
-Purpose: It will request house data for the provided `zillow id` and save two formatted `json` files.
-One of the files, `hist.json`, contains the historical prices of the property. The other file, `data.json`, contains the data for all the other information about the property.
-
-Expected output:
-* there `will not` be an output for this command; however, there should be two json file, `data.json` & `hist.json`, created within the `Main` folder.
-
-## --addr
-Command: `python main.py --addr`
-
-Purpose: It will provide information about the property with the given Zillow ID. This command does not take arguments it uses the data stored in `data.json`. The `--addr` flag will provide the address of the property.
-
-Expected output: 
-* The street address and zip code of the property.
-    * Format: `123 Main St 12345`
-
-## --describe
-Command: `python main.py --describe`
-
-Purpose: It will provide a description of the property with the given Zillow ID. This command does not take arguments it uses the data stored in `data.json`. The `--describe` flag will provide the description of the property.
-
-Expected output:
-* The description of the property written by the broker.
-  * Format: `paragraph of text`
-
-## --school
-Command: `python main.py --school`
-
-Purpose: It will provide information about the schools near the property with the given Zillow ID. This command does not take arguments it uses the data stored in `data.json`. The `--school` flag will provide the information about the schools near the property.
-
-Expected output:
-* The name of the school, the type of school, the grade level, the distance from the property, and the rating of the school.
-    * Format: `school name, distance, school rating, grade level`
-
-## --comp
-Command: `python main.py --comp`
-
-Purpose: It will provide information about the comparable properties near the property with the given Zillow ID. This command does not take arguments it uses the data stored in `data.json`. The `--comp` flag will provide the information about the comparable properties near the property.
-
-Criteria for comparable properties:
-1) Proximity to the property
-2) Property type
-3) Size and specifications
-4) Time frame of sale or listing
-
-Expected output:
-* Links to the comparable properties near the property.
-    * Format: `clickable links to the comparable properties`
-      * `https://www.zillow.com/homedetails/123-Main-St-12345/12345678_zpid/`
-
-## --nearby
-Command: `python main.py --nearby`
-
-Purpose: It will provide a list of nearby cities with the given Zillow ID. This command does not take arguments it uses the data stored in `data.json`. The `--nearby` flag will provide the information about the nearby cities near the property.
-
-Expected output:
-* The name of the cities nearby the property.
-    * Format: `city Name`
-
-## --hist
-Command: `python main.py --hist`
-
-Purpose: It will provide a list of historical prices of the property with the given Zillow ID. This command does not take arguments it uses the data stored in `hist.json`. The `--hist` flag will provide the information about the historical prices of the property.
-
-Expected output:
-* Date of transaction
-* Price for transaction
-* Price per squareFoot at the time of sale
-* Price change rate in percentage
-* Event type (Sold, Listed, etc.)
-
-## --year
-Command: `python main.py --year`
-
-Purpose: It will provide information about the year built of the property with the given Zillow ID. This command does not take arguments it uses the data stored in `data.json`. The `--year` flag will provide the information about the year built of the property.
-
-Expected output:
-* The year built of the property.
-    * Format: `year started - year completed`
 
 ## Making sense of the output from the `--analyze` and `--predict` commands
 
@@ -223,10 +173,3 @@ please contact us at:
 * [Karthik Turimella](mailto:karthik.turimella@du.edu)
 * 
 
-## Flask Setup!
-Execute these steps sequentially in your repo directory to initialize your development environment.
-
-* pip3 install virtualenv
-* virtualenv env
-* Mac: source env/bin/activate    or    Windows: source \env\Scripts\activate.bat
-* pip3 install flask pandas requests
