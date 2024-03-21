@@ -47,7 +47,7 @@ property, allowing users to make informed decisions based on their preferences a
 
 The `Running the Program` section found below will walk you through setting up the program and how to get it to run on your system.
 
-The `Functionality` section will describe how to use each part of the app and how they function. 
+The [Routes & Functionality](#routes-&-functionality) section will describe how to use each part of the app and how they function. 
 
 For technical look at the system architecture, please refer to the diagram below also found in the
 `Diagrams` folder:
@@ -75,73 +75,50 @@ For technical look at the system architecture, please refer to the diagram below
 
 7. Run the Flask app by entering the command `flask run`, `python3 app.py`, or just hit the run button in your IDE. Open a browser and go to http://127.0.0.1:5000 to view the app.
 
-4. Go to the Zillow [website](https://www.zillow.com/) and search for homes (for sale) in the Denver. Try to include a variety of areas (Aurora, Centennial, etc) and a broad criteron for a large dataset. Once you're done with the search, copy the link in the address bar. If you wish, you can use this link already provided in the `zillow_example.txt` file under the 'Examples' folder.
-
 ## Routes & Functionality 
 ### Property Search
-TODO:
+**Usage:** Enter the address or ZPID of a property you want to search for. If you don't have a property in mind you can always find one on [Zillow](https://www.zillow.com/). Searching a property will load a dedicated page for that property. The page also displays a list of recently searched properties and any properies you have favorited.
 
-### Property Details Page
-TODO:
+Details: Search history and favorites are drawn from the propertyDetails and favoriteList tables of the database respectively. Address search autocompletion functionality is powered by the Google Places API.
+
+### Property Page(s)
+Usage: Allows users to view numerous details and metrics related to a property that can help eveluate whether a property might be a good deal. Also allows users to interact with an AI assistant that has access to the data on that property and can answer almost any questions users may have!
 
 ### AI Assistant
-The AI Assistant serves as a virtual real estate professional, providing assistance on property pages. It accesses specific property data stored in the `propertyDetails` table of the database, accessible through the `raw_json` tab.
+The AI Assistant serves as a virtual real estate professional, providing assistance on property.html pages. It accesses data for a specific property stored in the `raw_json` attribute of the `propertyDetails` table in the database.
 
 #### Files Related to the Assistant:
 
-- **assistant.py**: This file contains all information related to the creation and usage of the AI Assistant. Refer to the file's comments for detailed instructions.
+- **assistant.py**: This file contains all information related to the creation and usage of the AI Assistant. Refer to the file's comments for more details.
 - **assistants/del-assistants.py**: A script designed to delete all assistant objects associated with your OpenAI account/key.
-- **static/js/assistant.js**: This file contains the frontend code for interacting with the assistant on the `property.html` page.
+- **static/js/assistant.js**: Contains the frontend js code for interacting with the assistant on the `property.html` page.
 
 
 ### Listings Search
-Usage:
-The listings search is composed of three elements: a url search, a predict button, and an analyze button.
+**Usage:** 
+Go to the Zillow [website](https://www.zillow.com/) and search for homes (for sale) in the Denver. Try to include a variety of areas (Aurora, Centennial, etc) and filter the results to your liking. Once you're done with the search, copy the url from the address bar. Paste the URL into the search bar on the `Listings Search` page and hit submit.
 
-Purpose: It will create a SQLite database of listings from the search url you obtained previously. The url is a required argument for the command.
+Once you have submitted your search area, you can hit the predict or analyze buttons to process the mass of property data.
 
-Expected output: 'zillow_listings.db' should be created in the same directory (`Main` folder). And, a list of keys and the number of properties retrieved should be be shown. For example:
-```
-dict_keys(['user', 'mapState', 'regionState', 'searchPageSeoObject', 'requestId', 'cat1', 'categoryTotals'])
-Count of properties: 1969
-```
+**Search:** Populates the listings table of the database with the data for every property in the requested search area.
 
-Note: If this command does not work, please use the provided `zillow_listings.db` in the `Examples` folder of the repository. Move it to the `Main` folder on your local machine.
+**Predict:** Uses a linear regression machine learning model to predict prices of the properties in the database and compare them with the actual price to determine which properties are undervalued (ideal for investment). Outputs a list of the top five prospects to the user. **NOTE:** the original CLI version of the app created five additional [graphs](https://github.com/dussec/real-estate-price-analysis/assets/130081083/66921f71-dacb-490e-aa09-bcadd7cc536b) that are absent from the current version. See predict.py for more details.
 
-Note: In order to run the other two commands, it is important to have `zillow_listings.db` in the `Main` folder. Otherwise, the following 2 commands will not work.
+**Analyze:** Conducts Exploratory Data Analysis (EDA) on the properties in the listings table of the database. Outputs a table to the webpage containing basic statistics on the sample of properties. **NOTE:** the original command line version of the application created seven additional [graphs](https://github.com/dussec/real-estate-price-analysis/assets/130081083/b1ed48f0-fa85-4102-bdb5-896c07139b1c) to visualize the data that are absent from the current version. See analyze.py for more details.
 
-### --analyze
-Command: `python main.py --analyze`
+## Versions
 
-Purpose: It will conduct Exploratory Data Analysis (EDA) on the properties off the database.
+### v0.0.0 
+This is the original CLI version of the app developed by the original team of software developers in Spring 2023. It has been archived on the branch spring_cli_2023 for future reference and easy access.
 
-Expected output: 
-* a summary table to the terminal.
-* a variety of graphs (should be 6) that will appear in a seperate popup window (the next graph will not be shown unless you exit out of the window of the current graph).
-* a heat geographic heat map (should appear as `heatmap.html`) of current prices that will be saved to the current directory (inside `Main`). You can open it in your browser to interact with it.
+### v1.0.0
+This version implements the functionality of the original CLI version of the REPA software in a locally hosted Flask web app. It serves primarily as a GUI before reorganizing the system architecture and expand the functionality of the project to meet our client's vision.
 
-### --predict 
-Command: `python main.py --predict`
+### v1.0.1 (Sprint 1)
+Represents the state of the software after the first development spring. Includes updates to the UI, overhaul of the system architecture, database management, search functionality, and stability of the app.
 
-Purpose: It will use a linear regression machine learning model create predicted prices of the properties off the database and compare it with the actual price to determine which properties are undervalued (ideal for investment). 
-
-Expected output:
-* a list of 5 properties with the best value. It will have their Zillow ID, actual price, predicted price, and the difference between the two. It will be shown in the terminal.
-* a variety of graphs (should be 5) that will appear in a seperate popup window (the next graph will not be shown unless you exit out of the window of the current graph).
-* a heat geographic heat map (should appear as `price_difference_heatmap.html`) that will be saved to the current directory (inside `Main`). You can open it in your browser to interact with it.
-
-## Making sense of the output from the `--analyze` and `--predict` commands
-
-Below is a picture explaining the different graphs and outputs from the `--analyze` and `--predict` commands.
-This can also be found in the `Diagrams` folder:
-
-### --analyze:
-
-![image](https://github.com/dussec/real-estate-price-analysis/assets/130081083/b1ed48f0-fa85-4102-bdb5-896c07139b1c)
-
-### --predict:
-
-![image](https://github.com/dussec/real-estate-price-analysis/assets/130081083/66921f71-dacb-490e-aa09-bcadd7cc536b)
+### v1.0.2 (Sprint 2)
+This is the version completed of the web app after the second sprint. Updates include fully implemented AI real estate assistant, a UI overhaul, expansion of data/metrics displayed on the property page among other small features.
 
 ## Future Work
 
@@ -161,6 +138,11 @@ historical data would facilitate long-term trend analysis.
 These future endeavors will transform this project into a powerful 
 real estate analysis tool, empowering users with valuable insights and 
 supporting informed investment decisions.
+
+Property Analysis Algorithm
+How are we going to decide if a house is a good deal?!
+The factors that go into making that decision should be modifiable to fit user needs
+
 
 ## Help
 
