@@ -1,7 +1,8 @@
-// Functions for providing street address autocompletion on Property Search
+// Functions for providing street address autocompletion on Property Search page
 
 let autocomplete;
 let zipcode = "";
+
 function initAutocomplete() {
   autocomplete = new google.maps.places.Autocomplete(
     document.getElementById("autocomplete"),
@@ -12,6 +13,7 @@ function initAutocomplete() {
   );
   autocomplete.addListener("place_changed", getzip);
 }
+
 function getzip() {
   const place = autocomplete.getPlace();
   for (const component of place.address_components) {
