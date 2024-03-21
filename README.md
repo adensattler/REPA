@@ -5,34 +5,11 @@ Real Estate Price Prediction and Investment Analysis
 
 Leo Dixon, Executive MBA PhD Candidate, Adjunct Faculty, Daniels College of Business, University of Denver, leo.dixon@du.edu
 
-## Description
+## Project Description
 
 This project aims to help users find potentially profitable investment opportunities or "good deals" in the housing market.
 
 By leveraging large amounts of data from the real estate market, a machine learning model, an AI Assistant, and numerous evaluation metrics, this tool enables user to make more informed decisions and navigate the market with confidence. 
-
-
-Here's a brief overview of the tools and technologies used in the project:
-
-### Technologies:
-**Python**: Our project is primarily built using Python, a versatile and powerful programming language.
-
-**Flask**: We rely on Flask, a Python-based web framework, for building our web application and managing server-side logic.
-
-**HTML/CSS/JS**: For the frontend user interface design, we utilize a combination of HTML, CSS, and JavaScript to create an engaging and intuitive experience. We used the frontend framework [Bootstrap](https://getbootstrap.com/) for most of our UI design.
-
-### APIs:   
-**Scrapeak API**: Scrapes data from Zillow, allowing us to access comprehensive and up-to-date property information effortlessly.
-
-**Google Places API**: To enhance user experience, we integrated the Google Places API for address search autocompletion.
-
-**OpenAI Assistants API**: Allows us to create and interact with an AI Real Estate Assistant. This assistant adds an intelligent layer to our application, assisting users with various real estate-related inquiries and tasks.
-
-### Other Tools:
-**SQLite3**: We utilize SQLite3, a lightweight and self-contained SQL database engine, for managing our databases. SQLite3 offers simplicity and efficiency, making it an ideal choice for our application's data storage needs.
-
-**scikit-learn (ML Linear Regression)**: Utilized to implement a linear regression model for property price prediction. This model enhances our application by providing users with estimated property prices based on relevant features.
-
 
 The system architecture is designed with two keys objectives in mind:
 
@@ -45,26 +22,45 @@ property prices and investment opportunities.
 properties they wish to explore further. It provides detailed and specific information about the selected
 property, allowing users to make informed decisions based on their preferences and requirements.
 
-The `Running the Program` section found below will walk you through setting up the program and how to get it to run on your system.
+The [Running the Program](#running-the-program) section found below will walk you through setting up the program and how to get it to run on your system.
 
-The [Routes & Functionality](#routes-&-functionality) section will describe how to use each part of the app and how they function. 
+The [Routes and Functionality](#routes-and-functionality) section will describe how to use each part of the app and how they function. 
 
 For technical look at the system architecture, please refer to the diagram below also found in the
 `Diagrams` folder:
 
-<img width="373" alt="software architecture diagram" src="https://github.com/dussec/real-estate-price-analysis/assets/95201389/eccf48b2-e3d0-46fb-8cf8-4843819fe4ed">
+![System Architecture](https://github.com/DUSSEG/real-estate-price-analysis/blob/main/Diagrams/v1.2_architecture.png)
+
+
+## Tools & Technologies:
+**Python**: Our project is primarily built using Python, a versatile and powerful programming language.
+
+**Flask**: We rely on Flask, a Python-based web framework, for building our web application and managing server-side logic.
+
+**HTML/CSS/JS**: For the frontend user interface design, we utilize a combination of HTML, CSS, and JavaScript to create an engaging and intuitive experience. We used the frontend framework [Bootstrap](https://getbootstrap.com/) for most of our UI design.
+
+**Scrapeak API**: Scrapes data from Zillow, allowing us to access comprehensive and up-to-date property information effortlessly.
+
+**Google Places API**: To enhance user experience, we integrated the Google Places API for address search autocompletion.
+
+**OpenAI Assistants API**: Allows us to create and interact with an AI Real Estate Assistant. This assistant adds an intelligent layer to our application, assisting users with various real estate-related inquiries and tasks.
+
+**SQLite3**: We utilize SQLite3, a lightweight and self-contained SQL database engine, for managing our databases. SQLite3 offers simplicity and efficiency, making it an ideal choice for our application's data storage needs.
+
+**scikit-learn (ML Linear Regression)**: Utilized to implement a linear regression model for property price prediction. This model enhances our application by providing users with estimated property prices based on relevant features.
+
 
 ## Running the Program
 
 1. Clone the repository onto your local machine. Choose a directory that you plan to have the program in, open a terminal window on that directory, and run the following command line to clone:
 `git clone https://github.com/dussec/real-estate-price-analysis.git`
 
-2. If you haven't already, install the latest version of Python. You can install it from here: [website](https://www.python.org/downloads/)
+2. If you haven't already, install the latest version of Python. You can download Python [here](https://www.python.org/downloads/).
 
 3. In a terminal window, run the following command to install the necessary dependencies for the program:
 `pip install -r requirements.txt`
 
-    **`!NOTE`**: Please use `pip3` instead of `pip` in the following install instructions if you have the latest python release.
+    **`NOTE`**: Please use `pip3` instead of `pip` in the following install instructions if you have the latest python release.
 
 4. Navigate to the `Main` directory and create a file called config.py. Add the following line with your Scrapeak API key to the file.
     `API_KEY = "YOUR_SCRAPEAK_API_KEY_HERE"`
@@ -75,7 +71,7 @@ For technical look at the system architecture, please refer to the diagram below
 
 7. Run the Flask app by entering the command `flask run`, `python3 app.py`, or just hit the run button in your IDE. Open a browser and go to http://127.0.0.1:5000 to view the app.
 
-## Routes & Functionality 
+## Routes and Functionality 
 ### Property Search
 **Usage:** Enter the address or ZPID of a property you want to search for. If you don't have a property in mind you can always find one on [Zillow](https://www.zillow.com/). Searching a property will load a dedicated page for that property. The page also displays a list of recently searched properties and any properies you have favorited.
 
@@ -121,37 +117,15 @@ Represents the state of the software after the first development spring. Include
 This is the version completed of the web app after the second sprint. Updates include fully implemented AI real estate assistant, a UI overhaul, expansion of data/metrics displayed on the property page among other small features.
 
 ## Future Work
-
-In the future, there are several exciting avenues to explore and enhance this
-project. Firstly, developing a Graphical User Interface (GUI) would provide a
-user-friendly platform for easy interaction and visualization of data. 
-Secondly, accessing the Zillow Developer API could offer access to richer data
-, such as historical property information and market trends, enabling more 
-accurate predictive models. Gathering additional data, such as crime rates 
-and school district ratings, would further improve the models' accuracy and
-provide more comprehensive suggestions. Expanding the range of graphs and
-visualizations would enable deeper exploration and analysis of the gathered
-data. Integrating financial data, including mortgage rates and economic 
-indicators, would provide a holistic view of the real estate market. 
-Lastly, expanding the database to include more property listings and 
-historical data would facilitate long-term trend analysis. 
-These future endeavors will transform this project into a powerful 
-real estate analysis tool, empowering users with valuable insights and 
-supporting informed investment decisions.
-
-Property Analysis Algorithm
-How are we going to decide if a house is a good deal?!
-The factors that go into making that decision should be modifiable to fit user needs
-
+Gathering additional data and developing a comprehensive property analysis formula are two of the main ways we see to generate more value for a user. This could involve looking at crime rates of a neighborhood, school district ratings, and zoning opportunities among many other factors. Once you can evaluate a single house, applying that evaluation to a swath of properties to narrow your property search and finding those "diamonds in the rough" is something that could be extremely powerful! Hosting the app is also another obvious step to take. This would require some architecture rework and userlogin/registration functionality but is clearly the right step to take a web app. Developing a comprehensive, unique frontend/UI is also an options for future groups.These future endeavors will transform this project into a powerful real estate analysis tool, empowering users with valuable insights and supporting informed investment decisions.
 
 ## Help
 
 If you have any questions or need help with the project, 
 please contact us at:
 
-* [Robel Mamo](mailto:robel.mamo@du.du)
-* [Ibraheem Qureshi](mailto:ibraheem.qureshi@du.edu)
-* [Jordan Sutherland](mailto:jordan.sutherland@du.edu)
-* [Karthik Turimella](mailto:karthik.turimella@du.edu)
-* 
-
+* [Aden Sattler](mailto:adensattler@gmail.com)
+* [Kevin Lynch]()
+* [Jay Sharma]()
+* [Relja Eskic]()
+* [Hayden Schramm]()
