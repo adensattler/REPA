@@ -43,6 +43,7 @@ from config import API_KEY
 
 load_dotenv()   # Load environment variables from .env file
 ASSISTANT_ID = os.getenv("ASSISTANT_ID")
+ASSISTANT_ID = "asst_B7y7lcjgNfAb2SQ4FPeRvN8y"
 
 # Create the OpenAI client for API interactions
 # NOTE: You MUST set your OPENAI_API_KEY in a .env file or this will error out!
@@ -57,6 +58,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def upload_data(data):
     # Expected entry at `file` parameter to be bytes, an io.IOBase instance, PathLike or a tuple
     file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
+    print(file)
     return file
 
 # Creates a Real Estate assistant tied to your OpenAI account
@@ -106,6 +108,7 @@ def generate_response(message_body, zpid):
         # 1.) get the property json data from the database
         db = DatabaseManager('zillow_listings.db')
         data_obj = json.loads(db.get_JSON(zpid))
+        # print(data_obj)
 
         # 2.) convert the data to an OpenAI file object
         file = upload_data(data_obj)
@@ -138,35 +141,44 @@ def generate_response(message_body, zpid):
 
     # RUN THE THREAD AND RETURN ITS RESPONSE
     new_message = run_assistant(thread)
+    if not new_message:
+        new_message = "An error occured! If you are a developer please check the server logs. Users can submit a bug report through the about page."
     print(f"To User:", new_message)     # logging the response for debugging
     return new_message
 
 
 def run_assistant(thread):
-    # Retrieve the Assistant
-    assistant = client.beta.assistants.retrieve(ASSISTANT_ID)
+    try:
+        # Retrieve the Assistant
+        assistant = client.beta.assistants.retrieve(ASSISTANT_ID)
 
-    # Run the provided thread
-    run = client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id=assistant.id,
-    )
+        # Run the provided thread
+        run = client.beta.threads.runs.create(
+            thread_id=thread.id,
+            assistant_id=assistant.id,
+        )
 
-    # Wait for the API/LLM to finish running
-    while run.status != "completed":
-        # Be nice to the API
-        time.sleep(0.5)
-        run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+        # Wait for the API/LLM to finish running
+        while run.status not in ["completed", "failed"]:
+            # Be nice to the API
+            time.sleep(0.5)
+            run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
 
-    # Retrieve the the messages in the thread and get the most recent response
-    messages = client.beta.threads.messages.list(thread_id=thread.id)
-    new_response = messages.data[0].content[0].text.value
+        if run.status == "failed":
+            raise Exception(f"Run failed: {run.last_error}")
 
-    # Use re.sub() to remove the matched source tags from the API response
-    pattern = r'【\d+†source】'
-    cleaned_response = re.sub(pattern, '', new_response)
+        # Retrieve the the messages in the thread and get the most recent response
+        messages = client.beta.threads.messages.list(thread_id=thread.id)
+        new_response = messages.data[0].content[0].text.value
 
-    return cleaned_response
+        # Use re.sub() to remove the matched source tags from the API response
+        pattern = r'【\d+†source】'
+        cleaned_response = re.sub(pattern, '', new_response)
+
+        return cleaned_response
+    except Exception as e:
+        print(f"{str(e)}")
+
 
 
 def main():
@@ -198,7 +210,7 @@ def main():
             break
         else:
             print()
-            generate_response(user_input, "247389523")
+            generate_response(user_input, "119231804")
                 #         INSERT ZPID HERE ^^^^^^^^
 
 
