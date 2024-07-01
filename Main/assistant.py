@@ -1,6 +1,8 @@
 """
 Module Name: assistant.py
 
+migration guide: https://platform.openai.com/docs/assistants/migration/what-has-changed 
+
 Description:
 This module contains functions for setting up and interacting with a real estate assistant. 
 The assistant leverages the OpenAI Assistants API to process property details provided in a JSON format.
