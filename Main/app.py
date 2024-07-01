@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 from flask_caching import Cache
 import pandas as pd
 import sqlite3
+import os
 from werkzeug.exceptions import abort
 from config import API_KEY
 from data_acquisition import *
@@ -198,6 +199,17 @@ def get_assistant_response():
     zpid = request.args.get('zpid')
     response = generate_response(input, zpid=zpid)
     return response
+
+@app.route('/google_maps_js')
+def google_maps_js():
+    api_key = os.environ.get('GOOGLE_MAPS_API_KEY')
+    return f"""
+    var script = document.createElement('script');
+    script.src = 'https://maps.googleapis.com/maps/api/js?key={api_key}&libraries=places&callback=initAutocomplete';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+    """
 
 
 
