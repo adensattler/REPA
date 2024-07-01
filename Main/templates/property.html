@@ -66,83 +66,94 @@
     </div>
 
     <!-- Property Detail -->
-      <div class="card-body">
-        <h2 class="card-title">{{ property['streetAddress'] }}</h2>
-        <div class="row">
-          <div class="col">
-            <ul class="card-text">
-              <li><strong>Price:</strong> {{ "${:,.0f}".format(property['price']) }}</li>
-              <li><strong>Beds:</strong> {{ property['num_beds'] }}</li>
-              <li><strong>Baths:</strong> {{ property['num_baths'] }}</li>
-              <li><strong>Sqft:</strong> {{ "{:,.0f}".format(property['sqft']) }}</li>
-              <li><strong>House Type:</strong> {{ property['house_type'] }}</li>
-              <li><strong>Zestimate®:</strong> ${{ property['zestimate'] }}</li>
-            </ul>
-                 <!-- Toggle Favorites Button -->
-                 {% if property['is_favorite'] %}
-                 <form action="{{ url_for('remove_from_favorites') }}" method="post">
-                   <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
-                   <button type="submit" class="btn btn-danger">
-                     Remove from Favorites
-                   </button>
-                 </form>
-                 {% else %}
-                 <form action="{{ url_for('add_to_favorites') }}" method="post">
-                   <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
-                   <button type="submit" class="btn btn-warning">Add to Favorites</button>
-                 </form>
-                 {% endif %}
-          </div>
-          <div class="col">
-            <ul class="card-text">
-              <li><strong>Price Relative to Listings in Zipcode</strong> <span style="{{ 'color:red;' if property['rel_price'] >= 0 else 'color:green;' }}">{% if property['rel_price'] >= 0 %}+{{ property['rel_price'] }}%{% else %}{{ property['rel_price'] }}%{% endif %}</span></li>
-              <li><strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}</li>
-              <li><strong>Estimated Rent:</strong> {{ "${:,.0f}".format(property['monthly_rent']) }}</li>
-              <li><strong>Property Tax Rate:</strong> {{ property['property_tax'] }}%</li>
-              <li><strong>30 Year Mortgage Rate:</strong> {{ property['thirty_year_mortgage'] }}%</li>
-              <li><strong>15 Year Mortgage Rate:</strong> {{ property['fifteen_year_mortgage'] }}%</li>
-            </ul>
-            <!-- Mortgage calculator button-->
-            <button
-            type="submit"
-            class="btn btn-large btn-secondary"
-            data-bs-toggle="modal"
-            data-bs-target="#mortgageCalculator"
-            >
-              Mortgage Calculator
+    <div class="card-body">
+      <h2 class="card-title">{{ property['streetAddress'] }}</h2>
+      <div class="row">
+        <div class="col">
+          <ul class="card-text">
+            <li><strong>Price:</strong> {{ "${:,.0f}".format(property['price']) }}</li>
+            <li><strong>Beds:</strong> {{ property['num_beds'] }}</li>
+            <li><strong>Baths:</strong> {{ property['num_baths'] }}</li>
+            <li><strong>Sqft:</strong> {{ "{:,.0f}".format(property['sqft']) }}</li>
+            <li><strong>House Type:</strong> {{ property['house_type'] }}</li>
+            <li><strong>Zestimate®:</strong> ${{ property['zestimate'] }}</li>
+          </ul>
+          <!-- Toggle Favorites Button -->
+          {% if property['is_favorite'] %}
+          <form action="{{ url_for('remove_from_favorites') }}" method="post">
+            <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
+            <button type="submit" class="btn btn-danger">
+              Remove from Favorites
             </button>
-          </div>
+          </form>
+          {% else %}
+          <form action="{{ url_for('add_to_favorites') }}" method="post">
+            <input type="hidden" name="zpid" value="{{ property['zillow_ID'] }}" />
+            <button type="submit" class="btn btn-warning">Add to Favorites</button>
+          </form>
+          {% endif %}
+        </div>
+        <div class="col">
+          <ul class="card-text">
+            <li><strong>Price Relative to Listings in Zipcode</strong>
+
+              {% set rel_price = property['rel_price'] | float %}
+              {% set style = 'color:red;' if rel_price >= 0 else 'color:green;' %}
+              {% set formatted_rel_price = "+{:.0f}%".format(rel_price) if rel_price >= 0 else
+              "{:.0f}%".format(rel_price) %}
+              <span style="{{ style }}">
+                {{ formatted_rel_price }}
+              </span>
+
+              <!-- <span style="{{ 'color:red;' if property['rel_price'] >= 0 else 'color:green;' }}">{% if property['rel_price'] >= 0 %}+{{ property['rel_price'] }}%{% else %}{{ property['rel_price'] }}%{% endif %}</span>-->
+            </li>
+            <li><strong>Price per Sqft:</strong> ${{ property['price_per_sqft'] }}</li>
+            <li>
+              <strong>Estimated Rent:</strong>
+              {% set monthly_rent = property['monthly_rent'] | default(0) | float %}
+              ${{ "{:,.0f}".format(monthly_rent) }}
+            </li>
+            <li><strong>Property Tax Rate:</strong> {{ property['property_tax'] }}%</li>
+            <li><strong>30 Year Mortgage Rate:</strong> {{ property['thirty_year_mortgage'] }}%</li>
+            <li><strong>15 Year Mortgage Rate:</strong> {{ property['fifteen_year_mortgage'] }}%</li>
+          </ul>
+          <!-- Mortgage calculator button-->
+          <button type="submit" class="btn btn-large btn-secondary" data-bs-toggle="modal"
+            data-bs-target="#mortgageCalculator">
+            Mortgage Calculator
+          </button>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="row">
-    <div class="col-lg-8 mx-auto">
-      <!-- Description Section -->
-      <div>
-        <h3>Description</h3>
-        <p>{{ property['description'] }}</p>
-      </div>
-      <!-- Nearby Schools Section -->
-      <div class="mb-4">
-        <h3>Nearby Schools</h3>
-        {% if property['nearby_schools'] %}
-        <ul class="list-group">
-          {% for school in property['nearby_schools'] %}
-          <li class="list-group-item">
-            <strong>{{ school['name'] }}</strong>
-            <span>Grade: {{ school['grade'] }}</span>
-            <span>Distance: {{ school['distance'] }} miles</span>
-          </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p>No nearby school information available.</p>
-        {% endif %}
-      </div>
+<div class="row">
+  <div class="col-lg-8 mx-auto">
+    <!-- Description Section -->
+    <div>
+      <h3>Description</h3>
+      <p>{{ property['description'] }}</p>
+    </div>
+    <!-- Nearby Schools Section -->
+    <div class="mb-4">
+      <h3>Nearby Schools</h3>
+      {% if property['nearby_schools'] %}
+      <ul class="list-group">
+        {% for school in property['nearby_schools'] %}
+        <li class="list-group-item">
+          <strong>{{ school['name'] }}</strong>
+          <span>Grade: {{ school['grade'] }}</span>
+          <span>Distance: {{ school['distance'] }} miles</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No nearby school information available.</p>
+      {% endif %}
     </div>
   </div>
+</div>
 </div>
 
 <!-- Modal for mortgage calculator -->
@@ -151,32 +162,16 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Mortgage Calculator</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- Form inside the modal -->
         <form id="mortgageForm">
           <div class="mb-3">
-            <label for="downPayment-input" class="form-label"
-              >Down Payment</label
-            >
-            <input
-              type="number"
-              class="mortgage-modal"
-              id="downPayment-input"
-              required
-            />
+            <label for="downPayment-input" class="form-label">Down Payment</label>
+            <input type="number" class="mortgage-modal" id="downPayment-input" required />
           </div>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            onclick="calculateMortgage()"
-          >
+          <button type="submit" class="btn btn-primary" onclick="calculateMortgage()">
             Submit
           </button>
         </form>
