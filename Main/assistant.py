@@ -4,14 +4,18 @@ Module Name: assistant.py
 Description:
 This module contains functions for setting up and interacting with a real estate assistant. 
 The assistant leverages the OpenAI Assistants API to process property details provided in a JSON format.
-For more information on Assistants API, refer to the documentation: https://platform.openai.com/docs/assistants/overview
+For more information on Assistants API, refer to the documentation: 
+https://platform.openai.com/docs/assistants/overview
 
-The goal of this assistant is to act as a substitute for someone with deep knowledge of real estate, capable of answering user inquiries regarding a property.
+The goal of this assistant is to act as a substitute for someone with deep knowledge of real estate,
+capable of answering user inquiries regarding a property.
 
-For setting up your OpenAI Key, please follow the instructions at: https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key
+For setting up your OpenAI Key, please follow the instructions at: 
+https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key
 
 In our application there is ONE Assistant with many different threads (or conversations) tied to that assistant.
-Each thread represents a conversation about a specific property. The references to these conversations are stored in threads_db.
+Each thread represents a conversation about a specific property. 
+The references to these conversations are stored in threads_db since this functionality is not built in to the Assistants API.
 
 Functions:
 - upload_data(data): Uploads a file-like object to be used across various endpoints and returns an OpenAI File object.
@@ -32,16 +36,18 @@ import shelve
 import time
 import json
 import re
+import os
+from dotenv import load_dotenv
 from database import DatabaseManager
 from config import API_KEY
 
-# Hardcoded Assistant ID
-ASSISTANT_ID = "asst_jzMUaqyzjNcKF4oAKbzLYYjh"
+load_dotenv()   # Load environment variables from .env file
+ASSISTANT_ID = os.getenv("ASSISTANT_ID")
 
-client = OpenAI()
-# NOTE: OpenAI() defaults to getting your key using os.environ.get("OPENAI_API_KEY") and will error out if not set in your system.
-# if you have the key set under a different name or not at all, you can pass the key as a parameter instead:
-# client = OpenAI(api_key="YOUR_API_KEY_HERE")
+# Create the OpenAI client for API interactions
+# NOTE: You MUST set your OPENAI_API_KEY in a .env file or this will error out!
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 
 # FUNCTIONS
@@ -63,7 +69,7 @@ def create_assistant():
         If you don't know the answer, simply say that the question is outside of your scope of knowledge.
         Be concise.""",
         tools=[{"type": "retrieval"}],
-        model="gpt-4-1106-preview",
+        model="gpt-3.5-turbo-1106",
         file_ids=[],
     )
     # In order for an assistant to handle files from threads, you MUST set the file_ids parameter to [].
@@ -173,8 +179,11 @@ def main():
 
 
     # NOTE: 
-    # The assistant id is HARDCODED. All threads are made from this single assistant.
-    # If you create a NEW assistant you must update the new assistant id in the ASSISTANT_ID variable.
+    # YOU MUST CREATE AN ASSISTANT. You can do so by running the code below 
+    # OR by making an assistant on the OPENAI Assistants dashboard
+    # All threads are made from a SINGLE assistant and reference one assistant id.
+
+    # If you create a NEW assistant you must update the new assistant id in the ASSISTANT_ID env variable.
     # i.e. uncomment the code below, run it, then copy-paste the printed id into ASSISTANT_ID.
 
     # Create an assistant (Uncomment this to create a new assistant)

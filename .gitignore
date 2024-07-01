@@ -32,3 +32,6 @@ Main/config.py
 *.dir
 *.dat
 *.bak
+
+# ignore .env
+.env
