@@ -55,7 +55,12 @@ def PriceRelativeArea(zpid, purchasePrice, zipcode):
     total = 0
     for i in prices:
         total = total + i["price"]
-    average = total / (len(prices))
+    if len(prices) != 0:
+        average = total / (len(prices))
+    else:
+        database.update_property_db(zpid,"rel_price",1)
+        return
+
     percentDif = round(((purchasePrice/average)-1) * 100, 2)
     database.update_property_db(zpid,"rel_price",percentDif)
 
