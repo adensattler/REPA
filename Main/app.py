@@ -91,11 +91,13 @@ def property_search():
             
             # Add property data to the database
             database.insert_property_db(zpid, data.text)
-            try:
-                url = database.add_nearby_homes(zpid)
-                print(get_listings_nearby(url,API_KEY))
-            except:
-                print("nearby homes already in DB")
+
+            # ENABLE NEARBY SEARCH (DISABLE TO CONSERVE API TOKENS)
+            # try:
+            #     url = database.add_nearby_homes(zpid)
+            #     print(get_listings_nearby(url,API_KEY))
+            # except:
+            #     print("nearby homes already in DB")
 
             evaluationFunctions.PriceRelativeArea(zpid, database.get_value_from_property_db(zpid,"price"),database.get_value_from_property_db(zpid,"zipcode"))
             # Redirect the user to the property page on submission
