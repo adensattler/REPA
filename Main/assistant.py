@@ -39,13 +39,14 @@ import time
 import json
 import re
 import os
+import io
+import tempfile
 from dotenv import load_dotenv
 from database import DatabaseManager
 from config import API_KEY
 
 load_dotenv()   # Load environment variables from .env file
 ASSISTANT_ID = os.getenv("ASSISTANT_ID")
-ASSISTANT_ID = "asst_B7y7lcjgNfAb2SQ4FPeRvN8y"
 
 # Create the OpenAI client for API interactions
 # NOTE: You MUST set your OPENAI_API_KEY in a .env file or this will error out!
@@ -57,10 +58,19 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # -----------------------------------------------------------------------------------------------------
 
 # Upload file-like object that can be used across various endpoints. returns an OpenAI File object.
-def upload_data(data):
-    # Expected entry at `file` parameter to be bytes, an io.IOBase instance, PathLike or a tuple
-    file = client.files.create(file=json.dumps(data).encode(), purpose="assistants")
-    print(file)
+def upload_data(data: dict):
+    with tempfile.NamedTemporaryFile(mode='w+b', suffix='.json', delete=True) as temp_file:
+        # Write the JSON data to the temporary file
+        temp_file.write(json.dumps(data).encode("utf-8"))
+        
+        # Reset file pointer to the beginning
+        temp_file.seek(0)
+        
+        # Create the file using the name of the temporary file
+        file = client.files.create(
+            file=open(temp_file.name, 'rb'),
+            purpose="assistants"
+        )
     return file
 
 # Creates a Real Estate assistant tied to your OpenAI account
@@ -72,11 +82,9 @@ def create_assistant():
         Use your knowledge base to best respond to customer queries. 
         If you don't know the answer, simply say that the question is outside of your scope of knowledge.
         Be concise.""",
-        tools=[{"type": "retrieval"}],
         model="gpt-3.5-turbo-1106",
-        file_ids=[],
+        tools=[{"type": "file_search"}],
     )
-    # In order for an assistant to handle files from threads, you MUST set the file_ids parameter to [].
     return assistant
 
 
@@ -116,13 +124,16 @@ def generate_response(message_body, zpid):
         file = upload_data(data_obj)
 
         # 3.) create the thread. pass the thread the file object!
-        print(f"Creating new thread for zpid {zpid}")
+        print(f"Creating new thread for zpid {zpid}\n")
+        address = db.get_address(zpid)
         thread = client.beta.threads.create(    
             messages=[
                 {
-                "role": "user",
-                "content": "Utilize this file containing data on a property to answer any questions a user may have on the property going forward.",
-                "file_ids": [file.id]
+                    "role": "user",
+                    "content": f"Utilize this file containing data on a property with address of ({address}) to answer any questions a user may have on the property going forward. You do not need to respond to this message!",
+                    "attachments": [
+                        { "file_id": file.id, "tools": [{"type": "file_search"}] }
+                    ],
                 }
             ]
         ) 
@@ -131,7 +142,7 @@ def generate_response(message_body, zpid):
 
     # Otherwise, retrieve the existing thread from the shelf
     else:
-        print(f"Retrieving existing thread for zpid {zpid}")
+        print(f"Retrieving existing thread for zpid {zpid}\n")
         thread = client.beta.threads.retrieve(thread_id)
 
     # Add message to thread
@@ -154,17 +165,12 @@ def run_assistant(thread):
         # Retrieve the Assistant
         assistant = client.beta.assistants.retrieve(ASSISTANT_ID)
 
-        # Run the provided thread
-        run = client.beta.threads.runs.create(
+        # Run the thread! The 'create and poll' SDK helper only returns after the run it terminates (i.e. manages api polling)
+        run = client.beta.threads.runs.create_and_poll(
             thread_id=thread.id,
             assistant_id=assistant.id,
+            # tools=[{"type": "file_search"}] # NOTE: This might be helpful
         )
-
-        # Wait for the API/LLM to finish running
-        while run.status not in ["completed", "failed"]:
-            # Be nice to the API
-            time.sleep(0.5)
-            run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
 
         if run.status == "failed":
             raise Exception(f"Run failed: {run.last_error}")
@@ -202,19 +208,18 @@ def main():
 
     # Create an assistant (Uncomment this to create a new assistant)
     # assistant = create_assistant()
-    # assistant_id = assistant.id
-    # print(assistant_id)
+    # print(assistant.id)
 
-    
+    # enter you desired zpid here:
+    PROPERTY_ZPID = 119232998
+
     while True:
-        user_input = input("Please enter your message (or 'exit' to quit): ")
+        user_input = input("\nPlease enter your message (or 'exit' to quit): ")
         if user_input.lower() == 'exit':
             break
         else:
             print()
-            generate_response(user_input, "119231804")
-                #         INSERT ZPID HERE ^^^^^^^^
-
+            generate_response(user_input, str(PROPERTY_ZPID))
 
 if __name__ == "__main__":
     main()
