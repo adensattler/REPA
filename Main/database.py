@@ -329,4 +329,10 @@ class DatabaseManager:
             cursor.execute("SELECT COUNT(*) FROM favoriteList WHERE zillow_ID = ?", (zpid,))
             count = cursor.fetchone()[0]
             return count > 0
+        
+    def get_address(self, zpid):
+        with self.conn as conn:
+            cursor = conn.cursor()
+            return cursor.execute("SELECT streetAddress FROM propertyDetails WHERE zillow_ID = ?", (zpid,)).fetchone()
+
     
