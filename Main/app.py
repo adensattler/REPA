@@ -106,8 +106,9 @@ def property_search():
             flash('Please enter a valid Zillow ID')
 
     # Retrieve property search history from the database
-    recent_searches = cache.get('recent_searches') or []
-    properties = database.get_prop_search_history(recent_searches)
+    # recent_searches = cache.get('recent_searches') or []
+    # properties = database.get_prop_search_history(recent_searches)
+    properties = database.get_all_searches()
     
     # Retrieve favorite properties from the database
     favorite_properties = database.get_favorite_properties()
