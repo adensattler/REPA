@@ -253,6 +253,14 @@ class DatabaseManager:
         c.close()
         return list
 
+    def get_all_searches(self):
+        with self.conn:
+            self.conn.row_factory = sqlite3.Row
+            c = self.conn.cursor()
+            searches = c.execute('''SELECT * FROM propertyDetails''').fetchall()
+        self.conn.commit()
+        return [dict(ix) for ix in searches]
+
     def sql_data_to_list_of_dicts(self, select_query):
         # Returns data from an SQL query as a list of dicts.
         with self.conn:
