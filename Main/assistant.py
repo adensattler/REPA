@@ -1,6 +1,7 @@
 """
 Module Name: assistant.py
 
+NOTE: This uses v2 of the Assistants API
 migration guide: https://platform.openai.com/docs/assistants/migration/what-has-changed 
 
 Description:
